@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="10dp">
+
+    <TextView
+        android:id="@+id/tv_note_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Name: Football"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_note_category_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Category: Relax"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_note_priority_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Priority: Slow"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_note_status_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Status: Processing"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_note_plan_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Plan date: 6/9/2019"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_note_created_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Created date: 2019-09-05 16:10:05"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"/>
+
+</LinearLayout>

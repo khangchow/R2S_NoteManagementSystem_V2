@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="main_bg">#009688</color>
+    <color name="gray">#f1f1f1</color>
+    <color name="grey">#DDD</color>
+    <color name="tool_bar_bg">#077E73</color>
+    <color name="status_bar_bg">#09635B</color>
+    <color name="button_edit_profile">#9B9393</color>
+    <color name="btn_floating_insert">#d90dd9</color>
+</resources>

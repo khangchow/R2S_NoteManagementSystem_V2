@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/llItemCate"
+    android:layout_margin="10dp">
+
+    <TextView
+        android:id="@+id/tvNameCategory"
+        android:textSize="20sp"
+        android:text="@string/name_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvCreatedDate"
+        android:textSize="20sp"
+        android:text="@string/created_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
