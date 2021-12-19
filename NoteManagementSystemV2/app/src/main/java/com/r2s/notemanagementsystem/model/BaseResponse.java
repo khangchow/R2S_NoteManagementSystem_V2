@@ -1,12 +1,14 @@
 package com.r2s.notemanagementsystem.model;
 
-public class BaseResponse<T> {
+import java.util.List;
+
+public class BaseResponse {
     private int status;
     private Info info;
-    private T data;
+    private List<List<String>> data;
     private int error;
 
-    public BaseResponse(int status, Info info, T data, int error) {
+    public BaseResponse(int status, Info info, List<List<String>> data, int error) {
         this.status = status;
         this.info = info;
         this.data = data;
@@ -29,19 +31,19 @@ public class BaseResponse<T> {
         this.info = info;
     }
 
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
     public int getError() {
         return error;
     }
 
     public void setError(int error) {
         this.error = error;
+    }
+
+    public List<List<String>> getData() {
+        return data;
+    }
+
+    public void setData(List<List<String>> data) {
+        this.data = data;
     }
 }
