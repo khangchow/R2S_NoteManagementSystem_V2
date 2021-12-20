@@ -1,60 +1,87 @@
 package com.r2s.notemanagementsystem.repository;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
-import com.google.gson.Gson;
-import com.r2s.notemanagementsystem.constant.Constants;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Priority;
 import com.r2s.notemanagementsystem.model.User;
-import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
+import com.r2s.notemanagementsystem.service.PriorityService;
+import com.r2s.notemanagementsystem.utils.ApiClient;
+import com.r2s.notemanagementsystem.utils.RefreshLiveData;
 
 import java.util.List;
-import java.util.concurrent.Executors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PriorityRepository {
-
-    private LiveData<List<Priority>> mPriorities;
-    private User mUser;
+    private PriorityService mService;
 
     /**
      * This method is used as constructor for PriorityRepository class
-     * @param context Context
      */
-    public PriorityRepository(Context context) {
-
+    public PriorityRepository() {
+        mService = ApiClient.getClient().create(PriorityService.class);
     }
 
     /**
-     * This method returns all priorities by current logged in user
-     * @return LiveData List
+     * This method loads all users
+     * @param tab String
+     * @param email String
+     * @return RefreshLiveData
      */
-    public LiveData<List<Priority>> getAllPrioritiesByUserId() {
-        return mPriorities;
+    public RefreshLiveData<BaseResponse> loadAllPriorities(String tab, String email) {
+        final RefreshLiveData<BaseResponse> liveData = new RefreshLiveData<>((callback -> {
+            mService.getAllPriorities(tab, email).enqueue(new Callback<BaseResponse>() {
+                @Override
+                public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                    callback.onDataLoaded(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<BaseResponse> call, Throwable t) {
+                    Log.e("PriorityRepository", t.getMessage());
+                }
+            });
+        }));
+        return liveData;
     }
 
     /**
-     * This method inserts a new priority
-     * @param priority Priority
+     * This method adds a new priority
+     * @param tab String
+     * @param email String
+     * @param name String
+     * @return Call
      */
-    public void insertPriority(Priority priority) {
-
-    }
-
-    /**
-     * This method updates a priority by id
-     * @param priority Priority
-     */
-    public void updatePriority(Priority priority) {
-
+    public Call<BaseResponse> addPriority(String tab, String email, String name) {
+        return mService.addPriority(tab, email, name);
     }
 
     /**
      * This method deletes a priority
-     * @param priority Priority
+     * @param tab String
+     * @param email String
+     * @param name String
+     * @return Call
      */
-    public void deletePriority(Priority priority) {
+    public Call<BaseResponse> deletePriority(String tab, String email, String name) {
+        return mService.deletePriority(tab, email, name);
+    }
 
+    /**
+     * This method updates a priority by name
+     * @param tab String
+     * @param email String
+     * @param name String
+     * @param nname String
+     * @return Call
+     */
+    public Call<BaseResponse> editPriority(String tab, String email, String name, String nname) {
+        return mService.editPriority(tab, email, name, nname);
     }
 }

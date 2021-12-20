@@ -47,12 +47,13 @@
     <string name="priority_form">Priority Form</string>
     <string name="status_form">Status Form</string>
 
-    <string name="priority_name">PriorityName</string>
-    <string name="priority_created_date">PriorityCreatedDate</string>
+    <string name="priority_email">Email</string>
+    <string name="priority_name">Name</string>
+    <string name="priority_created_date">Created Date</string>
     <string name="author_id">AuthorId</string>
 
-    <string name="status_created_date">StatusCreatedDate</string>
-    <string name="status_name">StatusName</string>
+    <string name="status_created_date">Created Date</string>
+    <string name="status_name">Name</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="user_name">Username</string>
     <string name="user_email">username@gmail.com</string>
@@ -77,4 +78,6 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="status_email">Email</string>
+    <string name="update">Update</string>
 </resources>

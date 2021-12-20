@@ -26,9 +26,9 @@ public class PriorityViewModel extends AndroidViewModel {
      */
     public PriorityViewModel(@NonNull Application application) {
         super(application);
-        this.mPriorityRepository = new PriorityRepository(application);
+        this.mPriorityRepository = new PriorityRepository();
 
-        this.mPriorities = mPriorityRepository.getAllPrioritiesByUserId();
+//        this.mPriorities = mPriorityRepository.loadAllPriorities();
     }
 
     /**
@@ -40,26 +40,34 @@ public class PriorityViewModel extends AndroidViewModel {
     }
 
     /**
-     * This method inserts a new priority
-     * @param priority Priority
+     * This method adds a new priority
+     * @param tab String
+     * @param email String
+     * @param name String
      */
-    public void insertPriority(Priority priority) {
-        mPriorityRepository.insertPriority(priority);
+    public void addPriority(String tab, String email, String name) {
+        mPriorityRepository.addPriority(tab, email, name);
     }
 
     /**
-     * This method updates a priority by id
-     * @param priority Priority
+     * This method updates a priority
+     * @param tab String
+     * @param email String
+     * @param name String
+     * @param nname String
      */
-    public void updatePriority(Priority priority) {
-        mPriorityRepository.updatePriority(priority);
+    public void editPriority(String tab, String email, String name, String nname) {
+        mPriorityRepository.editPriority(tab, email, name, nname);
     }
+
 
     /**
      * This method deletes a priority
-     * @param priority Priority
+     * @param tab String
+     * @param email String
+     * @param name String
      */
-    public void deletePriority(Priority priority) {
-        mPriorityRepository.deletePriority(priority);
+    public void deletePriority(String tab, String email, String name) {
+        mPriorityRepository.deletePriority(tab, email, name);
     }
 }

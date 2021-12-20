@@ -23,7 +23,7 @@ import com.r2s.notemanagementsystem.databinding.FragmentPriorityBinding;
 import com.r2s.notemanagementsystem.model.Priority;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
-import com.r2s.notemanagementsystem.ui.dialog.PriorityDialog;
+import com.r2s.notemanagementsystem.ui.dialog.AddPriorityDialog;
 import com.r2s.notemanagementsystem.viewmodel.PriorityViewModel;
 
 import java.util.ArrayList;
@@ -178,8 +178,8 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab_open_priority:
-                DialogFragment priorityDialog = new PriorityDialog();
-                priorityDialog.show(getChildFragmentManager(), PriorityDialog.TAG);
+                DialogFragment priorityDialog = new AddPriorityDialog();
+                priorityDialog.show(getChildFragmentManager(), AddPriorityDialog.TAG);
         }
     }
 

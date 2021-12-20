@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.adapter.PriorityAdapter;
 import com.r2s.notemanagementsystem.constant.Constants;
-import com.r2s.notemanagementsystem.databinding.DialogPriorityBinding;
+import com.r2s.notemanagementsystem.databinding.DialogAddPriorityBinding;
 import com.r2s.notemanagementsystem.model.Priority;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
@@ -26,11 +26,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PriorityDialog extends DialogFragment implements View.OnClickListener {
+public class AddPriorityDialog extends DialogFragment implements View.OnClickListener {
 
     public static final String TAG = "PriorityDialog";
     private PriorityViewModel mPriorityViewModel;
-    private DialogPriorityBinding binding;
+    private DialogAddPriorityBinding binding;
     private PriorityAdapter mPriorityAdapter;
     private List<Priority> mPriorities = new ArrayList<>();
     private Bundle bundle = new Bundle();
@@ -48,7 +48,7 @@ public class PriorityDialog extends DialogFragment implements View.OnClickListen
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding = DialogPriorityBinding.inflate(inflater, container, false);
+        binding = DialogAddPriorityBinding.inflate(inflater, container, false);
 
         setUserInfo();
 
@@ -103,36 +103,9 @@ public class PriorityDialog extends DialogFragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add_priority:
-                if (binding.btnAddPriority.getText().toString()
-                        .equalsIgnoreCase("add")) {
-                    final Priority priority = new Priority(0,
-                            binding.etPriority.getText().toString(),
-                            getCurrentLocalDateTimeStamp(), mUser.getUid());
-                    mPriorityViewModel.insertPriority(priority);
-
-                    Toast.makeText(getActivity(), "Create " +
+                Toast.makeText(getActivity(), "Create " +
                             binding.etPriority.getText().toString(), Toast.LENGTH_SHORT).show();
-                    dismiss();
-                }
-
-                if (binding.btnAddPriority.getText().toString()
-                        .equalsIgnoreCase("update")) {
-                    int updateId = bundle.getInt("priority_id");
-
-                    final Priority priority = new Priority(updateId,
-                            binding.etPriority.getText().toString(),
-                            getCurrentLocalDateTimeStamp(), mUser.getUid());
-
-                    mPriorityViewModel.updatePriority(priority);
-
-                    Toast.makeText(getActivity(), "Update to " +
-                            binding.etPriority.getText().toString(), Toast.LENGTH_SHORT).show();
-                    dismiss();
-                }
-                break;
-            case R.id.btn_close_priority:
                 dismiss();
-                break;
         }
     }
 
