@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.adapter.NoteAdapter;
 import com.r2s.notemanagementsystem.databinding.DialogFragmentInsertNoteBinding;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Note;
 import com.r2s.notemanagementsystem.viewmodel.CategoryViewModel;
 import com.r2s.notemanagementsystem.viewmodel.NoteViewModel;
@@ -43,7 +44,7 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
 
     private int userId = 1;
 
-    List<String> listStringCate = new ArrayList<>();
+    List<BaseResponse> listStringCate = new ArrayList<>();
     List<String> listStringPri = new ArrayList<>();
     List<String> listStringSta = new ArrayList<>();
 
@@ -184,14 +185,14 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
     public void initView(View view) {
 
         //auto complete category
-        mCateViewModel.loadAllCate().observe(getViewLifecycleOwner(), categories -> {
-            for (int i = 0; i < categories.size(); i++) {
-                listStringCate.add(categories.get(i).getNameCate());
-            }
-        });
-
-        adapterItemCategory = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringCate);
-        binding.autoCompleteCategory.setAdapter(adapterItemCategory);
+//        mCateViewModel.getCateById().observe(getViewLifecycleOwner(), categories -> {
+//            for (int i = 0; i < categories.size(); i++) {
+//                listStringCate.add(categories.get(i).getCategory().getNameCate());
+//            }
+//        });
+//
+//        adapterItemCategory = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringCate);
+//        binding.autoCompleteCategory.setAdapter(adapterItemCategory);
 
         // auto complete for priority
         mPriorityViewModel.getAllPrioritiesByUserId().observe(getViewLifecycleOwner(), priorities -> {

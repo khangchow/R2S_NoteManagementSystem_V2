@@ -18,6 +18,14 @@ public class Category {
      * Constructor
      * @param nameCate
      */
+    public Category(String nameCate) {
+        this.nameCate = nameCate;
+    }
+
+    /**
+     * Constructor
+     * @param nameCate
+     */
     public Category(int cateId, String nameCate, String createdDate) {
         this.cateId = cateId;
         this.nameCate = nameCate;

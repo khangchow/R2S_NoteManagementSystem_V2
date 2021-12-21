@@ -1,60 +1,93 @@
 package com.r2s.notemanagementsystem.repository;
 
-import android.app.Application;
+import android.util.Log;
 
-import androidx.lifecycle.LiveData;
-
-import com.google.gson.Gson;
-import com.r2s.notemanagementsystem.constant.Constants;
+import com.r2s.notemanagementsystem.api.APIClient;
+import com.r2s.notemanagementsystem.api.CategoryService;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Category;
-import com.r2s.notemanagementsystem.model.User;
-import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
+import com.r2s.notemanagementsystem.utils.RefreshLiveData;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CategoryRepository {
-    private LiveData<List<Category>> mCates;
-    private User mUser;
+    private CategoryService mCateService;
 
-    /**
-     * This method is used as constructor for CategoryRepository class
-     * @param application
-     */
-    public CategoryRepository(Application application) {
-
+    public static CategoryService getService() {
+        return APIClient.getCate().create(CategoryService.class);
     }
 
     /**
-     * his method returns all category
-     * @return
+     * This method is used as constructor for CategoryRepository class
      */
-    public LiveData<List<Category>> getAllCate() {
-        return mCates;
+    public CategoryRepository() {
+        mCateService = APIClient.getCate().create(CategoryService.class);
+    }
+
+    /**
+     * this method returns all category
+     * @return liveData
+     */
+    public RefreshLiveData<List<BaseResponse>> getAllCate() {
+        final RefreshLiveData<List<BaseResponse>> liveData = new RefreshLiveData<>(callback -> {
+           mCateService.getAllCate("cate", "email").enqueue(new Callback<BaseResponse>() {
+               @Override
+               public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                   callback.onDataLoaded((List<BaseResponse>) response.body());
+               }
+
+               @Override
+               public void onFailure(Call<BaseResponse> call, Throwable t) {
+                   Log.e("CateRepo", t.getMessage());
+               }
+           });
+        });
+
+        return liveData;
+    }
+
+    /**
+     * Load category by id
+     * @param id
+     * @return category by id
+     */
+    public Call<BaseResponse> loadCateById(int id) {
+        Call<BaseResponse> call = mCateService.getCateByID("category", "email", id);
+
+        return call;
     }
 
     /**
      * This method inserts a new category
-     * @param category
+     * @param nameCategory
+     * @return new Cate
      */
-    public void insert (Category category) {
-
+    public Call<BaseResponse> postCate (String nameCategory) {
+        return mCateService.addCate("Category", "a", nameCategory);
     }
 
     /**
      * This method update category
-     * @param category
+     * @param nameCate
+     * @param newCate
+     * @return cate's information updated
      */
-    public void update (Category category) {
-
+    public Call<BaseResponse> updateCate (String nameCate, String newCate) {
+        return mCateService.updateCate("category", "email", nameCate, newCate);
     }
 
     /**
      * This method delete category
-     * @param category
+     * @param nameCategory
+     * @return void
      */
-    public void delete (Category category) {
-
+    public Call<BaseResponse> deleteCate (String nameCategory) {
+        return mCateService.deleteCate("category", "email", nameCategory);
     }
 
 }

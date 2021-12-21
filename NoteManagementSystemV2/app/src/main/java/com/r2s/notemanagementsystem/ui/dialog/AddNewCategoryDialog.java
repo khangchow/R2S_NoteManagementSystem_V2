@@ -1,6 +1,8 @@
 package com.r2s.notemanagementsystem.ui.dialog;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,57 +15,125 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
+import com.r2s.notemanagementsystem.adapter.CategoryAdapter;
+import com.r2s.notemanagementsystem.api.CategoryService;
+import com.r2s.notemanagementsystem.constant.CategoryConstant;
+import com.r2s.notemanagementsystem.constant.Constants;
+import com.r2s.notemanagementsystem.databinding.DialogAddNewCategoryBinding;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Category;
+import com.r2s.notemanagementsystem.model.Status;
+import com.r2s.notemanagementsystem.model.User;
+import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.viewmodel.CategoryViewModel;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AddNewCategoryDialog extends DialogFragment implements View.OnClickListener {
-    private TextInputEditText etNewCate;
-    private AppCompatButton btnAdd, btnCancel;
+    public static final String TAG = "CateDialog";
     private CategoryViewModel mCateViewModel;
-
-    public static AddNewCategoryDialog newInstance() {
-        return new AddNewCategoryDialog();
-    }
+    private DialogAddNewCategoryBinding binding;
+    private final List<BaseResponse> mCates = new ArrayList<>();
+    private Bundle bundle = new Bundle();
+    CategoryAdapter mCateAdapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_add_new_category, container, false);
+        binding = DialogAddNewCategoryBinding.inflate(inflater, container, false);
 
+        setUserInfo();
 
-        //Reference
-        etNewCate = view.findViewById(R.id.etNewCate);
-        btnAdd = view.findViewById(R.id.btnAdd);
-        btnCancel = view.findViewById(R.id.btnCancel);
+        return binding.getRoot();
+    }
 
-        // Add event
-        btnAdd.setOnClickListener(this);
-        btnCancel.setOnClickListener(this);
-
-        // Setting modal dialog
-        setCancelable(false);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mCateViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-        return view;
+        mCateAdapter = new CategoryAdapter(mCates, this.getContext());
+
+        setViewModel();
+        setOnClick();
+
+        bundle = getArguments();
+        if (bundle != null) {
+            binding.btnAdd.setText("Update");
+            binding.etNewCate.setText(bundle.getString("cate_name"));
+        }
+    }
+
+    private void setOnClick() {
+        binding.btnAdd.setOnClickListener(this);
+        binding.btnCancel.setOnClickListener(this);
+    }
+
+    private void setViewModel() {
+        mCateViewModel.getCateById().observe(getViewLifecycleOwner(), categories -> {
+                    mCateAdapter.setCateAdapter(categories);
+        });
+    }
+
+    private void setUserInfo() {
+        User mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnAdd:
-                String currentTime = getCurrentTime();
-                Category category = new Category(0, etNewCate.getText().toString(), currentTime);
-                if (etNewCate.getText().toString().equals("")) {
-                    Toast.makeText(getContext(), "Vui lòng nhập tên", Toast.LENGTH_SHORT).show();
-                } else {
-                    mCateViewModel.insertCate(category);
+                if (binding.btnAdd.getText().toString()
+                        .equalsIgnoreCase("add")) {
+
+                    mCateViewModel.insertCate(binding.etNewCate.getText().toString())
+                            .enqueue(new Callback<BaseResponse>() {
+                        @Override
+                        public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                            if (response.body().getStatus() == 1) {
+                                Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<BaseResponse> call, Throwable t) {
+                            Toast.makeText(getContext(), "Failure!!!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    Toast.makeText(getActivity(), "Create " +
+                            binding.etNewCate.getText().toString(), Toast.LENGTH_SHORT).show();
+                    dismiss();
                 }
+
+//                if (binding.btnAdd.getText().toString()
+//                        .equalsIgnoreCase("update")) {
+//                    int updateId = bundle.getInt("status_id");
+//
+//                    Log.d("RRR", String.valueOf(updateId));
+//
+//                    final Category category = new Category(updateId,
+//                            binding.etNewCate.getText().toString(),
+//                            getCurrentTime());
+//
+////                    mCateViewModel.updateCate(updateId, category);
+//
+//                    Toast.makeText(getActivity(), "Update to " +
+//                            binding.etNewCate.getText().toString(), Toast.LENGTH_SHORT).show();
+//                    dismiss();
+//                }
+                break;
             case R.id.btnCancel:
                 dismiss();
                 break;

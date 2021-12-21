@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/llItemCate"
-    android:layout_margin="10dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cvCate"
+    app:cardCornerRadius="20dp">
 
-    <TextView
-        android:id="@+id/tvNameCategory"
-        android:textSize="20sp"
-        android:text="@string/name_category"
+    <LinearLayout
+        android:padding="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvCreatedDate"
-        android:textSize="20sp"
-        android:text="@string/created_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</LinearLayout>
+        <TextView
+            android:id="@+id/tvNameCategory"
+            android:textSize="20sp"
+            android:text="@string/name_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"/>
+
+        <TextView
+            android:id="@+id/tvCreatedDate"
+            android:textSize="20sp"
+            android:text="@string/created_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

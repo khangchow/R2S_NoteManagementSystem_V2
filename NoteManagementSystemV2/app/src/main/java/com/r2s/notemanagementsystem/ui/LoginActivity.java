@@ -84,10 +84,16 @@ public class LoginActivity extends AppCompatActivity {
         binding.activityLoginBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User user = new User();
-                user.setEmail(binding.activityLoginEtEmail.getText().toString().trim());
-                user.setPassword(binding.activityLoginEtPassword.getText().toString().trim());
+//                User user = new User();
+//                user.setEmail(binding.activityLoginEtEmail.getText().toString().trim());
+//                user.setPassword(binding.activityLoginEtPassword.getText().toString().trim());
+                User user = new User(binding.activityLoginEtEmail.getText().toString(), binding.activityLoginEtEmail.getText().toString());
 
+                AppPrefsUtils.putString(UserConstant.KEY_USER_DATA, new Gson().toJson(user));
+
+                userViewModel.insertUser(user);
+
+                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 //                userViewModel.login(user.getEmail(), user.getPassword()).observe(LoginActivity.this, new Observer<User>() {
 //                    @Override
 //                    public void onChanged(User mUser) {
