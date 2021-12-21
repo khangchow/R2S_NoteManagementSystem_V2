@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
         AppPrefsUtils.createAppPrefs(this);
 
+        showMainActivity();
         if(isRememberUser(AppPrefsUtils.getString(UserConstant.KEY_REMEMBER_USER))) {
             showMainActivity();
         }else {

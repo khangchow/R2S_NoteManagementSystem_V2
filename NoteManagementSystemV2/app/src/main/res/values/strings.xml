@@ -56,7 +56,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="user_name">Username</string>
     <string name="user_email">username@gmail.com</string>
-    <string name="edt_hint_enter_note_name">enter note name</string>
+    <string name="edt_hint_enter_note_name">Enter note name</string>
     <string name="hint_auto_complete_category">Select category</string>
     <string name="hint_auto_complete_priority">Select priority</string>
     <string name="hint_auto_complete_status">Select status</string>
