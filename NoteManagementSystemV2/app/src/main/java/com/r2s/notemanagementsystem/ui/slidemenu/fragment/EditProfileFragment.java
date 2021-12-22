@@ -19,9 +19,12 @@ import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.constant.Constants;
 import com.r2s.notemanagementsystem.databinding.FragmentEditProfileBinding;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.viewmodel.UserViewModel;
+
+import retrofit2.Call;
 
 public class EditProfileFragment extends Fragment implements View.OnClickListener {
 
@@ -87,6 +90,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
         //Doi profile tren database
 //        mUserViewModel.updateUser(mUser);
+//        Call<BaseResponse> call = mUserViewModel();
 
         //Doi profile cua thong tin dang nhap
         AppPrefsUtils.putString(Constants.KEY_USER_DATA, new Gson().toJson(mUser));

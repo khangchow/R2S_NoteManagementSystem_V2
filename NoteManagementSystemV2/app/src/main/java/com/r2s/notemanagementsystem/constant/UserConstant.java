@@ -5,4 +5,7 @@ public class UserConstant {
     public static final String KEY_REMEMBER_USER = "isRememberUser";
     public static final String KEY_GMAIL = "gmail";
     public static final String KEY_PASS = "pass";
+    public static final String GET_USER = "get";
+    public static final String UPDATE_USER = "update";
+
 }

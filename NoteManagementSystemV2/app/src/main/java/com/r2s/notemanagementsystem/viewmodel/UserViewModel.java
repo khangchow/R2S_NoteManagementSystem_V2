@@ -48,4 +48,7 @@ public class UserViewModel extends AndroidViewModel {
 //    public LiveData<User> getUser() {
 //        return mUser;
 //    }
+    public  void updateUser(String tab, String email, String firstname, String lastname){
+        mUserRepo.editUser(tab, email, firstname, lastname);
+    }
 }

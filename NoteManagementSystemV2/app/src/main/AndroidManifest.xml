@@ -11,9 +11,11 @@
         android:theme="@style/Theme.NoteManagementSystem">
         <activity
             android:name=".ui.slidemenu.HomeActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_home"
-            android:theme="@style/Theme.NoteManagementSystem.NoActionBar" />
+            android:theme="@style/Theme.NoteManagementSystem.NoActionBar" >
+
+        </activity>
         <activity
             android:name=".ui.LoginActivity"
             android:exported="true">
