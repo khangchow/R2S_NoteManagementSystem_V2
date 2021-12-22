@@ -1,4 +1,4 @@
-package com.r2s.notemanagementsystem.services;
+package com.r2s.notemanagementsystem.service;
 
 import com.r2s.notemanagementsystem.constant.Constants;
 import com.r2s.notemanagementsystem.model.BaseResponse;
