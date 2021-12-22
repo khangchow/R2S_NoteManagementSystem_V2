@@ -63,6 +63,9 @@ public class PriorityAdapter extends RecyclerView.Adapter<PriorityAdapter.Priori
      */
     @Override
     public int getItemCount() {
+        if (mPriorities == null) {
+            return 0;
+        }
         return mPriorities.size();
     }
 

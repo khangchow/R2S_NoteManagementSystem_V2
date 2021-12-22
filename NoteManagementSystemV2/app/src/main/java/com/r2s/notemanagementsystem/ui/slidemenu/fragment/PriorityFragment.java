@@ -1,10 +1,12 @@
 package com.r2s.notemanagementsystem.ui.slidemenu.fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -15,15 +17,18 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.adapter.PriorityAdapter;
 import com.r2s.notemanagementsystem.constant.Constants;
 import com.r2s.notemanagementsystem.databinding.FragmentPriorityBinding;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Priority;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.ui.dialog.EditPriorityDialog;
@@ -33,6 +38,11 @@ import com.r2s.notemanagementsystem.viewmodel.PriorityViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,6 +90,7 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
 
     /**
      * This method is used for non-graphical initialisations
+     *
      * @param savedInstanceState Bundle
      */
     @Override
@@ -94,8 +105,9 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
 
     /**
      * This method is used for graphical initialisations
-     * @param inflater LayoutInflater
-     * @param container ViewGroup
+     *
+     * @param inflater           LayoutInflater
+     * @param container          ViewGroup
      * @param savedInstanceState Bundle
      * @return View
      */
@@ -105,26 +117,25 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         binding = FragmentPriorityBinding.inflate(getLayoutInflater());
 
-        return binding.getRoot();
-    }
+        binding.rvPriority.setHasFixedSize(true);
+        binding.rvPriority.setLayoutManager(new LinearLayoutManager(getContext()));
 
-    /**
-     * This method is called after the onCreateView() method
-     * @param view View
-     * @param savedInstanceState Bundle
-     */
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        binding.fabOpenPriority.setOnClickListener(this);
+
+        mPriorityAdapter = new PriorityAdapter(mPriorities, getContext());
+        binding.rvPriority.setAdapter(mPriorityAdapter);
 
         mPriorityViewModel = new ViewModelProvider(this).get(PriorityViewModel.class);
+        mPriorityViewModel.getAllPriorities().observe(getViewLifecycleOwner(), priorities -> {
+            mPriorityAdapter.setPriorities(priorities);
+        });
 
-        setUpRecyclerView();
-        setOnClicks();
-
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
 
@@ -139,26 +150,82 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
                     // Swipe right to delete
                     case ItemTouchHelper.RIGHT:
                         int position = viewHolder.getAdapterPosition();
-                        List<Priority> priorities = mPriorityAdapter.getPriorities();
-                        mPriorityViewModel.deletePriority(priorities.get(position).getName());
-                        retrievePriorities();
+                        mPriorities = mPriorityAdapter.getPriorities();
+                        String priorityName = mPriorities.get(position).getName();
+
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle("Title")
+                                .setMessage("Do you really want to delete?")
+                                .setPositiveButton("Yes",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                mPriorityViewModel.deletePriority(priorityName).enqueue(
+                                                        new Callback<BaseResponse>() {
+                                                            @Override
+                                                            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                                                                assert response.body() != null;
+                                                                if (response.body().getStatus() == 1) {
+                                                                    Toast.makeText(getContext(), "Deleted",
+                                                                            Toast.LENGTH_SHORT).show();
+                                                                    mPriorityViewModel.refreshData();
+                                                                } else if (response.body().getStatus() == -1) {
+                                                                    if (response.body().getError() == 2) {
+                                                                        Toast.makeText(getContext(), "Can't delete, because it's in use",
+                                                                                Toast.LENGTH_SHORT).show();
+                                                                        mPriorityViewModel.refreshData();
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<BaseResponse> call, Throwable t) {
+
+                                                            }
+                                                        }
+                                                );
+                                            }
+                                        })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        mPriorityViewModel.refreshData();
+                                    }
+                                }).create().show();
+                        break;
 
                     // Swipe left to update
                     case ItemTouchHelper.LEFT:
-                        position = viewHolder.getAdapterPosition();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("priority_name", mPriorities.get(position).getName());
+                        try {
+                            position = viewHolder.getAdapterPosition();
+                            mPriorities = mPriorityAdapter.getPriorities();
+                            priorityName = mPriorities.get(position).getName();
+                            String priorityCreatedDate = mPriorities.get(position).getCreatedDate();
+                            int priorityId = mPriorities.get(position).getId();
 
-                        final EditPriorityDialog editPriorityDialog = new EditPriorityDialog();
-                        editPriorityDialog.setArguments(bundle);
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("priority_id", priorityId);
+                            bundle.putString("priority_name", priorityName);
+                            bundle.putString("priority_created_date", priorityCreatedDate);
 
-                        FragmentManager fm = ((AppCompatActivity) mContext).getSupportFragmentManager();
-                        FragmentTransaction ft = fm.beginTransaction();
+                            final EditPriorityDialog editPriorityDialog = EditPriorityDialog.newInstance();
+                            editPriorityDialog.setArguments(bundle);
 
-                        editPriorityDialog.show(fm, "EditPriorityDialog");
+                            FragmentManager fm = ((AppCompatActivity) requireContext())
+                                    .getSupportFragmentManager();
+                            FragmentTransaction ft = fm.beginTransaction();
+
+                            editPriorityDialog.show(ft, "EditPriorityDialog");
+                        } catch(Exception e) {
+                            Log.e("Error", e.getMessage());
+                        }
+                        mPriorityViewModel.refreshData();
+                        break;
                 }
             }
         }).attachToRecyclerView(binding.rvPriority);
+
+        return binding.getRoot();
     }
 
     /**
@@ -167,7 +234,7 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        retrievePriorities();
+        mPriorityViewModel.refreshData();
     }
 
     /**
@@ -180,48 +247,17 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * This method sets on-click listener for views
-     */
-    private void setOnClicks() {
-        binding.fabOpenPriority.setOnClickListener(this);
-    }
-
-    /**
-     * This method initializes the Adapter and attach it to the RecyclerView
-     */
-    private void setUpRecyclerView() {
-        mPriorityAdapter = new PriorityAdapter(mPriorities, this.getContext());
-
-        binding.rvPriority.setAdapter(mPriorityAdapter);
-
-        binding.rvPriority.setLayoutManager(new LinearLayoutManager(getContext()));
-    }
-
-    /**
      * This method sets on-click actions for views
+     *
      * @param view View
      */
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab_open_priority:
-                DialogFragment priorityDialog = new AddPriorityDialog();
+                DialogFragment priorityDialog = AddPriorityDialog.newInstance();
                 priorityDialog.show(getChildFragmentManager(), AddPriorityDialog.TAG);
         }
-    }
-
-    /**
-     * This method is used to update the RecyclerView
-     */
-    public void retrievePriorities() {
-        requireActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mPriorityViewModel.getAllPriorities().observe(getViewLifecycleOwner(), priorities -> {
-                    mPriorityAdapter.setPriorities(priorities);
-                });
-            }
-        });
     }
 
     /**

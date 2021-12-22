@@ -6,12 +6,16 @@
         <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/activity_edit_priority_dialog.xml" value="0.3489583333333333" />
         <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/activity_register.xml" value="0.15353260869565216" />
         <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_add_new_category.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_add_priority.xml" value="0.18820224719101122" />
         <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_edit_category.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_edit_priority.xml" value="0.1" />
         <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_fragment_insert_note.xml" value="0.3489583333333333" />
         <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_priority.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/fragment_category.xml" value="0.1697061803444782" />
         <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/fragment_edit_profile.xml" value="0.3489583333333333" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/fragment_priority.xml" value="0.3489583333333333" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/row_priority.xml" value="0.4180064308681672" />
+        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/fragment_priority.xml" value="0.17771883289124668" />
+        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/row_category.xml" value="0.1697061803444782" />
+        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/row_priority.xml" value="0.15473441108545036" />
         <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/row_status.xml" value="0.3489583333333333" />
       </map>
     </option>

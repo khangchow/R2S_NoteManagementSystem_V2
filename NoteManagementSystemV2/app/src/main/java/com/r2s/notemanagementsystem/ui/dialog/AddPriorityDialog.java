@@ -15,12 +15,10 @@ import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.adapter.PriorityAdapter;
 import com.r2s.notemanagementsystem.constant.Constants;
-import com.r2s.notemanagementsystem.constant.PriorityConstant;
 import com.r2s.notemanagementsystem.databinding.DialogAddPriorityBinding;
 import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Priority;
 import com.r2s.notemanagementsystem.model.User;
-import com.r2s.notemanagementsystem.service.PriorityService;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.viewmodel.PriorityViewModel;
 
@@ -28,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,6 +40,10 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
     private PriorityAdapter mPriorityAdapter;
     private List<Priority> mPriorities = new ArrayList<>();
     private User mUser;
+
+    public static AddPriorityDialog newInstance() {
+        return new AddPriorityDialog();
+    }
 
     /**
      * This method is called when a view is being created
@@ -89,6 +92,7 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
      * This method sets up the ViewModel
      */
     private void setUpViewModel() {
+        mPriorityViewModel = new ViewModelProvider(this).get(PriorityViewModel.class);
         mPriorityViewModel.getAllPriorities()
                 .observe(getViewLifecycleOwner(), priorities -> {
             mPriorityAdapter.setPriorities(priorities);
@@ -103,43 +107,47 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add_priority:
-                final Priority priority = new Priority(binding.etPriority.getText().toString(),
-                    getCurrentTime(), mUser.getEmail());
+                if(isEmpty()) {
+                    final String name = Objects.requireNonNull(binding.etPriority.getText())
+                            .toString();
 
-                mPriorityViewModel.addPriority(priority).enqueue(new Callback<BaseResponse>() {
-                    @Override
-                    public void onResponse(Call<BaseResponse> call,
-                                           Response<BaseResponse> response) {
-                        if (response.isSuccessful()) {
-                            BaseResponse baseResponse = response.body();
-                            assert baseResponse != null;
-                            if (baseResponse.getStatus() == 1) {
-                                Toast.makeText(getActivity(), "Đăng ký thành công",
-                                        Toast.LENGTH_SHORT).show();
-                            } else if (baseResponse.getStatus() == -1
-                                    && baseResponse.getError() == 2) {
-                                Toast.makeText(getActivity(), "Trùng tên",
-                                        Toast.LENGTH_SHORT).show();
+                    mPriorityViewModel.addPriority(name).enqueue(new Callback<BaseResponse>() {
+                        @Override
+                        public void onResponse(Call<BaseResponse> call,
+                                               Response<BaseResponse> response) {
+                            if (response.isSuccessful()) {
+                                BaseResponse baseResponse = response.body();
+                                assert baseResponse != null;
+                                if (baseResponse.getStatus() == 1) {
+                                    Toast.makeText(requireActivity(), "Create Successful!",
+                                            Toast.LENGTH_SHORT).show();
+                                    mPriorityViewModel.refreshData();
+                                } else if (baseResponse.getStatus() == -1)
+                                        if(baseResponse.getError() == 2) {
+                                    Toast.makeText(requireActivity(),
+                                            "This name is already taken",
+                                            Toast.LENGTH_SHORT).show();
+                                    mPriorityViewModel.refreshData();
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<BaseResponse> call, Throwable t) {
-                        Toast.makeText(getActivity(), "Không thành công",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<BaseResponse> call, Throwable t) {
+                            Toast.makeText(getActivity(), "Create Failed!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dismiss();
+                } else {
+                    binding.etPriority.setError("This information can't be empty!");
+                    return;
+                }
+                break;
+            case R.id.btn_close_priority:
                 dismiss();
+                break;
         }
-    }
-
-    /**
-     * This method returns the current date with custom format
-     * @return String
-     */
-    public String getCurrentTime() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     /**
@@ -156,5 +164,12 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
      */
     private void setUserInfo() {
         mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
+    }
+
+    private Boolean isEmpty() {
+        if (Objects.requireNonNull(binding.etPriority.getText()).toString().trim().length() <= 0) {
+            return false;
+        }
+        return true;
     }
 }

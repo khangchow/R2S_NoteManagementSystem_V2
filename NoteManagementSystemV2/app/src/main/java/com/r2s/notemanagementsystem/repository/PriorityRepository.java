@@ -2,6 +2,9 @@ package com.r2s.notemanagementsystem.repository;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+
 import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.constant.Constants;
 import com.r2s.notemanagementsystem.constant.PriorityConstant;
@@ -12,6 +15,9 @@ import com.r2s.notemanagementsystem.service.PriorityService;
 import com.r2s.notemanagementsystem.utils.ApiClient;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.utils.RefreshLiveData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,34 +37,39 @@ public class PriorityRepository {
 
     /**
      * This method loads all users
-     * @param tab String
-     * @param email String
      * @return RefreshLiveData
      */
-    public RefreshLiveData<BaseResponse> loadAllPriorities(String tab, String email) {
-        final RefreshLiveData<BaseResponse> liveData = new RefreshLiveData<>((callback -> {
-            mService.getAllPriorities(tab, email).enqueue(new Callback<BaseResponse>() {
+    public RefreshLiveData<List<Priority>> loadAllPriorities() {
+        final RefreshLiveData<List<Priority>> liveData = new RefreshLiveData<>((callback) -> {
+            mService.getAllPriorities(PriorityConstant.PRIORITY_TAB,
+                    mUser.getEmail()).enqueue(new Callback<BaseResponse>() {
                 @Override
-                public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                    callback.onDataLoaded(response.body());
+                public void onResponse(@NonNull Call<BaseResponse> call,
+                                       @NonNull Response<BaseResponse> response) {
+                    List<Priority> mPriorites = new ArrayList<>();
+                    assert response.body() != null;
+                    for (List<String> priority : response.body().getData()) {
+                        mPriorites.add(new Priority(priority.get(0), priority.get(1), priority.get(2)));
+                    }
+                    callback.onDataLoaded(mPriorites);
                 }
 
                 @Override
                 public void onFailure(Call<BaseResponse> call, Throwable t) {
-                    Log.e("PriorityRepository", t.getMessage());
+                    Log.e("PrioriryRepository", t.getMessage());
                 }
             });
-        }));
+        });
         return liveData;
     }
 
     /**
      * This method adds a new priority
-     * @param priority Priority
+     * @param name String
      * @return Call
      */
-    public Call<BaseResponse> addPriority(Priority priority) {
-        return mService.addPriority(PriorityConstant.PRIORITY_TAB, mUser.getEmail(), priority);
+    public Call<BaseResponse> addPriority(String name) {
+        return mService.addPriority(PriorityConstant.PRIORITY_TAB, mUser.getEmail(), name);
     }
 
     /**

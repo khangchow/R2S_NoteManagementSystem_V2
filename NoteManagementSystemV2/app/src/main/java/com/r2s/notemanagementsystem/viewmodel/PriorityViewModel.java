@@ -13,6 +13,7 @@ import com.r2s.notemanagementsystem.model.Priority;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.repository.PriorityRepository;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
+import com.r2s.notemanagementsystem.utils.RefreshLiveData;
 
 import java.util.List;
 
@@ -20,8 +21,8 @@ import retrofit2.Call;
 
 public class PriorityViewModel extends AndroidViewModel {
 
-    private PriorityRepository mPriorityRepository;
-    private LiveData<List<Priority>> mPriorities;
+    private final PriorityRepository mPriorityRepository;
+    private final RefreshLiveData<List<Priority>> mPriorities;
 
     /**
      * Constructor with 1 parameter
@@ -30,8 +31,11 @@ public class PriorityViewModel extends AndroidViewModel {
     public PriorityViewModel(@NonNull Application application) {
         super(application);
         this.mPriorityRepository = new PriorityRepository();
+        this.mPriorities = mPriorityRepository.loadAllPriorities();
+    }
 
-//        this.mPriorities = mPriorityRepository.loadAllPriorities();
+    public void refreshData() {
+        mPriorities.refresh();
     }
 
     /**
@@ -44,10 +48,10 @@ public class PriorityViewModel extends AndroidViewModel {
 
     /**
      * This method adds a new priority
-     * @param priority Priority
+     * @param name String
      */
-    public Call<BaseResponse> addPriority(Priority priority) {
-        return mPriorityRepository.addPriority(priority);
+    public Call<BaseResponse> addPriority(String name) {
+        return mPriorityRepository.addPriority(name);
     }
 
     /**
@@ -64,7 +68,7 @@ public class PriorityViewModel extends AndroidViewModel {
      * This method deletes a priority
      * @param name String
      */
-    public void deletePriority(String name) {
-        mPriorityRepository.deletePriority(name);
+    public Call<BaseResponse> deletePriority(String name) {
+        return mPriorityRepository.deletePriority(name);
     }
 }

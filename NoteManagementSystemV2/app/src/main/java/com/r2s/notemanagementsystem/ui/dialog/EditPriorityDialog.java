@@ -6,19 +6,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.adapter.PriorityAdapter;
+import com.r2s.notemanagementsystem.constant.Constants;
 import com.r2s.notemanagementsystem.databinding.DialogEditPriorityBinding;
 import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Priority;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.service.PriorityService;
+import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.viewmodel.PriorityViewModel;
 
 import java.time.LocalDateTime;
@@ -37,20 +41,34 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
     private PriorityAdapter mAdapter;
     private List<Priority> mPriorities = new ArrayList<>();
     private Bundle bundle;
-    private PriorityService mPriorityService;
     private User mUser;
 
     public static EditPriorityDialog newInstance() {
         return new EditPriorityDialog();
     }
 
+    /**
+     * This method is called when a view is being created
+     * @param inflater LayoutInflater
+     * @param container ViewGroup
+     * @param savedInstanceState Bundle
+     * @return View
+     */
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         binding = DialogEditPriorityBinding.inflate(inflater, container, false);
-        return super.onCreateView(inflater, container, savedInstanceState);
+        setUserInfo();
+        return binding.getRoot();
     }
 
+    /**
+     * This method is called after the onCreateView() method
+     * @param view View
+     * @param savedInstanceState Bundle
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -84,14 +102,14 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
                     @Override
                     public void onResponse(Call<BaseResponse> call,
                                            Response<BaseResponse> response) {
-                        if (response.isSuccessful()) {
+                        if (response.isSuccessful() && isAdded()) {
                             BaseResponse baseResponse = response.body();
                             assert baseResponse != null;
                             if (baseResponse.getStatus() == 1) {
-                                Toast.makeText(getActivity(), "Sửa thành công",
+                                Toast.makeText(requireActivity(), "Update Successful!",
                                         Toast.LENGTH_SHORT).show();
                             } else if (baseResponse.getStatus() == -1) {
-                                Toast.makeText(getActivity(), "Thất bại",
+                                Toast.makeText(requireActivity(), "Update Failed!",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -99,7 +117,7 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
 
                     @Override
                     public void onFailure(Call<BaseResponse> call, Throwable t) {
-                        Toast.makeText(getActivity(), "Không thành công",
+                        Toast.makeText(getActivity(), "Update Failed!",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -112,11 +130,10 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
     }
 
     /**
-     * This method returns the current date with custom format
-     * @return String
+     * This method get the user data from the SharedPreference
      */
-    public String getCurrentLocalDateTimeStamp() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    private void setUserInfo() {
+        mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
     }
 
     /**

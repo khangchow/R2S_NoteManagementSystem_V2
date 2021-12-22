@@ -60,4 +60,20 @@ public class BaseResponse {
     public void setError(int error) {
         this.error = error;
     }
+
+    /**
+     * Get list of category's data
+     * @return List of category's data
+     */
+    public List<List<String>> getData() {
+        return data;
+    }
+
+    /**
+     * set list of category's data
+     * @param data
+     */
+    public void setData(List<List<String>> data) {
+        this.data = data;
+    }
 }
