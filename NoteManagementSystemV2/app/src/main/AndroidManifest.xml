@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.r2s.notemanagementsystem">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,12 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NoteManagementSystem">
         <activity
+            android:name=".DemoLoggedActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.slidemenu.HomeActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_home"
-            android:theme="@style/Theme.NoteManagementSystem.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.NoteManagementSystem.NoActionBar" >
 
+        </activity>
         <activity
             android:name=".ui.LoginActivity"
             android:exported="true">
@@ -25,9 +30,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.RegisterActivity"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
+
 </manifest>
