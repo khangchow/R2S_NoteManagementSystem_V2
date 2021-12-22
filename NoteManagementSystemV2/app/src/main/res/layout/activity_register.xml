@@ -44,7 +44,9 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_register_et_email" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_et_email_wp"
+        android:theme="@style/pointer_color"
+        app:passwordToggleEnabled="true">
 
     <EditText
         android:id="@+id/activity_register_et_password_confirm"
@@ -58,7 +60,19 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_register_et_password" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_et_password_wp"
+        android:theme="@style/pointer_color"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/activity_register_et_password_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:hint="@string/et_pwd_confirm_label"
+            android:inputType="textPassword"
+            android:paddingStart="0dp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/activity_register_btn_register"

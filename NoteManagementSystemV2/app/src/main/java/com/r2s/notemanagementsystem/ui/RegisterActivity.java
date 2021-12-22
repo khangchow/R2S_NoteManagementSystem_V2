@@ -15,8 +15,13 @@ import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.constant.Constants;
 import com.r2s.notemanagementsystem.constant.UserConstant;
 import com.r2s.notemanagementsystem.databinding.ActivityRegisterBinding;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.viewmodel.UserViewModel;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding binding;
@@ -87,36 +92,32 @@ public class RegisterActivity extends AppCompatActivity {
                 user.setPassword(binding.activityRegisterEtPassword.getText().toString().trim());
 
                 if(validateInput(user)){
-//                    userViewModel.count(user.getEmail())
-//                            .observe(RegisterActivity.this, new Observer<Integer>() {
-//                        @Override
-//                        public void onChanged(@Nullable Integer integer) {
-//                            if(integer<1){
-//                                userViewModel.insertUser(user);
-//
-//                                isExist = false;
-//
-//                                Toast.makeText(RegisterActivity.this
-//                                        , getResources().getString(R.string.user_created), Toast.LENGTH_SHORT).show();
-//
-//                                Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-//
-//                                intent.putExtra(UserConstant.KEY_GMAIL
-//                                        , binding.activityRegisterEtEmail.getText().toString());
-//
-//                                intent.putExtra(UserConstant.KEY_PASS
-//                                        , binding.activityRegisterEtPassword.getText().toString());
-//
-//                                startActivity(intent);
-//
-//                                finish();
-//                            }
-//                            if(isExist == true)
-//                                binding.activityRegisterEtEmail.setError(getResources().getString(R.string.et_email_exists));
-//                        }
-//                    });
+                    userViewModel.signUp(user).enqueue(new Callback<BaseResponse>() {
+                        @Override
+                        public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                            registerUI(response.body(), user);
+                        }
+
+                        @Override
+                        public void onFailure(Call<BaseResponse> call, Throwable t) {
+
+                        }
+                    });
                 }
             }
         });
+    }
+
+    public void registerUI(BaseResponse res, User user){
+        if(res.getStatus()==Constants.REGISTER_ERR)
+            if(res.getError()==Constants.REGISTER_EMAIL_EXISTS_ERR){
+                binding.activityRegisterEtEmail.setError(getResources().getString(R.string.et_email_exists));
+                binding.activityRegisterEtEmail.requestFocus();
+            }
+        if(res.getStatus()==Constants.REGISTER_SUCCESS){
+            Toast.makeText(this, getResources().getString(R.string.user_created), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+            startActivity(intent);
+        }
     }
 }
