@@ -99,7 +99,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_register_et_email_wp"
-        android:theme="@style/pointer_color">
+        android:theme="@style/pointer_color"
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/activity_register_et_password"
@@ -123,7 +124,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_register_et_password_wp"
-        android:theme="@style/pointer_color">
+        android:theme="@style/pointer_color"
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/activity_register_et_password_confirm"
