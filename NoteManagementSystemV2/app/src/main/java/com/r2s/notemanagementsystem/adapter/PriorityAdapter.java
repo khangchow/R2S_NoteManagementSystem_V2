@@ -55,23 +55,6 @@ public class PriorityAdapter extends RecyclerView.Adapter<PriorityAdapter.Priori
     @Override
     public void onBindViewHolder(@NonNull PriorityViewHolder holder, int position) {
         holder.bind(mPriorities.get(position));
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putString("priority_name",
-                        mPriorities.get(holder.getAdapterPosition()).getName());
-
-                final EditPriorityDialog editPriorityDialog = new EditPriorityDialog();
-                editPriorityDialog.setArguments(bundle);
-
-                FragmentManager fm = ((AppCompatActivity) mContext).getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-
-                editPriorityDialog.show(fm, "EditPriorityDialog");
-            }
-        });
     }
 
     /**

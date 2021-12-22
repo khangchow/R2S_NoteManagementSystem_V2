@@ -1,11 +1,15 @@
 package com.r2s.notemanagementsystem.ui.slidemenu.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,6 +45,7 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
     private PriorityAdapter mPriorityAdapter;
     private List<Priority> mPriorities = new ArrayList<>();
     private User mUser;
+    private Context mContext;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -140,8 +145,17 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
 
                     // Swipe left to update
                     case ItemTouchHelper.LEFT:
-                        DialogFragment dialogFragment = EditPriorityDialog.newInstance();
-                        dialogFragment.show(getChildFragmentManager(), "Priority");
+                        position = viewHolder.getAdapterPosition();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("priority_name", mPriorities.get(position).getName());
+
+                        final EditPriorityDialog editPriorityDialog = new EditPriorityDialog();
+                        editPriorityDialog.setArguments(bundle);
+
+                        FragmentManager fm = ((AppCompatActivity) mContext).getSupportFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+
+                        editPriorityDialog.show(fm, "EditPriorityDialog");
                 }
             }
         }).attachToRecyclerView(binding.rvPriority);
