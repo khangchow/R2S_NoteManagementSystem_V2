@@ -117,7 +117,7 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
         setUpRecyclerView();
         setOnClicks();
 
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
@@ -130,23 +130,19 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
              */
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                DialogFragment dialogFragment = EditPriorityDialog.newInstance();
-                dialogFragment.show(getChildFragmentManager(), "Priority");
-            }
-        }).attachToRecyclerView(binding.rvPriority);
+                switch (direction) {
+                    // Swipe right to delete
+                    case ItemTouchHelper.RIGHT:
+                        int position = viewHolder.getAdapterPosition();
+                        List<Priority> priorities = mPriorityAdapter.getPriorities();
+                        mPriorityViewModel.deletePriority(priorities.get(position).getName());
+                        retrievePriorities();
 
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
-                List<Priority> priorities = mPriorityAdapter.getPriorities();
-                mPriorityViewModel.deletePriority(priorities.get(position).getName());
-                retrievePriorities();
+                    // Swipe left to update
+                    case ItemTouchHelper.LEFT:
+                        DialogFragment dialogFragment = EditPriorityDialog.newInstance();
+                        dialogFragment.show(getChildFragmentManager(), "Priority");
+                }
             }
         }).attachToRecyclerView(binding.rvPriority);
     }
