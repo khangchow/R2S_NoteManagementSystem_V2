@@ -15,9 +15,12 @@ import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.adapter.PriorityAdapter;
 import com.r2s.notemanagementsystem.constant.Constants;
+import com.r2s.notemanagementsystem.constant.PriorityConstant;
 import com.r2s.notemanagementsystem.databinding.DialogAddPriorityBinding;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Priority;
 import com.r2s.notemanagementsystem.model.User;
+import com.r2s.notemanagementsystem.service.PriorityService;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.viewmodel.PriorityViewModel;
 
@@ -26,6 +29,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AddPriorityDialog extends DialogFragment implements View.OnClickListener {
 
     public static final String TAG = "PriorityDialog";
@@ -33,7 +40,6 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
     private DialogAddPriorityBinding binding;
     private PriorityAdapter mPriorityAdapter;
     private List<Priority> mPriorities = new ArrayList<>();
-    private Bundle bundle = new Bundle();
     private User mUser;
 
     /**
@@ -69,12 +75,6 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
 
         setUpViewModel();
         setOnClicks();
-
-        bundle = getArguments();
-        if (bundle != null) {
-            binding.btnAddPriority.setText("Update");
-            binding.etPriority.setText(bundle.getString("priority_name" ));
-        }
     }
 
     /**
@@ -89,7 +89,7 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
      * This method sets up the ViewModel
      */
     private void setUpViewModel() {
-        mPriorityViewModel.getAllPrioritiesByUserId()
+        mPriorityViewModel.getAllPriorities()
                 .observe(getViewLifecycleOwner(), priorities -> {
             mPriorityAdapter.setPriorities(priorities);
         });
@@ -103,8 +103,33 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add_priority:
-                Toast.makeText(getActivity(), "Create " +
-                            binding.etPriority.getText().toString(), Toast.LENGTH_SHORT).show();
+                final Priority priority = new Priority(binding.etPriority.getText().toString(),
+                    getCurrentTime(), mUser.getEmail());
+
+                mPriorityViewModel.addPriority(priority).enqueue(new Callback<BaseResponse>() {
+                    @Override
+                    public void onResponse(Call<BaseResponse> call,
+                                           Response<BaseResponse> response) {
+                        if (response.isSuccessful()) {
+                            BaseResponse baseResponse = response.body();
+                            assert baseResponse != null;
+                            if (baseResponse.getStatus() == 1) {
+                                Toast.makeText(getActivity(), "Đăng ký thành công",
+                                        Toast.LENGTH_SHORT).show();
+                            } else if (baseResponse.getStatus() == -1
+                                    && baseResponse.getError() == 2) {
+                                Toast.makeText(getActivity(), "Trùng tên",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+                        Toast.makeText(getActivity(), "Không thành công",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
                 dismiss();
         }
     }
@@ -113,7 +138,7 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
      * This method returns the current date with custom format
      * @return String
      */
-    public String getCurrentLocalDateTimeStamp() {
+    public String getCurrentTime() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 

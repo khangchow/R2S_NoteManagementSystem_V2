@@ -1,14 +1,20 @@
 package com.r2s.notemanagementsystem.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.r2s.notemanagementsystem.databinding.RowPriorityBinding;
 import com.r2s.notemanagementsystem.model.Priority;
+import com.r2s.notemanagementsystem.ui.dialog.EditPriorityDialog;
 
 import java.util.List;
 
@@ -49,6 +55,23 @@ public class PriorityAdapter extends RecyclerView.Adapter<PriorityAdapter.Priori
     @Override
     public void onBindViewHolder(@NonNull PriorityViewHolder holder, int position) {
         holder.bind(mPriorities.get(position));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("priority_name",
+                        mPriorities.get(holder.getAdapterPosition()).getName());
+
+                final EditPriorityDialog editPriorityDialog = new EditPriorityDialog();
+                editPriorityDialog.setArguments(bundle);
+
+                FragmentManager fm = ((AppCompatActivity) mContext).getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+
+                editPriorityDialog.show(fm, "EditPriorityDialog");
+            }
+        });
     }
 
     /**

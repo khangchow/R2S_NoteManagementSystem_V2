@@ -6,4 +6,5 @@ public class PriorityConstant {
     public static final String ADD_PRIORITY = "add";
     public static final String UPDATE_PRIORITY = "update";
     public static final String DELETE_PRIORITY = "del";
+    public static final String PRIORITY_TAB = "Priority";
 }

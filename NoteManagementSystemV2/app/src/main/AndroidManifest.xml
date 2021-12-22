@@ -10,9 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NoteManagementSystem">
         <activity
-            android:name=".ui.dialog.EditPriorityDialog"
-            android:exported="false" />
-        <activity
             android:name=".ui.slidemenu.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
@@ -22,7 +19,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

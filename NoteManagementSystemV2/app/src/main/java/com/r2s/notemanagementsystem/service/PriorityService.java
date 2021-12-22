@@ -27,7 +27,7 @@ public interface PriorityService {
     * */
     @GET(PriorityConstant.ADD_PRIORITY)
     Call<BaseResponse> addPriority(@Query("tab") String tab, @Query("email") String email,
-                                       @Query("name") String name);
+                                       @Query("name") Priority namePriority);
 
     /*
     Sửa

@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.r2s.notemanagementsystem.databinding.RowStatusListBinding;
+import com.r2s.notemanagementsystem.databinding.RowStatusBinding;
 import com.r2s.notemanagementsystem.model.Status;
 import com.r2s.notemanagementsystem.ui.dialog.StatusDialog;
 
@@ -39,7 +39,7 @@ public class StatusAdapter extends  RecyclerView.Adapter<StatusAdapter.StatusVie
     @Override
     public StatusViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Return a new holder instance
-        return new StatusViewHolder(RowStatusListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new StatusViewHolder(RowStatusBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     /**
@@ -88,9 +88,9 @@ public class StatusAdapter extends  RecyclerView.Adapter<StatusAdapter.StatusVie
     }
 
     public class StatusViewHolder extends RecyclerView.ViewHolder {
-        private RowStatusListBinding binding;
+        private RowStatusBinding binding;
 
-        public StatusViewHolder(@NonNull RowStatusListBinding itemView) {
+        public StatusViewHolder(@NonNull RowStatusBinding itemView) {
             super(itemView.getRoot());
 
             binding = itemView;
