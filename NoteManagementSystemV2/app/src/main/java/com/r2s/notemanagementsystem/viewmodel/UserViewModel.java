@@ -33,26 +33,11 @@ public class UserViewModel extends AndroidViewModel {
         }
     }
 
-    public void insertUser(User user) {
-
-        mUserRepo.insertUser(user);
-    }
-
-//    public void updateUser(User user) {
-//        mUserRepo.updateUser(user);
-//
-//        mUser = mUserRepo.getUserById(user.getUid());
-//    }
-//
-//    public LiveData<Integer> count(String email){ return mUserRepo.count(email); }
-//
-//    public LiveData<User> login(String email, String pass){return mUserRepo.login(email, pass);}
-//
-//    public LiveData<User> getUser() {
-//        return mUser;
-//    }
-
     public Call<BaseResponse> login(User user){
         return mUserRepo.login(user.getEmail(), user.getPassword());
+    }
+
+    public Call<BaseResponse> signUp(User user){
+        return mUserRepo.signUp(user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName());
     }
 }

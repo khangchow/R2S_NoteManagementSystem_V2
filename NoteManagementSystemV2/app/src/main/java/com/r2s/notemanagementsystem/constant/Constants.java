@@ -8,4 +8,8 @@ public class Constants {
     public static final int LOGIN_ERR = -1;
     public static final int LOGIN_USER_NOT_FOUND_ERR = 1;
     public static final int LOGIN_PWD_INCORRECT_ERR = 2;
+
+    public static final int REGISTER_SUCCESS = 1;
+    public static final int REGISTER_ERR = -1;
+    public static final int REGISTER_EMAIL_EXISTS_ERR = 2;
 }
