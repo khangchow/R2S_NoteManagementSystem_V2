@@ -79,4 +79,5 @@
     <string name="menu_slideshow">Slideshow</string>
     <string name="status_email">Email</string>
     <string name="update">Update</string>
+    <string name="enter_category_name">Enter Category\'s Name</string>
 </resources>
