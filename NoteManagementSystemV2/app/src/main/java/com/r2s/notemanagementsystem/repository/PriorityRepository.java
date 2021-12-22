@@ -3,7 +3,6 @@ package com.r2s.notemanagementsystem.repository;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 
 import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.constant.Constants;
@@ -24,7 +23,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PriorityRepository {
-    private PriorityService mService;
+    private PriorityService mPriorityService;
     private User mUser;
 
     /**
@@ -32,7 +31,7 @@ public class PriorityRepository {
      */
     public PriorityRepository() {
         mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
-        mService = ApiClient.getClient().create(PriorityService.class);
+        mPriorityService = ApiClient.getClient().create(PriorityService.class);
     }
 
     /**
@@ -41,7 +40,7 @@ public class PriorityRepository {
      */
     public RefreshLiveData<List<Priority>> loadAllPriorities() {
         final RefreshLiveData<List<Priority>> liveData = new RefreshLiveData<>((callback) -> {
-            mService.getAllPriorities(PriorityConstant.PRIORITY_TAB,
+            mPriorityService.getAllPriorities(PriorityConstant.PRIORITY_TAB,
                     mUser.getEmail()).enqueue(new Callback<BaseResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<BaseResponse> call,
@@ -69,7 +68,7 @@ public class PriorityRepository {
      * @return Call
      */
     public Call<BaseResponse> addPriority(String name) {
-        return mService.addPriority(PriorityConstant.PRIORITY_TAB, mUser.getEmail(), name);
+        return mPriorityService.addPriority(PriorityConstant.PRIORITY_TAB, mUser.getEmail(), name);
     }
 
     /**
@@ -78,7 +77,7 @@ public class PriorityRepository {
      * @return Call
      */
     public Call<BaseResponse> deletePriority(String name) {
-        return mService.deletePriority(PriorityConstant.PRIORITY_TAB, mUser.getEmail(), name);
+        return mPriorityService.deletePriority(PriorityConstant.PRIORITY_TAB, mUser.getEmail(), name);
     }
 
     /**
@@ -88,6 +87,6 @@ public class PriorityRepository {
      * @return Call
      */
     public Call<BaseResponse> editPriority(String name, String nname) {
-        return mService.editPriority(PriorityConstant.PRIORITY_TAB, mUser.getEmail(), name, nname);
+        return mPriorityService.editPriority(PriorityConstant.PRIORITY_TAB, mUser.getEmail(), name, nname);
     }
 }

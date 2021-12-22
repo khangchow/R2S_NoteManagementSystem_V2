@@ -156,36 +156,35 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
                         new AlertDialog.Builder(requireContext())
                                 .setTitle("Title")
                                 .setMessage("Do you really want to delete?")
-                                .setPositiveButton("Yes",
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                mPriorityViewModel.deletePriority(priorityName).enqueue(
-                                                        new Callback<BaseResponse>() {
-                                                            @Override
-                                                            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                                                                assert response.body() != null;
-                                                                if (response.body().getStatus() == 1) {
-                                                                    Toast.makeText(getContext(), "Deleted",
-                                                                            Toast.LENGTH_SHORT).show();
-                                                                    mPriorityViewModel.refreshData();
-                                                                } else if (response.body().getStatus() == -1) {
-                                                                    if (response.body().getError() == 2) {
-                                                                        Toast.makeText(getContext(), "Can't delete, because it's in use",
-                                                                                Toast.LENGTH_SHORT).show();
-                                                                        mPriorityViewModel.refreshData();
-                                                                    }
-                                                                }
-                                                            }
-
-                                                            @Override
-                                                            public void onFailure(Call<BaseResponse> call, Throwable t) {
-
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        mPriorityViewModel.deletePriority(priorityName).enqueue(
+                                                new Callback<BaseResponse>() {
+                                                    @Override
+                                                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                                                        assert response.body() != null;
+                                                        if (response.body().getStatus() == 1) {
+                                                            Toast.makeText(getContext(), "Deleted",
+                                                                    Toast.LENGTH_SHORT).show();
+                                                            mPriorityViewModel.refreshData();
+                                                        } else if (response.body().getStatus() == -1) {
+                                                            if (response.body().getError() == 2) {
+                                                                Toast.makeText(getContext(), "Can't delete, because it's in use",
+                                                                        Toast.LENGTH_SHORT).show();
+                                                                mPriorityViewModel.refreshData();
                                                             }
                                                         }
-                                                );
-                                            }
-                                        })
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+
+                                                    }
+                                                }
+                                        );
+                                    }
+                                })
                                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -200,13 +199,9 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
                             position = viewHolder.getAdapterPosition();
                             mPriorities = mPriorityAdapter.getPriorities();
                             priorityName = mPriorities.get(position).getName();
-                            String priorityCreatedDate = mPriorities.get(position).getCreatedDate();
-                            int priorityId = mPriorities.get(position).getId();
 
                             Bundle bundle = new Bundle();
-                            bundle.putInt("priority_id", priorityId);
                             bundle.putString("priority_name", priorityName);
-                            bundle.putString("priority_created_date", priorityCreatedDate);
 
                             final EditPriorityDialog editPriorityDialog = EditPriorityDialog.newInstance();
                             editPriorityDialog.setArguments(bundle);
@@ -216,7 +211,8 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
                             FragmentTransaction ft = fm.beginTransaction();
 
                             editPriorityDialog.show(ft, "EditPriorityDialog");
-                        } catch(Exception e) {
+                            mPriorityAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
                             Log.e("Error", e.getMessage());
                         }
                         mPriorityViewModel.refreshData();

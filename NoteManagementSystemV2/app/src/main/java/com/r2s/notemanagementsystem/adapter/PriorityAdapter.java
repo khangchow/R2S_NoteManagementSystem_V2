@@ -24,6 +24,14 @@ public class PriorityAdapter extends RecyclerView.Adapter<PriorityAdapter.Priori
     private Context mContext;
 
     /**
+     * Constructor with 1 parameter
+     * @param context Context
+     */
+    public PriorityAdapter(Context context) {
+        this.mContext = context;
+    }
+
+    /**
      * Constructor with 2 parameters
      * @param mPriorities List<Priority>
      * @param context Context
@@ -34,7 +42,7 @@ public class PriorityAdapter extends RecyclerView.Adapter<PriorityAdapter.Priori
     }
 
     /**
-     * Create new views
+     * Create new view
      * @param parent
      * @param viewType
      * @return new view

@@ -109,8 +109,10 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
                                 Toast.makeText(requireActivity(), "Update Successful!",
                                         Toast.LENGTH_SHORT).show();
                             } else if (baseResponse.getStatus() == -1) {
-                                Toast.makeText(requireActivity(), "Update Failed!",
-                                        Toast.LENGTH_SHORT).show();
+                                if (response.body().getError() == Integer.getInteger(null)) {
+                                    Toast.makeText(requireActivity(), "Update Failed!",
+                                            Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                     }

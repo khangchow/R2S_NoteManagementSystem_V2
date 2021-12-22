@@ -34,12 +34,15 @@ public class PriorityViewModel extends AndroidViewModel {
         this.mPriorities = mPriorityRepository.loadAllPriorities();
     }
 
+    /**
+     * This method refresh data after changes
+     */
     public void refreshData() {
         mPriorities.refresh();
     }
 
     /**
-     * This method returns all notes by current logged in user
+     * This method returns all priorities by current logged in user
      * @return LiveData List
      */
     public LiveData<List<Priority>> getAllPriorities() {
