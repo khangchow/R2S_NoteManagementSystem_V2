@@ -27,13 +27,17 @@ import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.adapter.PriorityAdapter;
 import com.r2s.notemanagementsystem.constant.Constants;
+import com.r2s.notemanagementsystem.constant.PriorityConstant;
 import com.r2s.notemanagementsystem.databinding.FragmentPriorityBinding;
 import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Priority;
 import com.r2s.notemanagementsystem.model.User;
+import com.r2s.notemanagementsystem.repository.PriorityRepository;
+import com.r2s.notemanagementsystem.service.PriorityService;
 import com.r2s.notemanagementsystem.ui.dialog.EditPriorityDialog;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.ui.dialog.AddPriorityDialog;
+import com.r2s.notemanagementsystem.utils.CommunicateViewModel;
 import com.r2s.notemanagementsystem.viewmodel.PriorityViewModel;
 
 import java.util.ArrayList;
@@ -56,6 +60,8 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
     private List<Priority> mPriorities = new ArrayList<>();
     private User mUser;
     private Context mContext;
+    private CommunicateViewModel mCommunicateViewModel;
+    private PriorityService mPriorityService;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -117,13 +123,22 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         binding = FragmentPriorityBinding.inflate(getLayoutInflater());
 
-        binding.rvPriority.setHasFixedSize(true);
-        binding.rvPriority.setLayoutManager(new LinearLayoutManager(getContext()));
+        mPriorityService = PriorityRepository.getService();
+
+        mCommunicateViewModel = new ViewModelProvider(this).get(CommunicateViewModel.class);
+        mCommunicateViewModel.needReloading().observe(getViewLifecycleOwner(), needReloading -> {
+            Log.d("RESUME", needReloading.toString());
+            if (needReloading) {
+                onResume();
+            }
+        });
 
         binding.fabOpenPriority.setOnClickListener(this);
 
         mPriorityAdapter = new PriorityAdapter(mPriorities, getContext());
         binding.rvPriority.setAdapter(mPriorityAdapter);
+        binding.rvPriority.setHasFixedSize(true);
+        binding.rvPriority.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mPriorityViewModel = new ViewModelProvider(this).get(PriorityViewModel.class);
         mPriorityViewModel.getAllPriorities().observe(getViewLifecycleOwner(), priorities -> {
@@ -162,15 +177,20 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
                                         mPriorityViewModel.deletePriority(priorityName).enqueue(
                                                 new Callback<BaseResponse>() {
                                                     @Override
-                                                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                                                    public void onResponse(Call<BaseResponse> call,
+                                                                           Response<BaseResponse> response) {
                                                         assert response.body() != null;
                                                         if (response.body().getStatus() == 1) {
-                                                            Toast.makeText(getContext(), "Deleted",
+                                                            Toast.makeText(getContext(),
+                                                                    "Deleted",
                                                                     Toast.LENGTH_SHORT).show();
                                                             mPriorityViewModel.refreshData();
-                                                        } else if (response.body().getStatus() == -1) {
+                                                        } else if (response.body()
+                                                                .getStatus() == -1) {
                                                             if (response.body().getError() == 2) {
-                                                                Toast.makeText(getContext(), "Can't delete, because it's in use",
+                                                                Toast.makeText(getContext(),
+                                                                        "Can't delete, " +
+                                                                                "because it's in use",
                                                                         Toast.LENGTH_SHORT).show();
                                                                 mPriorityViewModel.refreshData();
                                                             }
@@ -178,7 +198,8 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
                                                     }
 
                                                     @Override
-                                                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+                                                    public void onFailure(Call<BaseResponse> call,
+                                                                          Throwable t) {
 
                                                     }
                                                 }
@@ -211,7 +232,6 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
                             FragmentTransaction ft = fm.beginTransaction();
 
                             editPriorityDialog.show(ft, "EditPriorityDialog");
-                            mPriorityAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             Log.e("Error", e.getMessage());
                         }
@@ -230,6 +250,26 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
+        mPriorityService.getAllPriorities(PriorityConstant.PRIORITY_TAB, mUser.getEmail())
+                .enqueue(new Callback<BaseResponse>() {
+                    @Override
+                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<Priority> mPriorites = new ArrayList<>();
+                            for (List<String> priority : response.body().getData()) {
+                                mPriorites.add(new Priority(priority.get(0), priority.get(1), priority.get(2)));
+                            }
+                            mPriorityAdapter.setPriorities(mPriorites);
+                            mPriorityAdapter.notifyItemChanged(0, mPriorites.size());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+
+                    }
+                });
+
         mPriorityViewModel.refreshData();
     }
 
@@ -253,6 +293,7 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
             case R.id.fab_open_priority:
                 DialogFragment priorityDialog = AddPriorityDialog.newInstance();
                 priorityDialog.show(getChildFragmentManager(), AddPriorityDialog.TAG);
+                mCommunicateViewModel.openDialog();
         }
     }
 

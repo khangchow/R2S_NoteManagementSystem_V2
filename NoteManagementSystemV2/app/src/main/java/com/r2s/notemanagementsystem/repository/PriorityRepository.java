@@ -23,7 +23,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PriorityRepository {
-    private PriorityService mPriorityService;
+    private static PriorityService mPriorityService;
     private User mUser;
 
     /**
@@ -88,5 +88,10 @@ public class PriorityRepository {
      */
     public Call<BaseResponse> editPriority(String name, String nname) {
         return mPriorityService.editPriority(PriorityConstant.PRIORITY_TAB, mUser.getEmail(), name, nname);
+    }
+
+    public static PriorityService getService() {
+        mPriorityService = ApiClient.getClient().create(PriorityService.class);
+        return mPriorityService;
     }
 }

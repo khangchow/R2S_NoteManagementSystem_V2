@@ -1,6 +1,8 @@
 package com.r2s.notemanagementsystem.ui.dialog;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Priority;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
+import com.r2s.notemanagementsystem.utils.CommunicateViewModel;
 import com.r2s.notemanagementsystem.viewmodel.PriorityViewModel;
 
 import java.time.LocalDateTime;
@@ -40,9 +43,17 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
     private PriorityAdapter mPriorityAdapter;
     private List<Priority> mPriorities = new ArrayList<>();
     private User mUser;
+    private Context context;
+    private CommunicateViewModel mCommunicateViewModel;
 
     public static AddPriorityDialog newInstance() {
         return new AddPriorityDialog();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 
     /**
@@ -60,6 +71,8 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
         binding = DialogAddPriorityBinding.inflate(inflater, container, false);
 
         setUserInfo();
+
+        mCommunicateViewModel = new ViewModelProvider(getActivity()).get(CommunicateViewModel.class);
 
         return binding.getRoot();
     }
@@ -119,12 +132,17 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
                                 BaseResponse baseResponse = response.body();
                                 assert baseResponse != null;
                                 if (baseResponse.getStatus() == 1) {
-                                    Toast.makeText(requireActivity(), "Create Successful!",
+                                    mCommunicateViewModel.makeChanges();
+
+                                    Toast.makeText(context, "Create Successful!",
                                             Toast.LENGTH_SHORT).show();
                                     mPriorityViewModel.refreshData();
+                                    Log.d("RESUME", "Add Success");
                                 } else if (baseResponse.getStatus() == -1)
                                         if(baseResponse.getError() == 2) {
-                                    Toast.makeText(requireActivity(),
+                                            mCommunicateViewModel.makeChanges();
+
+                                            Toast.makeText(context,
                                             "This name is already taken",
                                             Toast.LENGTH_SHORT).show();
                                     mPriorityViewModel.refreshData();

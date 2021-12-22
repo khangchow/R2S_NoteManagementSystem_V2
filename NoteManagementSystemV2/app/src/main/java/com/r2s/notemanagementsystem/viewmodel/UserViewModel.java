@@ -33,10 +33,10 @@ public class UserViewModel extends AndroidViewModel {
         }
     }
 
-    public void insertUser(User user) {
-
-        mUserRepo.insertUser(user);
-    }
+//    public void insertUser(User user) {
+//
+//        mUserRepo.insertUser(user);
+//    }
 
 //    public void updateUser(User user) {
 //        mUserRepo.updateUser(user);
@@ -51,10 +51,11 @@ public class UserViewModel extends AndroidViewModel {
 //    public LiveData<User> getUser() {
 //        return mUser;
 //    }
-    public  void updateUser(String tab, String email, String firstname, String lastname){
+    public  void updateUser(String tab, String email, String firstname, String lastname) {
         mUserRepo.editUser(tab, email, firstname, lastname);
-
-    public Call<BaseResponse> login(User user){
-        return mUserRepo.login(user.getEmail(), user.getPassword());
     }
+
+//    public Call<BaseResponse> login(){
+//        return mUserRepo.login(user.getEmail(), user.getPassword());
+//    }
 }

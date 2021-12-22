@@ -3,16 +3,10 @@ package com.r2s.notemanagementsystem.repository;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
-
-import com.r2s.notemanagementsystem.api.UserService;
 import com.r2s.notemanagementsystem.model.BaseResponse;
-import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.utils.ApiClient;
 import com.r2s.notemanagementsystem.utils.RefreshLiveData;
 import com.r2s.notemanagementsystem.services.UserService;
-
-import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -100,19 +100,19 @@ public class LoginActivity extends AppCompatActivity {
                 user.setEmail(binding.activityLoginEtEmail.getText().toString().trim());
                 user.setPassword(binding.activityLoginEtPassword.getText().toString().trim());
 
-                if (validateInput(user))
-
-                    userViewModel.login(user).enqueue(new Callback<BaseResponse>() {
-                        @Override
-                        public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                            loginUI(response.body(), user);
-                        }
-
-                        @Override
-                        public void onFailure(Call<BaseResponse> call, Throwable t) {
-
-                        }
-                    });
+//                if (validateInput(user))
+//
+//                    userViewModel.login(user).enqueue(new Callback<BaseResponse>() {
+//                        @Override
+//                        public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+//                            loginUI(response.body(), user);
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<BaseResponse> call, Throwable t) {
+//
+//                        }
+//                    });
             }
         });
         binding.activityLoginBtnExit.setOnClickListener(new View.OnClickListener() {

@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.r2s.notemanagementsystem.model.Priority;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.service.PriorityService;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
+import com.r2s.notemanagementsystem.utils.CommunicateViewModel;
 import com.r2s.notemanagementsystem.viewmodel.PriorityViewModel;
 
 import java.time.LocalDateTime;
@@ -42,9 +44,17 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
     private List<Priority> mPriorities = new ArrayList<>();
     private Bundle bundle;
     private User mUser;
+    private Context context;
+    private CommunicateViewModel mCommunicateViewModel;
 
     public static EditPriorityDialog newInstance() {
         return new EditPriorityDialog();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 
     /**
@@ -61,6 +71,7 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
                              @Nullable Bundle savedInstanceState) {
         binding = DialogEditPriorityBinding.inflate(inflater, container, false);
         setUserInfo();
+        mCommunicateViewModel = new ViewModelProvider(this).get(CommunicateViewModel.class);
         return binding.getRoot();
     }
 
@@ -102,15 +113,18 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
                     @Override
                     public void onResponse(Call<BaseResponse> call,
                                            Response<BaseResponse> response) {
-                        if (response.isSuccessful() && isAdded()) {
+                        if (response.isSuccessful() && response.body() != null) {
                             BaseResponse baseResponse = response.body();
-                            assert baseResponse != null;
                             if (baseResponse.getStatus() == 1) {
-                                Toast.makeText(requireActivity(), "Update Successful!",
+                                mCommunicateViewModel.makeChanges();
+
+                                Toast.makeText(context, "Update Successful!",
                                         Toast.LENGTH_SHORT).show();
                             } else if (baseResponse.getStatus() == -1) {
                                 if (response.body().getError() == Integer.getInteger(null)) {
-                                    Toast.makeText(requireActivity(), "Update Failed!",
+                                    mCommunicateViewModel.makeChanges();
+
+                                    Toast.makeText(context, "Update Failed!",
                                             Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -119,6 +133,8 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
 
                     @Override
                     public void onFailure(Call<BaseResponse> call, Throwable t) {
+                        mCommunicateViewModel.makeChanges();
+
                         Toast.makeText(getActivity(), "Update Failed!",
                                 Toast.LENGTH_SHORT).show();
                     }
