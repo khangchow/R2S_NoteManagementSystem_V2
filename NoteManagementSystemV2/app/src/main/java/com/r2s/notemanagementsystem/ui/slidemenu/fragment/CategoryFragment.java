@@ -1,16 +1,22 @@
 package com.r2s.notemanagementsystem.ui.slidemenu.fragment;
 
-import android.content.Intent;
+import android.app.Application;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +26,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.adapter.CategoryAdapter;
-import com.r2s.notemanagementsystem.adapter.StatusAdapter;
 import com.r2s.notemanagementsystem.constant.Constants;
-import com.r2s.notemanagementsystem.databinding.FragmentCategoryBinding;
-import com.r2s.notemanagementsystem.databinding.FragmentStatusBinding;
 import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Category;
-import com.r2s.notemanagementsystem.model.Status;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.ui.dialog.StatusDialog;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.ui.dialog.AddNewCategoryDialog;
 import com.r2s.notemanagementsystem.viewmodel.CategoryViewModel;
-import com.r2s.notemanagementsystem.viewmodel.StatusViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,15 +120,21 @@ public class CategoryFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mCateViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+
         RecyclerView rvCate = view.findViewById(R.id.rvCategory);
         FloatingActionButton fabAddCate = view.findViewById(R.id.fabAddCate);
 
-        mCateAdapter = new CategoryAdapter(mCateList, this.getContext());
+        mCateAdapter = new CategoryAdapter( this.getContext());
 
-        rvCate.setAdapter(mCateAdapter);
+        mCateViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        mCateViewModel.getCateById().observe(getViewLifecycleOwner(), categories -> {
+            mCateAdapter.setCateAdapter(categories);
+
+            Log.d("Cate", mCateList.toString());
+        });
 
         rvCate.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvCate.setAdapter(mCateAdapter);
 
         // Handling floating button
         fabAddCate.setOnClickListener(new View.OnClickListener() {
@@ -153,28 +160,75 @@ public class CategoryFragment extends Fragment{
              */
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
-                List<BaseResponse> tasks = mCateAdapter.getCateAdapter();
-                String category = tasks.get(position).getCategory().getNameCate();
 
-                mCateViewModel.deleteCate(category).enqueue(new Callback<BaseResponse>() {
-                    @Override
-                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                        if (response.body().getStatus() == 1) {
-                            Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
-                        } else if (response.body().getStatus() == -1){
-                            if (response.body().getError() == 2) {
-                                Toast.makeText(getContext(), "Can't delete, cause using",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
+                switch (direction) {
 
-                    @Override
-                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+                    /**
+                     * Swiped to delete
+                     */
+                    case ItemTouchHelper.LEFT:
+                        int position = viewHolder.getAdapterPosition();
+                        List<Category> tasks = mCateAdapter.getCateAdapter();
+                        String category = tasks.get(position).getNameCate();
 
-                    }
-                });
+                        /**
+                         * showing confirm dialog
+                         */
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Title")
+                                .setMessage("Do you really want to delete?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mCateViewModel.deleteCate(category).enqueue(new Callback<BaseResponse>() {
+                                            @Override
+                                            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                                                if (response.body().getStatus() == 1) {
+                                                    Toast.makeText(getContext(), "Deleted",
+                                                            Toast.LENGTH_SHORT).show();
+
+                                                    mCateViewModel.refreshData();
+                                                } else if (response.body().getStatus() == -1){
+                                                    if (response.body().getError() == 2) {
+                                                        Toast.makeText(getContext(), "Can't delete, cause using",
+                                                                Toast.LENGTH_SHORT).show();
+
+                                                        mCateViewModel.refreshData();
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<BaseResponse> call, Throwable t) {
+
+                                            }
+                                        });
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mCateViewModel.refreshData();
+                                    }
+                                }).show();
+
+                    /**
+                     * Swiped to update
+                     */
+                    case ItemTouchHelper.RIGHT:
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString("cate_name", mCateList.get(position).getCategory().getNameCate());
+//
+//                        Log.d("LLL", String.valueOf(mCateList.get(position).getCategory().getNameCate()));
+//
+//                        final AddNewCategoryDialog categoryDialog = new AddNewCategoryDialog();
+//                        categoryDialog.setArguments(bundle);
+//
+//                        FragmentManager fm = categoryDialog.getChildFragmentManager();
+//                        FragmentTransaction ft = fm.beginTransaction();
+//
+//                        categoryDialog.show(fm, "CateDialog");
+                }
             }
         }).attachToRecyclerView(rvCate);
     }

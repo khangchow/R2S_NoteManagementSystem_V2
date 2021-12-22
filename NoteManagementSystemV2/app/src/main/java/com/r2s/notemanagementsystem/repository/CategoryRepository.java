@@ -18,9 +18,9 @@ import retrofit2.Response;
 public class CategoryRepository {
     private CategoryService mCateService;
 
-    public static CategoryService getService() {
-        return APIClient.getCate().create(CategoryService.class);
-    }
+//    public static CategoryService getService() {
+//        return APIClient.getCate().create(CategoryService.class);
+//    }
 
     /**
      * This method is used as constructor for CategoryRepository class
@@ -33,12 +33,16 @@ public class CategoryRepository {
      * this method returns all category
      * @return liveData
      */
-    public RefreshLiveData<List<BaseResponse>> getAllCate() {
-        final RefreshLiveData<List<BaseResponse>> liveData = new RefreshLiveData<>(callback -> {
-           mCateService.getAllCate("cate", "email").enqueue(new Callback<BaseResponse>() {
+    public RefreshLiveData<List<Category>> getAllCate() {
+        final RefreshLiveData<List<Category>> liveData = new RefreshLiveData<>(callback -> {
+           mCateService.getAllCate("Category", "a").enqueue(new Callback<BaseResponse>() {
                @Override
                public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                   callback.onDataLoaded((List<BaseResponse>) response.body());
+                   List<Category> categories = new ArrayList<>();
+                   for (List<String> category: response.body().getData()) {
+                       categories.add(new Category(category.get(0), category.get(1)));
+                   }
+                   callback.onDataLoaded(categories);
                }
 
                @Override
@@ -57,7 +61,7 @@ public class CategoryRepository {
      * @return category by id
      */
     public Call<BaseResponse> loadCateById(int id) {
-        Call<BaseResponse> call = mCateService.getCateByID("category", "email", id);
+        Call<BaseResponse> call = mCateService.getCateByID("Category", "a", id);
 
         return call;
     }
@@ -78,7 +82,7 @@ public class CategoryRepository {
      * @return cate's information updated
      */
     public Call<BaseResponse> updateCate (String nameCate, String newCate) {
-        return mCateService.updateCate("category", "email", nameCate, newCate);
+        return mCateService.updateCate("Category", "a", nameCate, newCate);
     }
 
     /**
@@ -87,7 +91,7 @@ public class CategoryRepository {
      * @return void
      */
     public Call<BaseResponse> deleteCate (String nameCategory) {
-        return mCateService.deleteCate("category", "email", nameCategory);
+        return mCateService.deleteCate("Category", "a", nameCategory);
     }
 
 }

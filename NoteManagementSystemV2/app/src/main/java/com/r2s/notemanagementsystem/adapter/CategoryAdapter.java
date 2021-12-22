@@ -22,7 +22,7 @@ import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder>{
     private Context context;
-    private List<BaseResponse> categoryList;
+    private List<Category> categoryList;
 
     /**
      * Constructor with 1 param
@@ -37,7 +37,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
      * @param categoryList
      * @param context
      */
-    public CategoryAdapter(List<BaseResponse> categoryList, Context context) {
+    public CategoryAdapter(List<Category> categoryList, Context context) {
         this.categoryList = categoryList;
         this.context = context;
     }
@@ -59,9 +59,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        BaseResponse br = categoryList.get(position);
-        holder.tvNameCate.setText("Name: " + br.getCategory().getNameCate());
-        holder.tvCreatedDate.setText("Created date: " + br.getCategory().getCreatedDate());
+        Category br = categoryList.get(position);
+        holder.tvNameCate.setText("Name: " + br.getNameCate());
+        holder.tvCreatedDate.setText("Created date: " + br.getCreatedDate());
     }
 
     /**
@@ -81,7 +81,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
      * This method updates the data list and notify the changes
      * @param cateResponse
      */
-    public void setCateAdapter(List<BaseResponse> cateResponse) {
+    public void setCateAdapter(List<Category> cateResponse) {
         categoryList = cateResponse;
         notifyDataSetChanged();
     }
@@ -90,7 +90,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
      * return date list
      * @return
      */
-    public List<BaseResponse> getCateAdapter() {
+    public List<Category> getCateAdapter() {
         return categoryList;
     }
 
@@ -105,18 +105,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
             tvNameCate = itemView.findViewById(R.id.tvNameCategory);
             tvCreatedDate = itemView.findViewById(R.id.tvCreatedDate);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, AddNewCategoryDialog.class);
-                    intent.putExtra(CategoryConstant.UPDATE_CATEGORY, getAdapterPosition());
-
-                    Log.d("CCC", String.valueOf(categoryList.get(getAdapterPosition()).getCategory()));
-
-                    context.startActivity(intent);
-                }
-            });
         }
     }
 

@@ -32,6 +32,11 @@ public class Category {
         this.createdDate = createdDate;
     }
 
+    public Category(String nameCate, String createdDate) {
+        this.nameCate = nameCate;
+        this.createdDate = createdDate;
+    }
+
     /**
      * get user id
      * @return

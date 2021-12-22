@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.r2s.notemanagementsystem.api.CategoryService;
+import com.r2s.notemanagementsystem.constant.CategoryConstant;
 import com.r2s.notemanagementsystem.model.Category;
 import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.repository.CategoryRepository;
@@ -19,7 +20,7 @@ import retrofit2.Call;
 
 public class CategoryViewModel extends AndroidViewModel {
     private CategoryRepository mCateRepo;
-    private RefreshLiveData<List<BaseResponse>> mCateList;
+    private RefreshLiveData<List<Category>> mCateList;
 
     public CategoryViewModel(@NonNull Application application) {
         super(application);
@@ -46,7 +47,7 @@ public class CategoryViewModel extends AndroidViewModel {
      * return all category
      * @return list of category
      */
-    public LiveData<List<BaseResponse>> getCateById() {
+    public LiveData<List<Category>> getCateById() {
         return mCateList;
     }
 
