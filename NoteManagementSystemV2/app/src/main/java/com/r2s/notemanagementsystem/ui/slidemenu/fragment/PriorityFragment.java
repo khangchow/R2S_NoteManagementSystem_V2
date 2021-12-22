@@ -106,7 +106,7 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        setUserInfo();
+        mCommunicateViewModel = new ViewModelProvider(this).get(CommunicateViewModel.class);
     }
 
     /**
@@ -123,11 +123,12 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         binding = FragmentPriorityBinding.inflate(getLayoutInflater());
 
+        setUserInfo();
+
         mPriorityService = PriorityRepository.getService();
 
-        mCommunicateViewModel = new ViewModelProvider(this).get(CommunicateViewModel.class);
         mCommunicateViewModel.needReloading().observe(getViewLifecycleOwner(), needReloading -> {
-            Log.d("RESUME", needReloading.toString());
+            Log.d("RESUME_FRAGMENT", needReloading.toString());
             if (needReloading) {
                 onResume();
             }
@@ -260,7 +261,7 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
                                 mPriorites.add(new Priority(priority.get(0), priority.get(1), priority.get(2)));
                             }
                             mPriorityAdapter.setPriorities(mPriorites);
-                            mPriorityAdapter.notifyItemChanged(0, mPriorites.size());
+                            Log.d("RESUME_UPDATE", "Reload");
                         }
                     }
 
@@ -269,8 +270,6 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
 
                     }
                 });
-
-        mPriorityViewModel.refreshData();
     }
 
     /**

@@ -32,8 +32,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/activity_login_et_password"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/activity_login_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -44,8 +44,7 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_login_et_email_wp"
-        android:theme="@style/pointer_color"
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_et_email"
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -53,7 +52,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@android:color/transparent"
-            android:hint="@string/et_pwd_label"
             android:inputType="textPassword"
             android:paddingStart="0dp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -66,7 +64,7 @@
         android:layout_marginTop="20dp"
         android:text="@string/chk_remember_me_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_login_et_password" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_password" />
 
     <Button
         android:id="@+id/activity_login_btn_login"

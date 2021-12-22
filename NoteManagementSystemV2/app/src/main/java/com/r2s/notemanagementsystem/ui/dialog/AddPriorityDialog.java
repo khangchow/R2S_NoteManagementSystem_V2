@@ -59,7 +59,7 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCommunicateViewModel = new ViewModelProvider(getActivity()).get(CommunicateViewModel.class);
+        mCommunicateViewModel = new ViewModelProvider(requireActivity()).get(CommunicateViewModel.class);
     }
 
     /**
@@ -90,9 +90,6 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mPriorityViewModel = new ViewModelProvider(this).get(PriorityViewModel.class);
-        mPriorityAdapter = new PriorityAdapter(mPriorities, this.getContext());
-
         setUpViewModel();
         setOnClicks();
     }
@@ -110,6 +107,7 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
      */
     private void setUpViewModel() {
         mPriorityViewModel = new ViewModelProvider(this).get(PriorityViewModel.class);
+        mPriorityAdapter = new PriorityAdapter(mPriorities, this.getContext());
         mPriorityViewModel.getAllPriorities()
                 .observe(getViewLifecycleOwner(), priorities -> {
             mPriorityAdapter.setPriorities(priorities);
