@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="pointer_color" parent="">
+        <item name="colorControlActivated">@color/tool_bar_bg</item>
+    </style>
+</resources>
