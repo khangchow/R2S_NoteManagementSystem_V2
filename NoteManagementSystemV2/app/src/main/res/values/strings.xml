@@ -41,14 +41,6 @@
     <string name="open_priority_dialog">Open Priority Dialog</string>
     <string name="open_status_dialog">Open Status Dialog</string>
 
-    <string name="et_fName_label">First Name</string>
-    <string name="et_lName_label">Last Name</string>
-    <string name="et_email_label">Email</string>
-    <string name="et_pwd_label">Password</string>
-    <string name="et_pwd_confirm_label">Password Confirm</string>
-    <string name="et_fName_empty">Please enter your first name</string>
-    <string name="et_lName_empty">Please enter your last name</string>
-
     <string name="close">Close</string>
 
     <string name="priority_form">Priority Form</string>
@@ -73,8 +65,7 @@
     <string name="btn_add_new_note">Add</string>
     <string name="btn_close_new_note">Close</string>
     <string name="description_fab">description</string>
-    <string name="login_failed">User not found!</string>
-    <string name="login_pwd_incorrect">Incorrect password!</string>
+    <string name="login_failed">Email or password is incorrect</string>
     <string name="logged_in">Logged in</string>
     <string name="user_created">User created successfully!</string>
     <string name="title_activity_home">HomeActivity</string>
