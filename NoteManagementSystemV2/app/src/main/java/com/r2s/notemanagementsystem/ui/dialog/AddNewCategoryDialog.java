@@ -43,7 +43,6 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
     public static final String TAG = "CateDialog";
     private CategoryViewModel mCateViewModel;
     private DialogAddNewCategoryBinding binding;
-    private final List<Category> mCates = new ArrayList<>();
     private Bundle bundle = new Bundle();
     CategoryAdapter mCateAdapter;
 
@@ -72,7 +71,7 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
         bundle = getArguments();
         if (bundle != null) {
             binding.btnAdd.setText("Update");
-            binding.etNewCate.setText(bundle.getString("cate_name"));
+            binding.etNewCate.setText(bundle.getString(CategoryConstant.CATEGORY_KEY));
         }
     }
 
@@ -83,18 +82,22 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
 
     private void setViewModel() {
         mCateViewModel.getCateById().observe(getViewLifecycleOwner(), categories -> {
-            mCateAdapter.setCateAdapter(mCates);
+            mCateAdapter.setCateAdapter(categories);
         });
-    }
-
-    private void setUserInfo() {
-        User mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
+            /**
+             * Handling button add new category
+             */
             case R.id.btnAdd:
+
+                /**
+                 * Add new category
+                 */
                 if (binding.btnAdd.getText().toString()
                         .equalsIgnoreCase("add")) {
 
@@ -104,11 +107,13 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
                         public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                             if (response.body().getStatus() == 1) {
                                 Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
-                            }
 
-                            if (response.body().getStatus() == -1){
+                                dismiss();
+                                mCateViewModel.refreshData();
+                            } else if (response.body().getStatus() == -1){
                                 if (response.body().getError() == 2) {
-                                    Toast.makeText(getContext(), "cate name already exists", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Category name already exists"
+                                            , Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -118,41 +123,44 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
                             Toast.makeText(getContext(), "Failure!!!", Toast.LENGTH_SHORT).show();
                         }
                     });
-                    dismiss();
 
-                } else if (binding.btnAdd.getText().toString()
+                }
+                /**
+                 * Update category
+                 */
+                else if (binding.btnAdd.getText().toString()
                         .equalsIgnoreCase("update")) {
-                    int updateId = bundle.getInt("status_id");
 
-                    final String category = mCates.get(updateId).getNameCate();
+                    try {
+                        String updateId = bundle.getString(CategoryConstant.CATEGORY_KEY);
 
-                    int nope = Integer.parseInt(String.valueOf(0));
+                        Log.d("TTT", updateId);
 
-                    mCateViewModel.updateCate(category, binding.etNewCate.getText().toString())
-                            .enqueue(new Callback<BaseResponse>() {
-                        @Override
-                        public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                            if (response.body().getStatus() == 1) {
-                                Toast.makeText(getContext(), "Update successful"
-                                        , Toast.LENGTH_SHORT).show();
-                            } else if (response.body().getStatus() == -1){
-                                if (response.body().getError() == Integer.getInteger(null)) {
-                                    Toast.makeText(getContext(), "Failure!!!"
+                        mCateViewModel.updateCate(updateId, binding.etNewCate.getText().toString())
+                                .enqueue(new Callback<BaseResponse>() {
+                            @Override
+                            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                                if (response.body().getStatus() == 1) {
+                                    Toast.makeText(getContext(), "Update successful"
                                             , Toast.LENGTH_SHORT).show();
+
+                                    dismiss();
                                 }
                             }
-                        }
+                            @Override
+                            public void onFailure(Call<BaseResponse> call, Throwable t) {
+                                Log.e("NNN", t.getMessage());
 
-                        @Override
-                        public void onFailure(Call<BaseResponse> call, Throwable t) {
+                            }
+                        });
+                    } catch (Exception e) {
+                        Log.e("GGG", e.getMessage());
 
-                        }
-                    });
-
-                    dismiss();
+                    }
                 }
                 break;
             case R.id.btnCancel:
+                mCateViewModel.refreshData();
                 dismiss();
                 break;
         }
@@ -173,5 +181,9 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
      */
     private String getCurrentTime() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    private void setUserInfo() {
+        User mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
     }
 }

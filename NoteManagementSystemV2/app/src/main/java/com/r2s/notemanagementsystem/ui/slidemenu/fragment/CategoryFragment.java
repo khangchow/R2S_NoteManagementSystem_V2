@@ -1,6 +1,7 @@
 package com.r2s.notemanagementsystem.ui.slidemenu.fragment;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
@@ -26,6 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.adapter.CategoryAdapter;
+import com.r2s.notemanagementsystem.constant.CategoryConstant;
 import com.r2s.notemanagementsystem.constant.Constants;
 import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Category;
@@ -46,6 +48,7 @@ public class CategoryFragment extends Fragment{
     private CategoryAdapter mCateAdapter;
     private CategoryViewModel mCateViewModel;
     private List<BaseResponse> mCateList = new ArrayList<>();
+    private Context mContext;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -129,8 +132,6 @@ public class CategoryFragment extends Fragment{
         mCateViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         mCateViewModel.getCateById().observe(getViewLifecycleOwner(), categories -> {
             mCateAdapter.setCateAdapter(categories);
-
-            Log.d("Cate", mCateList.toString());
         });
 
         rvCate.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -166,7 +167,7 @@ public class CategoryFragment extends Fragment{
                     /**
                      * Swiped to delete
                      */
-                    case ItemTouchHelper.LEFT:
+                    case ItemTouchHelper.RIGHT:
                         int position = viewHolder.getAdapterPosition();
                         List<Category> tasks = mCateAdapter.getCateAdapter();
                         String category = tasks.get(position).getNameCate();
@@ -175,7 +176,7 @@ public class CategoryFragment extends Fragment{
                          * showing confirm dialog
                          */
                         new AlertDialog.Builder(getContext())
-                                .setTitle("Title")
+                                .setTitle("Confirm!!")
                                 .setMessage("Do you really want to delete?")
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
@@ -211,23 +212,36 @@ public class CategoryFragment extends Fragment{
                                         mCateViewModel.refreshData();
                                     }
                                 }).show();
+                        break;
 
                     /**
                      * Swiped to update
                      */
-                    case ItemTouchHelper.RIGHT:
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString("cate_name", mCateList.get(position).getCategory().getNameCate());
-//
-//                        Log.d("LLL", String.valueOf(mCateList.get(position).getCategory().getNameCate()));
-//
-//                        final AddNewCategoryDialog categoryDialog = new AddNewCategoryDialog();
-//                        categoryDialog.setArguments(bundle);
-//
-//                        FragmentManager fm = categoryDialog.getChildFragmentManager();
-//                        FragmentTransaction ft = fm.beginTransaction();
-//
-//                        categoryDialog.show(fm, "CateDialog");
+                    case ItemTouchHelper.LEFT:
+                        try {
+                            int position1 = viewHolder.getAdapterPosition();
+                            List<Category> list = mCateAdapter.getCateAdapter();
+                            String cate = list.get(position1).getNameCate();
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString(CategoryConstant.CATEGORY_KEY, cate);
+
+                            Log.d("RRR", cate);
+
+                            final AddNewCategoryDialog addNewCategoryDialog = new AddNewCategoryDialog();
+                            addNewCategoryDialog.setArguments(bundle);
+
+                            FragmentManager fm = ((AppCompatActivity) requireContext()).getSupportFragmentManager();
+                            FragmentTransaction ft = fm.beginTransaction();
+
+                            addNewCategoryDialog.show(fm, "CateDialog");
+
+                            mCateAdapter.notifyItemChanged(position1);
+                        } catch (Exception e){
+                            Log.e("FFF", e.getMessage());
+                        }
+
+                        break;
                 }
             }
         }).attachToRecyclerView(rvCate);
@@ -240,14 +254,6 @@ public class CategoryFragment extends Fragment{
     public void onResume() {
         super.onResume();
         mCateViewModel.refreshData();
-    }
-
-    /**
-     * This method is called when the view is destroyed
-     */
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 
     /**

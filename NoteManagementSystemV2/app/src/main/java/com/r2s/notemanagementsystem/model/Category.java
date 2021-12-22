@@ -32,6 +32,11 @@ public class Category {
         this.createdDate = createdDate;
     }
 
+    /**
+     * Constructor
+     * @param nameCate
+     * @param createdDate
+     */
     public Category(String nameCate, String createdDate) {
         this.nameCate = nameCate;
         this.createdDate = createdDate;

@@ -28,24 +28,9 @@ public interface CategoryService {
 
     @GET(UPDATE_CATE)
     Call<BaseResponse> updateCate(@Query("tab") String category, @Query("email") String email,
-                                  @Query("name") String nameCate, @Query("nName") String nNameCate);
+                                  @Query("name") String nameCate, @Query("nname") String nNameCate);
 
     @GET(DELETE_CATE)
     Call<BaseResponse> deleteCate(@Query("tab") String category, @Query("email") String email,
                                   @Query("name") String nameCate);
-
-//    @GET(CATE)
-//    Call<ArrayList<Category>> getCates();
-//
-//    @GET(CATE + "/{id}")
-//    Call<Category> getCatesById(@Path("id") int cateId);
-//
-//    @POST(CATE)
-//    Call<Category> postCate(@Body Category category);
-//
-//    @PUT(CATE + "/{id}")
-//    Call<Category> updateCate(@Path("id") int cateId, @Body Category category);
-//
-//    @DELETE(CATE + "/{id}")
-//    Call<Void> deleteCate(@Path("id") int cateId);
 }

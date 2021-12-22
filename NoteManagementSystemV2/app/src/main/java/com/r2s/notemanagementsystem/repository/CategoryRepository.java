@@ -18,10 +18,6 @@ import retrofit2.Response;
 public class CategoryRepository {
     private CategoryService mCateService;
 
-//    public static CategoryService getService() {
-//        return APIClient.getCate().create(CategoryService.class);
-//    }
-
     /**
      * This method is used as constructor for CategoryRepository class
      */
