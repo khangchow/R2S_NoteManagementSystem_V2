@@ -56,6 +56,14 @@ public class RegisterActivity extends AppCompatActivity {
         String passwordConfirm = binding.activityRegisterEtPasswordConfirm
                 .getText().toString().trim();
 
+        if(TextUtils.isEmpty(user.getFirstName())){
+            binding.activityRegisterEtFName.setError(getResources().getString(R.string.et_fName_empty));
+            return false;
+        }
+        if(TextUtils.isEmpty(user.getLastName())){
+            binding.activityRegisterEtLName.setError(getResources().getString(R.string.et_lName_empty));
+            return false;
+        }
         if(!user.getEmail().matches(Constants.emailPattern)){
             binding.activityRegisterEtEmail.setError(getResources().getString(R.string.et_email_invalid));
             return false;
@@ -82,11 +90,16 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 User user = new User();
 
+                user.setFirstName(binding.activityRegisterEtFName.getText().toString().trim());
+
+                user.setLastName(binding.activityRegisterEtLName.getText().toString().trim());
+
                 user.setEmail(binding.activityRegisterEtEmail.getText().toString().trim());
 
                 user.setPassword(binding.activityRegisterEtPassword.getText().toString().trim());
 
                 if(validateInput(user)){
+                    Toast.makeText(RegisterActivity.this, getResources().getString(R.string.user_created), Toast.LENGTH_SHORT).show();
 //                    userViewModel.count(user.getEmail())
 //                            .observe(RegisterActivity.this, new Observer<Integer>() {
 //                        @Override
