@@ -44,12 +44,11 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_register_et_email_wp"
-        android:theme="@style/pointer_color"
-        app:passwordToggleEnabled="true">
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_et_email"
+        app:passwordToggleEnabled="true"/>
 
-    <EditText
-        android:id="@+id/activity_register_et_password_confirm"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/activity_register_password_confirm"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -60,8 +59,7 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_register_et_password_wp"
-        android:theme="@style/pointer_color"
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_et_password"
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -69,7 +67,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@android:color/transparent"
-            android:hint="@string/et_pwd_confirm_label"
             android:inputType="textPassword"
             android:paddingStart="0dp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -86,7 +83,7 @@
         android:textColor="@color/black"
         app:cornerRadius="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_register_et_password_confirm" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_password_confirm" />
 
     <Button
         android:id="@+id/activity_register_btn_login"
@@ -101,6 +98,6 @@
         android:textColor="@color/black"
         app:cornerRadius="0dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_register_et_password_confirm" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_password_confirm" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,9 +9,12 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.constant.UserConstant;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.repository.UserRepository;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
+
+import retrofit2.Call;
 
 public class UserViewModel extends AndroidViewModel {
     private UserRepository mUserRepo;

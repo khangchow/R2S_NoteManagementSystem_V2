@@ -56,6 +56,12 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
         this.context = context;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mCommunicateViewModel = new ViewModelProvider(getActivity()).get(CommunicateViewModel.class);
+    }
+
     /**
      * This method is called when a view is being created
      * @param inflater LayoutInflater
@@ -71,8 +77,6 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
         binding = DialogAddPriorityBinding.inflate(inflater, container, false);
 
         setUserInfo();
-
-        mCommunicateViewModel = new ViewModelProvider(getActivity()).get(CommunicateViewModel.class);
 
         return binding.getRoot();
     }
