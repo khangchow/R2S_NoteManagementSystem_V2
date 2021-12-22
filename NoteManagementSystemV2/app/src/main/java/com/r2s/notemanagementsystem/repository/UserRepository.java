@@ -15,6 +15,7 @@ import retrofit2.Call;
 
 public class UserRepository {
     Context context;
+    UserService mUserService;
 
     public static UserService getService() {
         return ApiClient.getClient().create(UserService.class);
@@ -22,6 +23,7 @@ public class UserRepository {
 
     public UserRepository(Context context) {
         this.context = context;
+        mUserService = getService();
     }
 
     public void insertUser(User user) {
@@ -33,10 +35,10 @@ public class UserRepository {
     }
 
     public Call<BaseResponse> login(String email, String pass){
-        return getService().login(email, pass);
+        return mUserService.login(email, pass);
     }
 
     public Call<BaseResponse> signUp(String email, String pass, String firstName, String lastName){
-        return getService().signUp(email, pass, firstName, lastName);
+        return mUserService.signUp(email, pass, firstName, lastName);
     }
 }
