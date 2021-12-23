@@ -1,8 +1,6 @@
 package com.r2s.notemanagementsystem.model;
 
-import java.io.Serializable;
-
-public class Note implements Serializable {
+public class Note{
     private int nid;
 
     private String name;
@@ -23,6 +21,16 @@ public class Note implements Serializable {
         this.createdDate = createdDate;
         this.userId = userId;
     }
+
+    public Note(String name, String category, String priority, String status, String planDate, String createdDate) {
+        this.name = name;
+        this.category = category;
+        this.priority = priority;
+        this.status = status;
+        this.planDate = planDate;
+        this.createdDate = createdDate;
+    }
+
 
     public int getUserId() {
         return userId;

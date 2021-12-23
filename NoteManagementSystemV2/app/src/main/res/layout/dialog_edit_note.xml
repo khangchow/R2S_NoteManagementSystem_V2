@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:minWidth="450dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/tv_note_form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/note_form"
+        android:textSize="25sp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:labelFor="@+id/et_priority" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tf_note_name"
+        android:id="@+id/tf_note_name2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -34,7 +43,7 @@
         android:hint="@string/hint_auto_complete_category">
 
         <AutoCompleteTextView
-            android:id="@+id/auto_complete_category"
+            android:id="@+id/auto_complete_category2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
@@ -54,7 +63,7 @@
         android:hint="@string/hint_auto_complete_priority">
 
         <AutoCompleteTextView
-            android:id="@+id/auto_complete_priority"
+            android:id="@+id/auto_complete_priority2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
@@ -74,7 +83,7 @@
         android:hint="@string/hint_auto_complete_status">
 
         <AutoCompleteTextView
-            android:id="@+id/auto_complete_status"
+            android:id="@+id/auto_complete_status2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
@@ -90,7 +99,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/tv_date_plan"
+            android:id="@+id/tv_date_plan2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -99,7 +108,7 @@
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/show_date_picker"
+            android:id="@+id/show_date_picker2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -109,34 +118,27 @@
             android:textColor="@color/black" />
     </FrameLayout>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:orientation="horizontal">
+        android:layout_marginTop="10dp">
 
         <Button
-            android:id="@+id/dialog_insert"
+            android:id="@+id/btn_update_note"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:layout_alignParentStart="true"
             android:layout_marginStart="10dp"
-            android:backgroundTint="@color/gray"
-            android:text="@string/btn_add_new_note"
-            android:textColor="@color/black" />
+            android:text="@string/update" />
 
         <Button
-            android:id="@+id/dialog_close"
+            android:id="@+id/btn_close_note"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:padding="12dp"
+            android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/gray"
-            android:text="@string/btn_close_new_note"
-            android:textColor="@color/black" />
-    </FrameLayout>
-
-
+            android:text="@string/close" />
+    </RelativeLayout>
 </LinearLayout>
