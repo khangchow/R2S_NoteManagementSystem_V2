@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 
 import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.User;
-import com.r2s.notemanagementsystem.services.UserService;
+import com.r2s.notemanagementsystem.service.UserService;
 import com.r2s.notemanagementsystem.utils.ApiClient;
 import com.r2s.notemanagementsystem.utils.RefreshLiveData;
 

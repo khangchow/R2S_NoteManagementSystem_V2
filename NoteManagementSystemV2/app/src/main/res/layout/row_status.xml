@@ -85,7 +85,7 @@
                 android:paddingTop="4dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="8dp"
-                android:text="@string/status_email" />
+                android:text="@string/email" />
 
             <TextView
                 android:id="@+id/tv_status_user"
