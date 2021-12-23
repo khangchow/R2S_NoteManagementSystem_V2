@@ -159,6 +159,11 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
                 if (isFilled()) {
                     final String name = Objects.requireNonNull(Objects.requireNonNull(binding.tfNoteName.getEditText()).getText())
                             .toString();
+                    Log.d("Auto", name);
+                    Log.d("Auto", strPriorityName);
+                    Log.d("Auto", strCategoryName);
+                    Log.d("Auto", strStatusName);
+                    Log.d("Auto", strPlanDate);
 
                     mNoteViewModel.addNote(name, strPriorityName, strCategoryName, strStatusName, strPlanDate).enqueue(new Callback<BaseResponse>() {
                         @Override
@@ -167,6 +172,7 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
                             Log.d("TestInsert","isSuccessful: "+String.valueOf(response.isSuccessful()));
                             if (response.isSuccessful()) {
                                 BaseResponse baseResponse = response.body();
+
                                 assert baseResponse != null;
                                 Log.d("TestInsert",String.valueOf("Status: " +baseResponse.getStatus()));
                                 if (baseResponse.getStatus() == 1) {
@@ -259,8 +265,8 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 month = month + 1;
 
-                Log.d(TAG, "onDateSet: dd/mm/yyyy: " + day + "/" + month + "/" + year);
-                String date = day + "/" + month + "/" + year;
+                Log.d(TAG, "onDateSet: yyyy/mm/dd: " + year + "/" + month + "/" + day);
+                String date = year + "-" + month + "-" + day;
 
                 binding.tvDatePlan.setText(date);
 

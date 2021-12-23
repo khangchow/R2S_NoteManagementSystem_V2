@@ -127,17 +127,18 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
         });
 
         binding.fab.setOnClickListener(this);
+        mNoteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
 
         mNoteAdapter = new NoteAdapter(mNotes, getContext());
-
+        mNoteViewModel.getAllNotes().observe(getViewLifecycleOwner(), notes -> {
+            mNoteAdapter.setNotes(notes);
+        });
         binding.rcvNoteFragment.setAdapter(mNoteAdapter);
         binding.rcvNoteFragment.setHasFixedSize(true);
         binding.rcvNoteFragment.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mNoteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
-        mNoteViewModel.getAllNotes().observe(getViewLifecycleOwner(), notes -> {
-            mNoteAdapter.setNotes(notes);
-        });
+
+
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {

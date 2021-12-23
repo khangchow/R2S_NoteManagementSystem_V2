@@ -36,7 +36,7 @@ public class NoteRepository {
     public RefreshLiveData<List<Note>> loadAllNotes() {
         final RefreshLiveData<List<Note>> liveData = new RefreshLiveData<>((callback) -> {
             mNoteService.getAllNotes(NoteConstant.NOTE_TAB,
-                    mUser.getEmail()).enqueue(new Callback<BaseResponse>() {
+                    "kylh84@gmail.com").enqueue(new Callback<BaseResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<BaseResponse> call,
                                        @NonNull Response<BaseResponse> response) {
