@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import com.google.gson.Gson;
+import com.r2s.notemanagementsystem.api.CategoryService;
 import com.r2s.notemanagementsystem.constant.Constants;
 import com.r2s.notemanagementsystem.model.Category;
 import com.r2s.notemanagementsystem.model.User;
@@ -15,6 +16,7 @@ import java.util.concurrent.Executors;
 
 public class CategoryRepository {
     private CategoryService mCateService;
+    private LiveData<List<Category>> mCates;
 
     /**
      * This method is used as constructor for CategoryRepository class
