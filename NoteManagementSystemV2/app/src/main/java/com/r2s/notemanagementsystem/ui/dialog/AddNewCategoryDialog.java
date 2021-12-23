@@ -29,6 +29,7 @@ import com.r2s.notemanagementsystem.model.Status;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.viewmodel.CategoryViewModel;
+import com.r2s.notemanagementsystem.viewmodel.CommunicateViewModel;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -45,6 +46,7 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
     private DialogAddNewCategoryBinding binding;
     private Bundle bundle = new Bundle();
     CategoryAdapter mCateAdapter;
+    private CommunicateViewModel mCommunicateViewModel;
 
     @Nullable
     @Override
@@ -62,7 +64,7 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mCateViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        mCateViewModel = new ViewModelProvider(getActivity()).get(CategoryViewModel.class);
         mCateAdapter = new CategoryAdapter( this.getContext());
 
         setViewModel();
@@ -83,6 +85,14 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
     private void setViewModel() {
         mCateViewModel.getCateById().observe(getViewLifecycleOwner(), categories -> {
             mCateAdapter.setCateAdapter(categories);
+        });
+
+        mCommunicateViewModel = new ViewModelProvider(getActivity()).get(CommunicateViewModel.class);
+        mCommunicateViewModel.needReloading().observe(getViewLifecycleOwner(), needReloading ->{
+            Log.d("RESUME", needReloading.toString());
+            if (needReloading) {
+                onResume();
+            }
         });
     }
 
@@ -107,9 +117,8 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
                         public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                             if (response.body().getStatus() == 1) {
                                 Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
-
+                                mCommunicateViewModel.makeChanges();
                                 dismiss();
-                                mCateViewModel.refreshData();
                             } else if (response.body().getStatus() == -1){
                                 if (response.body().getError() == 2) {
                                     Toast.makeText(getContext(), "Category name already exists"
@@ -144,7 +153,9 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
                                     Toast.makeText(getContext(), "Update successful"
                                             , Toast.LENGTH_SHORT).show();
 
+                                    mCommunicateViewModel.makeChanges();
                                     dismiss();
+
                                 }
                             }
                             @Override
@@ -160,7 +171,6 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
                 }
                 break;
             case R.id.btnCancel:
-                mCateViewModel.refreshData();
                 dismiss();
                 break;
         }

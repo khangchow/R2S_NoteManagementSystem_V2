@@ -36,6 +36,7 @@ import com.r2s.notemanagementsystem.ui.dialog.StatusDialog;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.ui.dialog.AddNewCategoryDialog;
 import com.r2s.notemanagementsystem.viewmodel.CategoryViewModel;
+import com.r2s.notemanagementsystem.viewmodel.CommunicateViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +48,8 @@ import retrofit2.Response;
 public class CategoryFragment extends Fragment{
     private CategoryAdapter mCateAdapter;
     private CategoryViewModel mCateViewModel;
-    private List<BaseResponse> mCateList = new ArrayList<>();
-    private Context mContext;
+    private CommunicateViewModel mCommunicateViewModel;
+    private User mUser;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -129,9 +130,17 @@ public class CategoryFragment extends Fragment{
 
         mCateAdapter = new CategoryAdapter( this.getContext());
 
-        mCateViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        mCateViewModel = new ViewModelProvider(getActivity()).get(CategoryViewModel.class);
         mCateViewModel.getCateById().observe(getViewLifecycleOwner(), categories -> {
             mCateAdapter.setCateAdapter(categories);
+        });
+
+        mCommunicateViewModel = new ViewModelProvider(getActivity()).get(CommunicateViewModel.class);
+        mCommunicateViewModel.needReloading().observe(getViewLifecycleOwner(), needReloading ->{
+            Log.d("RESUME", needReloading.toString());
+            if (needReloading) {
+                onResume();
+            }
         });
 
         rvCate.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -142,6 +151,7 @@ public class CategoryFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 new AddNewCategoryDialog().show(getChildFragmentManager(), AddNewCategoryDialog.TAG);
+                mCommunicateViewModel.openDialog();
             }
         });
 
@@ -193,8 +203,6 @@ public class CategoryFragment extends Fragment{
                                                     if (response.body().getError() == 2) {
                                                         Toast.makeText(getContext(), "Can't delete, cause using",
                                                                 Toast.LENGTH_SHORT).show();
-
-                                                        mCateViewModel.refreshData();
                                                     }
                                                 }
                                             }
@@ -212,6 +220,7 @@ public class CategoryFragment extends Fragment{
                                         mCateViewModel.refreshData();
                                     }
                                 }).show();
+                        onResume();
                         break;
 
                     /**
@@ -236,7 +245,8 @@ public class CategoryFragment extends Fragment{
 
                             addNewCategoryDialog.show(fm, "CateDialog");
 
-                            mCateAdapter.notifyItemChanged(position1);
+                            mCommunicateViewModel.openDialog();
+                            onResume();
                         } catch (Exception e){
                             Log.e("FFF", e.getMessage());
                         }
@@ -254,12 +264,13 @@ public class CategoryFragment extends Fragment{
     public void onResume() {
         super.onResume();
         mCateViewModel.refreshData();
+        Log.d("RESUME", "load");
     }
 
     /**
      * This method get the user data from the SharedPreference
      */
     private void setUserInfo() {
-        User mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
+       mUser  = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
     }
 }
