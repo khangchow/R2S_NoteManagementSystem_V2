@@ -38,6 +38,10 @@ public class BaseResponse {
         this.status = status;
     }
 
+    /**
+     * get info
+     * @return info
+     */
     public Info getInfo() {
         return info;
     }

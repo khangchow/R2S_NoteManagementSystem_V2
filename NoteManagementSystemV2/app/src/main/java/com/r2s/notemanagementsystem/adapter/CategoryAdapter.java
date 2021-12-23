@@ -32,15 +32,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         this.context = context;
     }
 
-    /**
-     * Constructor with 2 param
-     * @param categoryArrayList
-     * @param context
-     */
-    public CategoryAdapter(ArrayList<Category> categoryArrayList, Context context) {
-        this.categoryArrayList = categoryArrayList;
-        this.context = context;
-    }
+//    /**
+//     * Constructor with 2 param
+//     * @param categoryList
+//     * @param context
+//     */
+//    public CategoryAdapter(List<Category> categoryList, Context context) {
+//        this.categoryList = categoryList;
+//        this.context = context;
+//    }
 
     /**
      * Create new view

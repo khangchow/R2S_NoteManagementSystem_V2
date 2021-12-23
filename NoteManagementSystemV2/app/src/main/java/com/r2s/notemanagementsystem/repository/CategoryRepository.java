@@ -2,10 +2,9 @@ package com.r2s.notemanagementsystem.repository;
 
 import android.app.Application;
 
-import androidx.lifecycle.LiveData;
-
-import com.google.gson.Gson;
-import com.r2s.notemanagementsystem.constant.Constants;
+import com.r2s.notemanagementsystem.utils.APIClient;
+import com.r2s.notemanagementsystem.service.CategoryService;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Category;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.service.CategoryService;
