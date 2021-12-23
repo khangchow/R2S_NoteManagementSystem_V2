@@ -95,7 +95,7 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
 
         initView(view);
 
-        setViewModel();
+        //setViewModel();
 
         setOnClickListener();
 
@@ -104,7 +104,7 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         bundle = getArguments();
         if (bundle != null) {
             binding.dialogInsert.setText("Update");
-            binding.edtNoteName.setText(bundle.getString("note_name"));
+            binding.tfNoteName.getEditText().setText(bundle.getString("note_name"));
         }
     }
 
@@ -120,11 +120,11 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
     /**
      * This method set the ViewModel
      */
-    private void setViewModel() {
-        mNoteViewModel.getAllNotesByUserId().observe(getViewLifecycleOwner(), notes -> {
-            mNoteAdapter.setNotes(notes);
-        });
-    }
+//    private void setViewModel() {
+//        mNoteViewModel.getAllNotesByUserId().observe(getViewLifecycleOwner(), notes -> {
+//            mNoteAdapter.setNotes(notes);
+//        });
+//    }
 
     /**
      * This method sets on-click actions for views
@@ -141,7 +141,7 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
 
                     String currentDate = getCurrentLocalDateTime();
 
-                    Note note = new Note(0, binding.edtNoteName.getText().toString(),
+                    Note note = new Note(0, binding.tfNoteName.getEditText().getText().toString(),
                             strCategoryName, strPriorityName, strStatusName,
                             strPlanDate, currentDate, userId);
 
@@ -157,7 +157,7 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
 
                     String currentDate = getCurrentLocalDateTime();
 
-                    Note note = new Note(updateId, binding.edtNoteName.getText().toString(),
+                    Note note = new Note(updateId, binding.tfNoteName.getEditText().getText().toString(),
                             strCategoryName, strPriorityName, strStatusName, strPlanDate,
                             currentDate, userId);
 
@@ -184,31 +184,42 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
     public void initView(View view) {
 
         //auto complete category
-        mCateViewModel.loadAllCate().observe(getViewLifecycleOwner(), categories -> {
-            for (int i = 0; i < categories.size(); i++) {
-                listStringCate.add(categories.get(i).getNameCate());
-            }
-        });
+//        mCateViewModel.loadAllCate().observe(getViewLifecycleOwner(), categories -> {
+//            for (int i = 0; i < categories.size(); i++) {
+//                listStringCate.add(categories.get(i).getNameCate());
+//            }
+//        });
+
+        listStringCate.add("Working");
+        listStringCate.add("Study");
+        listStringCate.add("Relax");
 
         adapterItemCategory = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringCate);
         binding.autoCompleteCategory.setAdapter(adapterItemCategory);
 
         // auto complete for priority
-        mPriorityViewModel.getAllPriorities().observe(getViewLifecycleOwner(), priorities -> {
-            for (int i = 0; i < priorities.size(); i++) {
-                listStringPri.add(priorities.get(i).getName());
-            }
-        });
+//        mPriorityViewModel.getAllPrioritiesByUserId().observe(getViewLifecycleOwner(), priorities -> {
+//            for (int i = 0; i < priorities.size(); i++) {
+//                listStringPri.add(priorities.get(i).getName());
+//            }
+//        });
+
+        listStringPri.add("High");
+        listStringPri.add("Medium");
+        listStringPri.add("Slow");
 
         adapterItemPriority = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringPri);
         binding.autoCompletePriority.setAdapter(adapterItemPriority);
 
         // auto complete for status
-        mStatusViewModel.getAllStatuses().observe(getViewLifecycleOwner(), statuses -> {
-            for (int i = 0; i < statuses.size(); i++) {
-                listStringSta.add(statuses.get(i).getName());
-            }
-        });
+//        mStatusViewModel.getAllStatusesByUserId().observe(getViewLifecycleOwner(), statuses -> {
+//            for (int i = 0; i < statuses.size(); i++) {
+//                listStringSta.add(statuses.get(i).getName());
+//            }
+//        });
+
+        listStringSta.add("Done");
+        listStringSta.add("Processing");
 
         adapterItemStatus = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringSta);
         binding.autoCompleteStatus.setAdapter(adapterItemStatus);

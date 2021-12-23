@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.r2s.notemanagementsystem"
-        minSdk 30
+        minSdk 23
         targetSdk 31
         versionCode 1
         versionName "1.0"
@@ -45,6 +45,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     testImplementation 'junit:junit:4.+'
+    testImplementation 'junit:junit:'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
@@ -52,12 +53,13 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.7'
 
     //Circle image
-    implementation 'de.hdodenhof:circleimageview:3.0.0'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     //Chart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     // Retrofit & OkHttp
-    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.7.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.0'
+    implementation "androidx.cardview:cardview:1.0.0"
 }
