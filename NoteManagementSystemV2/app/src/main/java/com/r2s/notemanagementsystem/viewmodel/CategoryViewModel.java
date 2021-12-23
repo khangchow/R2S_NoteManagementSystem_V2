@@ -7,53 +7,68 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.r2s.notemanagementsystem.model.Category;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.repository.CategoryRepository;
+import com.r2s.notemanagementsystem.utils.RefreshLiveData;
 
 import java.util.List;
 
+import retrofit2.Call;
+
 public class CategoryViewModel extends AndroidViewModel {
     private CategoryRepository mCateRepo;
-    private LiveData<List<Category>> mCates;
+    private RefreshLiveData<List<Category>> mCateList;
 
-    /**
-     * Constructor with 1 param
-     * @param application
-     */
     public CategoryViewModel(@NonNull Application application) {
         super(application);
-        this.mCateRepo = new CategoryRepository(application);
-        this.mCates = mCateRepo.getAllCate();
+
+        init();
+    }
+
+    /**
+     * init view
+     */
+    private void init() {
+        this.mCateRepo = new CategoryRepository();
+        this.mCateList = mCateRepo.getAllCate();
+    }
+
+    /**
+     * refresh data
+     */
+    public void refreshData() {
+        mCateList.refresh();
     }
 
     /**
      * return all category
-     * @return
+     * @return list of category
      */
-    public LiveData<List<Category>> loadAllCate() {
-        return mCates;
+    public LiveData<List<Category>> getCateById() {
+        return mCateList;
     }
 
     /**
      * insert new Category
      * @param category
      */
-    public void insertCate(Category category) {
-        mCateRepo.insert(category);
+    public Call<BaseResponse> insertCate(String category) {
+        return mCateRepo.postCate(category);
     }
 
     /**
      * update category
      * @param category
      */
-    public void updateCate(Category category) {
-        mCateRepo.update(category);
+    public Call<BaseResponse> updateCate(String category, String newCate) {
+        return mCateRepo.updateCate(category, newCate);
     }
 
     /**
      * delete category
      * @param category
      */
-    public void deleteCate(Category category) {
-        mCateRepo.delete(category);
+    public Call<BaseResponse> deleteCate(String category) {
+        return mCateRepo.deleteCate(category );
     }
 }

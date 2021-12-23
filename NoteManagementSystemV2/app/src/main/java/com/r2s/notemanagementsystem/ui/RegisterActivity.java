@@ -61,6 +61,14 @@ public class RegisterActivity extends AppCompatActivity {
         String passwordConfirm = binding.activityRegisterEtPasswordConfirm
                 .getText().toString().trim();
 
+        if(TextUtils.isEmpty(user.getFirstName())){
+            binding.activityRegisterEtFName.setError(getResources().getString(R.string.et_fName_empty));
+            return false;
+        }
+        if(TextUtils.isEmpty(user.getLastName())){
+            binding.activityRegisterEtLName.setError(getResources().getString(R.string.et_lName_empty));
+            return false;
+        }
         if(!user.getEmail().matches(Constants.emailPattern)){
             binding.activityRegisterEtEmail.setError(getResources().getString(R.string.et_email_invalid));
             return false;
@@ -86,6 +94,10 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 User user = new User();
+
+                user.setFirstName(binding.activityRegisterEtFName.getText().toString().trim());
+
+                user.setLastName(binding.activityRegisterEtLName.getText().toString().trim());
 
                 user.setEmail(binding.activityRegisterEtEmail.getText().toString().trim());
 
