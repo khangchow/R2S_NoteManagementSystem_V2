@@ -1,35 +1,59 @@
 package com.r2s.notemanagementsystem.ui.slidemenu.fragment;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.adapter.NoteAdapter;
+import com.r2s.notemanagementsystem.constant.Constants;
+import com.r2s.notemanagementsystem.constant.NoteConstant;
 import com.r2s.notemanagementsystem.databinding.FragmentNoteBinding;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Note;
+import com.r2s.notemanagementsystem.model.User;
+import com.r2s.notemanagementsystem.repository.NoteRepository;
+import com.r2s.notemanagementsystem.service.NoteService;
+import com.r2s.notemanagementsystem.ui.dialog.EditNoteDialog;
 import com.r2s.notemanagementsystem.ui.dialog.FragmentDialogInsertNote;
+import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
+import com.r2s.notemanagementsystem.utils.CommunicateViewModel;
 import com.r2s.notemanagementsystem.viewmodel.NoteViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FragmentNote extends Fragment implements View.OnClickListener {
     private FragmentNoteBinding binding;
     private NoteViewModel mNoteViewModel;
     private NoteAdapter mNoteAdapter;
     private List<Note> mNotes = new ArrayList<>();
-
+    private User mUser;
+    private Context mContext;
+    private CommunicateViewModel mCommunicateViewModel;
+    private NoteService mNoteService;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,15 +65,16 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
     private String mParam2;
 
     public FragmentNote() {
-        // Required empty constructor
+        // Required empty public constructor
     }
 
     /**
-     * This fragment using the provided parameters.
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NoteFragment.
+     * @return A new instance of fragment PriorityFragment.
      */
     // TODO: Rename and change types and number of parameters
     public static FragmentNote newInstance(String param1, String param2) {
@@ -88,27 +113,38 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentNoteBinding.inflate(getLayoutInflater());
-        return binding.getRoot();
-    }
 
-    /**
-     * This method is called after the onCreateView() method
-     *
-     * @param view               View
-     * @param savedInstanceState Bundle
-     */
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        setUserInfo();
+
+        mNoteService = NoteRepository.getService();
+
+        mCommunicateViewModel = new ViewModelProvider(getActivity()).get(CommunicateViewModel.class);
+        mCommunicateViewModel.needReloading().observe(getViewLifecycleOwner(), needReloading -> {
+            Log.d("RESUME_FRAGMENT", needReloading.toString());
+            if (needReloading) {
+                onResume();
+            }
+        });
+
+        binding.fab.setOnClickListener(this);
+
+        mNoteAdapter = new NoteAdapter(mNotes, getContext());
+
+        binding.rcvNoteFragment.setAdapter(mNoteAdapter);
+        binding.rcvNoteFragment.setHasFixedSize(true);
+        binding.rcvNoteFragment.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mNoteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
+        mNoteViewModel.getAllNotes().observe(getViewLifecycleOwner(), notes -> {
+            mNoteAdapter.setNotes(notes);
+        });
 
-        setUpRecyclerView();
-        setOnClicks();
-
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
 
@@ -119,9 +155,89 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
              */
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                switch (direction) {
+                    // Swipe right to delete
+                    case ItemTouchHelper.RIGHT:
+                        int position = viewHolder.getAdapterPosition();
+                        mNotes = mNoteAdapter.getNotes();
+                        String noteName = mNotes.get(position).getName();
 
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle("Title")
+                                .setMessage("Do you really want to delete?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        mNoteViewModel.deleteNote(noteName).enqueue(
+                                                new Callback<BaseResponse>() {
+                                                    @Override
+                                                    public void onResponse(Call<BaseResponse> call,
+                                                                           Response<BaseResponse> response) {
+                                                        assert response.body() != null;
+                                                        if (response.body().getStatus() == 1) {
+                                                            Toast.makeText(getContext(),
+                                                                    "Deleted",
+                                                                    Toast.LENGTH_SHORT).show();
+                                                            mNoteViewModel.refreshData();
+                                                        } else if (response.body()
+                                                                .getStatus() == -1) {
+                                                            if (response.body().getError() == 2) {
+                                                                Toast.makeText(getContext(),
+                                                                        "Can't delete, " +
+                                                                                "because it's in use",
+                                                                        Toast.LENGTH_SHORT).show();
+                                                                mNoteViewModel.refreshData();
+                                                            }
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<BaseResponse> call,
+                                                                          Throwable t) {
+
+                                                    }
+                                                }
+                                        );
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        mNoteViewModel.refreshData();
+                                    }
+                                }).create().show();
+                        onResume();
+                        break;
+
+                    // Swipe left to update
+                    case ItemTouchHelper.LEFT:
+                        try {
+                            position = viewHolder.getAdapterPosition();
+                            mNotes = mNoteAdapter.getNotes();
+                            noteName = mNotes.get(position).getName();
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString("note_name", noteName);
+
+                            final EditNoteDialog editNoteDialog = EditNoteDialog.newInstance();
+                            editNoteDialog.setArguments(bundle);
+
+                            FragmentManager fm = ((AppCompatActivity) requireContext())
+                                    .getSupportFragmentManager();
+                            FragmentTransaction ft = fm.beginTransaction();
+
+                            editNoteDialog.show(ft, "EditNoteDialog");
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage());
+                        }
+                        mNoteViewModel.refreshData();
+                        onResume();
+                        break;
+                }
             }
         }).attachToRecyclerView(binding.rcvNoteFragment);
+
+        return binding.getRoot();
     }
 
     /**
@@ -130,7 +246,26 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        retrieveNotes();
+
+        mNoteService.getAllNotes(NoteConstant.NOTE_TAB, mUser.getEmail())
+                .enqueue(new Callback<BaseResponse>() {
+                    @Override
+                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<Note> mNote = new ArrayList<>();
+                            for (List<String> note : response.body().getData()) {
+                                mNote.add(new Note(note.get(0), note.get(1), note.get(2), note.get(3), note.get(4),note.get(5)));
+                            }
+                            mNoteAdapter.setNotes(mNotes);
+                            Log.d("RESUME_RELOAD", "Reload");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+
+                    }
+                });
     }
 
     /**
@@ -143,24 +278,6 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * This method sets on-click listener for views
-     */
-    private void setOnClicks() {
-        binding.fab.setOnClickListener(this);
-    }
-
-    /**
-     * This method initializes the Adapter and attach it to the RecyclerView
-     */
-    private void setUpRecyclerView() {
-        mNoteAdapter = new NoteAdapter(mNotes, this.getContext());
-
-        binding.rcvNoteFragment.setAdapter(mNoteAdapter);
-
-        binding.rcvNoteFragment.setLayoutManager(new LinearLayoutManager(getContext()));
-    }
-
-    /**
      * This method sets on-click actions for views
      *
      * @param view View
@@ -169,16 +286,16 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab:
-                DialogFragment dialogFragment = new FragmentDialogInsertNote();
-                dialogFragment.show(getChildFragmentManager(), FragmentDialogInsertNote.TAG);
+                DialogFragment noteDialog = FragmentDialogInsertNote.newInstance();
+                noteDialog.show(getChildFragmentManager(), FragmentDialogInsertNote.TAG);
         }
     }
 
     /**
-     * This method is used to update the RecyclerView
+     * This method get the user data from the SharedPreference
      */
-    public void retrieveNotes() {
-
+    private void setUserInfo() {
+        mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
     }
 
 }

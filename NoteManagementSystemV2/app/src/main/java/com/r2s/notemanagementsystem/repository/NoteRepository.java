@@ -1,65 +1,79 @@
 package com.r2s.notemanagementsystem.repository;
 
-import android.content.Context;
+import android.util.Log;
 
-import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.constant.Constants;
+import com.r2s.notemanagementsystem.constant.NoteConstant;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Note;
 import com.r2s.notemanagementsystem.model.User;
+import com.r2s.notemanagementsystem.service.NoteService;
+import com.r2s.notemanagementsystem.utils.ApiClient;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
+import com.r2s.notemanagementsystem.utils.RefreshLiveData;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class NoteRepository {
+    private static NoteService mNoteService;
+    private User mUser;
 
-    private LiveData<List<Note>> mNotes;
-    private User user;
 
-    /**
-     * This method is constructor for NoteRepository class
-     *
-     * @param context
-     */
-    public NoteRepository(Context context) {
-
+    public NoteRepository() {
+        mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
+        mNoteService = ApiClient.getClient().create(NoteService.class);
     }
 
-    /**
-     * This method returns all notes by current logged in user account
-     *
-     * @return LiveData List
-     */
-    public LiveData<List<Note>> getAllNotesByUserId() {
-        return mNotes;
+
+    public RefreshLiveData<List<Note>> loadAllNotes() {
+        final RefreshLiveData<List<Note>> liveData = new RefreshLiveData<>((callback) -> {
+            mNoteService.getAllNotes(NoteConstant.NOTE_TAB,
+                    mUser.getEmail()).enqueue(new Callback<BaseResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BaseResponse> call,
+                                       @NonNull Response<BaseResponse> response) {
+                    List<Note> notes = new ArrayList<>();
+                    assert response.body() != null;
+                    for (List<String> note : response.body().getData()) {
+                        notes.add(new Note(note.get(0), note.get(1), note.get(2), note.get(3), note.get(4), note.get(5)));
+                    }
+                    callback.onDataLoaded(notes);
+                }
+
+                @Override
+                public void onFailure(Call<BaseResponse> call, Throwable t) {
+                    Log.e("NoteRepository", t.getMessage());
+                }
+            });
+        });
+        return liveData;
     }
 
-    /**
-     * This method inserts a new note
-     *
-     * @param note Note
-     */
-    public void insertNote(Note note) {
 
+    public Call<BaseResponse> addNote(String name, String priority, String category, String status, String planDate) {
+        return mNoteService.addNote(NoteConstant.NOTE_TAB, mUser.getEmail(), name, priority, category, status, planDate);
     }
 
-    /**
-     * This method updates note by id
-     *
-     * @param note Note
-     */
-    public void updateNotes(Note note) {
 
+    public Call<BaseResponse> deleteNote(String name) {
+        return mNoteService.deleteNote(NoteConstant.NOTE_TAB, mUser.getEmail(), name);
     }
 
-    /**
-     * This method deletes a note
-     *
-     * @param note Note
-     */
-    public void deleteNote(Note note) {
 
+    public Call<BaseResponse> editNote(String name, String nname) {
+        return mNoteService.editNote(NoteConstant.NOTE_TAB, mUser.getEmail(), name, nname);
+    }
+
+    public static NoteService getService() {
+        mNoteService = ApiClient.getClient().create(NoteService.class);
+        return mNoteService;
     }
 }
