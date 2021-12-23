@@ -18,6 +18,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UserRepository {
+    Context context;
+    UserService mUserService;
 
     private UserService mUserService;
 
@@ -26,27 +28,16 @@ public class UserRepository {
         mUserService = ApiClient.getClient().create(UserService.class);
 
     }
-    public RefreshLiveData<BaseResponse> loadAllUsers(String tab, String email) {
-        final RefreshLiveData<BaseResponse> liveData = new RefreshLiveData<>((callback -> {
-            mUserService.getAllUser(tab, email).enqueue(new Callback<BaseResponse>() {
-                @Override
-                public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                    callback.onDataLoaded(response.body());
-                }
-
-                @Override
-                public void onFailure(Call<BaseResponse> call, Throwable t) {
-                    Log.e("User Repository", t.getMessage());
-                }
-            });
-        }));
-        return liveData;
-    }
-    public void insertUser(User user) {
-
-    }
 
     public Call<BaseResponse> editUser(String tab, String email, String firstname, String lastname) {
         return mUserService.updateUser(tab, email, firstname, lastname);
+    }
+
+    public Call<BaseResponse> login(String email, String pass){
+        return mUserService.login(email, pass);
+    }
+
+    public Call<BaseResponse> signUp(String email, String pass, String firstName, String lastName){
+        return mUserService.signUp(email, pass, firstName, lastName);
     }
 }

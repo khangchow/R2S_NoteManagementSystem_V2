@@ -9,14 +9,15 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.constant.UserConstant;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.repository.UserRepository;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 
+import retrofit2.Call;
+
 public class UserViewModel extends AndroidViewModel {
     private UserRepository mUserRepo;
-    private MutableLiveData<User> _mUser = new MutableLiveData<>();
-    private LiveData<User> mUser = _mUser;
 
     public UserViewModel(@NonNull Application application) {
         super(application);
@@ -30,25 +31,15 @@ public class UserViewModel extends AndroidViewModel {
         }
     }
 
-    public void insertUser(User user) {
-
-        mUserRepo.insertUser(user);
+    public Call<BaseResponse> login(User user){
+        return mUserRepo.login(user.getEmail(), user.getPassword());
     }
 
-//    public void updateUser(User user) {
-//        mUserRepo.updateUser(user);
-//
-//        mUser = mUserRepo.getUserById(user.getUid());
-//    }
-//
-//    public LiveData<Integer> count(String email){ return mUserRepo.count(email); }
-//
-//    public LiveData<User> login(String email, String pass){return mUserRepo.login(email, pass);}
-//
-//    public LiveData<User> getUser() {
-//        return mUser;
-//    }
     public  void updateUser(String tab, String email, String firstname, String lastname){
         mUserRepo.editUser(tab, email, firstname, lastname);
+    }
+
+    public Call<BaseResponse> signUp(User user){
+        return mUserRepo.signUp(user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName());
     }
 }
