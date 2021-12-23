@@ -86,4 +86,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="txt_enter_email">Enter your email</string>
+    <string name="txt_update_successful">Update user successfully</string>
+    <string name="err_wrong_email">Please re-enter your email!</string>
 </resources>

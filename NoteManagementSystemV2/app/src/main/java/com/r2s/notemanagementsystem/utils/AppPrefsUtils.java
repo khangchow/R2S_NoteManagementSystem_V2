@@ -9,6 +9,7 @@ public class AppPrefsUtils {
     private static SharedPreferences sp;
 
     public static void createAppPrefs(Context context) {
+
         sp = AppPrefs.getInstance(context);
     }
 

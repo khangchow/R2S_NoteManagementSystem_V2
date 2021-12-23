@@ -18,10 +18,17 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.constant.Constants;
+import com.r2s.notemanagementsystem.constant.UserConstant;
 import com.r2s.notemanagementsystem.databinding.FragmentEditProfileBinding;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
+import com.r2s.notemanagementsystem.utils.KeyboardUtils;
 import com.r2s.notemanagementsystem.viewmodel.UserViewModel;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EditProfileFragment extends Fragment implements View.OnClickListener {
 
@@ -44,7 +51,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         binding.btnChange.setOnClickListener(this);
         binding.btnHome.setOnClickListener(this);
 
-        mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        mUserViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
 
         //Lay thong tin user tu phien dang nhap
         mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
@@ -73,29 +80,121 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     }
 
     private void editProfile(){
-        String strFirstName = binding.etFirstName.getText().toString();
+        if (!isEmptyField() && mUser.getEmail().equals(binding.etEmail.getText().toString())
+                && !isRepeatedData()){
+            mUser.setFirstName(binding.etFirstName.getText().toString());
 
-        String strLastName = binding.etLastName.getText().toString();
+            mUser.setLastName(binding.etLastName.getText().toString());
 
-        if (TextUtils.isEmpty(strFirstName) || TextUtils.isEmpty(strLastName)){
-            return;
+            mUserViewModel.updateUser(UserConstant.TAB_PROFILE
+                    , binding.etEmail.getText().toString()
+                    , binding.etEmail.getText().toString()
+                    , binding.etFirstName.getText().toString()
+                    , binding.etLastName.getText().toString()
+            ).enqueue(new Callback<BaseResponse>() {
+                @Override
+                public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                    if (response.isSuccessful() && response.body().getStatus() == 1) {
+                        //Doi profile ở header
+                        mUserViewModel.updatedUserData();
+
+                        //Doi profile cua thong tin dang nhap
+                        AppPrefsUtils.putString(Constants.KEY_USER_DATA, new Gson().toJson(mUser));
+
+                        //Reset các fields
+                        binding.etFirstName.setText(null);
+
+                        binding.etLastName.setText(null);
+
+                        binding.etEmail.setText(null);
+
+                        binding.tilEmail.setError(null);
+
+                        binding.tilFirstname.setError(null);
+
+                        binding.tilLastname.setError(null);
+
+                        binding.parent.requestFocus();
+
+                        Toast.makeText(getContext(), R.string.txt_update_successful
+                                ,Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<BaseResponse> call, Throwable t) {
+
+                }
+            });
+        }else {
+            Boolean isFocused = false;
+
+            if (TextUtils.isEmpty(binding.etEmail.getText().toString())) {
+                binding.tilEmail.setError(getString(R.string.txt_enter_email));
+
+                if (!isFocused) {
+                    binding.etEmail.requestFocus();
+
+                    KeyboardUtils.openKeyboard(binding.etEmail);
+
+                    isFocused = true;
+                }
+            }else {
+                binding.tilEmail.setError(null);
+            }
+
+            if (TextUtils.isEmpty(binding.etFirstName.getText().toString())) {
+                binding.tilFirstname.setError(getString(R.string.app_etfirstname));
+
+                if (!isFocused) {
+                    binding.etFirstName.requestFocus();
+
+                    KeyboardUtils.openKeyboard(binding.etFirstName);
+
+                    isFocused = true;
+                }
+            }else {
+                binding.tilFirstname.setError(null);
+            }
+
+            if (TextUtils.isEmpty(binding.etLastName.getText().toString())) {
+                binding.tilLastname.setError(getString(R.string.app_etlastname));
+
+                if (!isFocused) {
+                    binding.etLastName.requestFocus();
+
+                    KeyboardUtils.openKeyboard(binding.etLastName);
+                }
+            }else {
+                binding.tilLastname.setError(null);
+            }
+
+            if (!isEmptyField() && !mUser.getEmail().equals(binding.etEmail.getText().toString())) {
+                binding.tilEmail.setError(getString(R.string.err_wrong_email));
+
+                binding.etEmail.requestFocus();
+
+                KeyboardUtils.openKeyboard(binding.etEmail);
+            }else if (isRepeatedData()) {
+                binding.tilEmail.setError(null);
+
+                binding.tilFirstname.setError("Repeated name!");
+
+                binding.etFirstName.requestFocus();
+
+                KeyboardUtils.openKeyboard(binding.etFirstName);
+            }
         }
+    }
 
-        mUser.setFirstName(strFirstName);
+    private boolean isRepeatedData() {
+        return mUser.getFirstName().equals(binding.etFirstName.getText().toString())
+                && mUser.getLastName().equals(binding.etLastName.getText().toString());
+    }
 
-        mUser.setLastName(strLastName);
-
-        //Doi profile tren database
-//        mUserViewModel.updateUser(mUser);
-
-        //Doi profile cua thong tin dang nhap
-        AppPrefsUtils.putString(Constants.KEY_USER_DATA, new Gson().toJson(mUser));
-
-        //Reset các fields
-        binding.etFirstName.setText(null);
-
-        binding.etLastName.setText(null);
-
-        Toast.makeText(getContext(),"Update user successfully",Toast.LENGTH_SHORT).show();
+    private boolean isEmptyField() {
+        return TextUtils.isEmpty(binding.etEmail.getText().toString())
+                || TextUtils.isEmpty(binding.etFirstName.getText().toString())
+                || TextUtils.isEmpty(binding.etLastName.getText().toString());
     }
 }
