@@ -1,9 +1,11 @@
 package com.r2s.notemanagementsystem.ui.dialog;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -11,9 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.r2s.notemanagementsystem.R;
-import com.r2s.notemanagementsystem.model.Category;
 import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.adapter.CategoryAdapter;
@@ -34,8 +33,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AddNewCategoryDialog extends DialogFragment implements View.OnClickListener {
-    private TextInputEditText etNewCate;
-    private AppCompatButton btnAdd, btnCancel;
+    public static final String TAG = "CateDialog";
     private CategoryViewModel mCateViewModel;
     private DialogAddNewCategoryBinding binding;
     private Bundle bundle = new Bundle();
@@ -47,19 +45,22 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_add_new_category, container, false);
+        binding = DialogAddNewCategoryBinding.inflate(inflater, container, false);
 
+        setUserInfo();
 
-        //Reference
-        etNewCate = view.findViewById(R.id.etNewCate);
-        btnAdd = view.findViewById(R.id.btnAdd);
-        btnCancel = view.findViewById(R.id.btnCancel);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mCateViewModel = new ViewModelProvider(getActivity()).get(CategoryViewModel.class);
         mCateAdapter = new CategoryAdapter( this.getContext());
 
-        // Setting modal dialog
-        setCancelable(false);
+        setViewModel();
+        setOnClick();
 
         bundle = getArguments();
         if (bundle != null) {
@@ -104,25 +105,25 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
 
                     mCateViewModel.insertCate(binding.etNewCate.getText().toString())
                             .enqueue(new Callback<BaseResponse>() {
-                        @Override
-                        public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                            if (response.body().getStatus() == 1) {
-                                Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
-                                mCommunicateViewModel.makeChanges();
-                                dismiss();
-                            } else if (response.body().getStatus() == -1){
-                                if (response.body().getError() == 2) {
-                                    Toast.makeText(getContext(), "Category name already exists"
-                                            , Toast.LENGTH_SHORT).show();
+                                @Override
+                                public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                                    if (response.body().getStatus() == 1) {
+                                        Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
+                                        mCommunicateViewModel.makeChanges();
+                                        dismiss();
+                                    } else if (response.body().getStatus() == -1){
+                                        if (response.body().getError() == 2) {
+                                            Toast.makeText(getContext(), "Category name already exists"
+                                                    , Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
                                 }
-                            }
-                        }
 
-                        @Override
-                        public void onFailure(Call<BaseResponse> call, Throwable t) {
-                            Toast.makeText(getContext(), "Failure!!!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                                @Override
+                                public void onFailure(Call<BaseResponse> call, Throwable t) {
+                                    Toast.makeText(getContext(), "Failure!!!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
                 }
                 /**
@@ -138,39 +139,57 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
 
                         mCateViewModel.updateCate(updateId, binding.etNewCate.getText().toString())
                                 .enqueue(new Callback<BaseResponse>() {
-                            @Override
-                            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                                if (response.body().getStatus() == 1) {
-                                    Toast.makeText(getContext(), "Update successful"
-                                            , Toast.LENGTH_SHORT).show();
+                                    @Override
+                                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                                        if (response.body().getStatus() == 1) {
+                                            Toast.makeText(getContext(), "Update successful"
+                                                    , Toast.LENGTH_SHORT).show();
 
-                                    mCommunicateViewModel.makeChanges();
-                                    dismiss();
+                                            mCommunicateViewModel.makeChanges();
+                                            dismiss();
 
-                                } else if (response.body().getStatus() == -1) {
-                                    String error = String.valueOf(response.body().getError());
-                                    Log.d("TTT", error);
-                                    if ((binding.etNewCate.getText().toString() == null)) {
-                                        Toast.makeText(getContext(), "Update fail"
-                                                , Toast.LENGTH_SHORT).show();
+                                        } else if (response.body().getStatus() == -1) {
+                                            String error = String.valueOf(response.body().getError());
+                                            Log.d("TTT", error);
+                                            if ((binding.etNewCate.getText().toString() == null)) {
+                                                Toast.makeText(getContext(), "Update fail"
+                                                        , Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
                                     }
-                                }
-                            }
-                            @Override
-                            public void onFailure(Call<BaseResponse> call, Throwable t) {
-                                Log.e("NNN", t.getMessage());
+                                    @Override
+                                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+                                        Log.e("NNN", t.getMessage());
 
-                            }
-                        });
+                                    }
+                                });
                     } catch (Exception e) {
                         Log.e("GGG", e.getMessage());
 
                     }
                 }
+                break;
             case R.id.btnCancel:
                 dismiss();
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+        params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+    }
+
+    /**
+     * get current time
+     * @return
+     */
+    private String getCurrentTime() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     private void setUserInfo() {

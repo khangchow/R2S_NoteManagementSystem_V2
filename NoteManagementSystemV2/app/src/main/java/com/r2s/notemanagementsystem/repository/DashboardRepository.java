@@ -2,6 +2,7 @@ package com.r2s.notemanagementsystem.repository;
 
 import android.util.Log;
 
+import com.r2s.notemanagementsystem.model.Dash;
 import com.r2s.notemanagementsystem.service.DashboardService;
 import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Category;

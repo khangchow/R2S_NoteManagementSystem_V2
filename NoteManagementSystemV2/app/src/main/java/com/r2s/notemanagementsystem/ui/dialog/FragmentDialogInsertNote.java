@@ -182,11 +182,11 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
                                             Toast.LENGTH_SHORT).show();
                                 } else if (baseResponse.getStatus() == -1)
                                     Log.d("TestInsert",String.valueOf("Error: " +baseResponse.getError()));
-                                    if (baseResponse.getError() == 2) {
-                                        Toast.makeText(mContext,
-                                                "This name already exists",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
+                                if (baseResponse.getError() == 2) {
+                                    Toast.makeText(mContext,
+                                            "This name already exists",
+                                            Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
 
@@ -232,21 +232,6 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         binding.autoCompleteCategory.setAdapter(adapterItemCategory);
 
         // auto complete for priority
-        mPriorityViewModel.getAllPriorities().observe(getViewLifecycleOwner(), priorities -> {
-            for (int i = 0; i < priorities.size(); i++) {
-                listStringPri.add(priorities.get(i).getName());
-            }
-        });
-
-        adapterItemPriority = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringPri);
-        binding.autoCompletePriority.setAdapter(adapterItemPriority);
-
-        // auto complete for status
-        mStatusViewModel.getAllStatuses().observe(getViewLifecycleOwner(), statuses -> {
-            for (int i = 0; i < statuses.size(); i++) {
-                listStringSta.add(statuses.get(i).getName());
-            }
-        });
 //        mPriorityViewModel.getAllPriorities().observe(getViewLifecycleOwner(), priorities -> {
 //            for (int i = 0; i < priorities.size(); i++) {
 //                listStringPri.add(priorities.get(i).getName());
