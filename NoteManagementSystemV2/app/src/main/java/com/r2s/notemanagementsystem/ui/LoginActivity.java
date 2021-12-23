@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.r2s.notemanagementsystem.DemoLoggedActivity;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.constant.Constants;
 import com.r2s.notemanagementsystem.constant.UserConstant;
@@ -152,20 +151,17 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(getBaseContext(), getResources().getString(R.string.login_pwd_incorrect), Toast.LENGTH_LONG).show();
                 binding.activityLoginEtPassword.setText("");
                 binding.activityLoginEtPassword.requestFocus();
-            }
-
-            if (res.getError() == Constants.LOGIN_USER_NOT_FOUND_ERR) {
+            }else if (res.getError() == Constants.LOGIN_USER_NOT_FOUND_ERR) {
                 Toast.makeText(getBaseContext(), getResources().getString(R.string.login_failed), Toast.LENGTH_LONG).show();
                 binding.activityLoginEtEmail.requestFocus();
                 binding.activityLoginEtPassword.setText("");
             }
-        }
-
-        if (res.getStatus() == Constants.LOGIN_SUCCESS) {
+        }else if (res.getStatus() == Constants.LOGIN_SUCCESS) {
             user.setFirstName(res.getInfo().getFirstName());
             user.setLastName(res.getInfo().getLastName());
 
             AppPrefsUtils.putString(UserConstant.KEY_USER_DATA, new Gson().toJson(user));
+
             if (binding.activityLoginChkRemember.isChecked())
                 AppPrefsUtils.putString(UserConstant.KEY_REMEMBER_USER
                         , new Gson().toJson("true"));
