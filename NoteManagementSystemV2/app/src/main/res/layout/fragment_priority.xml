@@ -16,7 +16,7 @@
         android:clickable="true"
         android:src="@drawable/ic_add"
         android:backgroundTint="@color/btn_floating_insert"
-        app:tint="#8BC34A"
+        app:tint="#B9E840"
         />
 
     <androidx.recyclerview.widget.RecyclerView

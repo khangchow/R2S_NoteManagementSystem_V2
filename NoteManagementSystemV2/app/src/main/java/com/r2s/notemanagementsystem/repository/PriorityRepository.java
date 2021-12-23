@@ -35,7 +35,7 @@ public class PriorityRepository {
     }
 
     /**
-     * This method loads all users
+     * This method loads all priorities
      * @return RefreshLiveData
      */
     public RefreshLiveData<List<Priority>> loadAllPriorities() {

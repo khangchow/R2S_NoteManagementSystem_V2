@@ -213,7 +213,6 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
                                         mPriorityViewModel.refreshData();
                                     }
                                 }).create().show();
-                        onResume();
                         break;
 
                     // Swipe left to update
@@ -238,7 +237,6 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
                             Log.e("Error", e.getMessage());
                         }
                         mPriorityViewModel.refreshData();
-                        onResume();
                         break;
                 }
             }

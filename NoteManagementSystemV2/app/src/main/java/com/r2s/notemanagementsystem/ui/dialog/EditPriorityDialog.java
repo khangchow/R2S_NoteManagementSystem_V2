@@ -2,11 +2,9 @@ package com.r2s.notemanagementsystem.ui.dialog;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,15 +21,13 @@ import com.r2s.notemanagementsystem.databinding.DialogEditPriorityBinding;
 import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Priority;
 import com.r2s.notemanagementsystem.model.User;
-import com.r2s.notemanagementsystem.service.PriorityService;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.utils.CommunicateViewModel;
 import com.r2s.notemanagementsystem.viewmodel.PriorityViewModel;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,7 +41,7 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
     private List<Priority> mPriorities = new ArrayList<>();
     private Bundle bundle;
     private User mUser;
-    private Context context;
+    private Context mContext;
     private CommunicateViewModel mCommunicateViewModel;
 
     public static EditPriorityDialog newInstance() {
@@ -55,7 +51,7 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        this.context = context;
+        this.mContext = context;
     }
 
     /**
@@ -108,37 +104,45 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_update_priority:
-                mPriorityViewModel.editPriority(bundle.getString("priority_name"),
-                        binding.etPriority.getText().toString()).enqueue(
-                        new Callback<BaseResponse>() {
-                    @Override
-                    public void onResponse(Call<BaseResponse> call,
-                                           Response<BaseResponse> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            BaseResponse baseResponse = response.body();
-                            if (baseResponse.getStatus() == 1) {
-                                mCommunicateViewModel.makeChanges();
+                if(isEmpty()) {
+                    mPriorityViewModel.editPriority(bundle.getString("priority_name"),
+                            binding.etPriority.getText().toString()).enqueue(
+                            new Callback<BaseResponse>() {
+                                @Override
+                                public void onResponse(Call<BaseResponse> call,
+                                                       Response<BaseResponse> response) {
+                                    if (response.isSuccessful() && response.body() != null) {
+                                        BaseResponse baseResponse = response.body();
+                                        if (baseResponse.getStatus() == 1) {
+                                            mCommunicateViewModel.makeChanges();
 
-                                Toast.makeText(context, "Update Successful!",
-                                        Toast.LENGTH_SHORT).show();
-                                Log.d("RESUME", "Edit Success");
-                            } else if (baseResponse.getStatus() == -1) {
-                                if (response.body().getError() == Integer.getInteger(null)) {
-                                    Toast.makeText(context, "Update Failed!",
+                                            Toast.makeText(mContext, "Update Successful!",
+                                                    Toast.LENGTH_SHORT).show();
+                                            Log.d("RESUME", "Edit Success");
+                                        } else if (baseResponse.getStatus() == -1) {
+                                            Integer error = new Integer(baseResponse.getError());
+                                            Log.d("TTT", error.toString());
+                                            if (error.equals(null)) {
+                                                Toast.makeText(mContext, "Update Failed!",
+                                                        Toast.LENGTH_SHORT).show();
+                                                Log.d("RESUME", "Edit Failed");
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<BaseResponse> call, Throwable t) {
+                                    mCommunicateViewModel.makeChanges();
+
+                                    Toast.makeText(getActivity(), "Update Failed!",
                                             Toast.LENGTH_SHORT).show();
                                 }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<BaseResponse> call, Throwable t) {
-                        mCommunicateViewModel.makeChanges();
-
-                        Toast.makeText(getActivity(), "Update Failed!",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
+                            });
+                } else {
+                    binding.tilPriority.setError("This field can't be empty!");
+                    return;
+                }
                 dismiss();
                 break;
             case R.id.btn_close_priority:
@@ -161,5 +165,12 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private Boolean isEmpty() {
+        if (Objects.requireNonNull(binding.etPriority.getText()).toString().trim().length() <= 0) {
+            return false;
+        }
+        return true;
     }
 }

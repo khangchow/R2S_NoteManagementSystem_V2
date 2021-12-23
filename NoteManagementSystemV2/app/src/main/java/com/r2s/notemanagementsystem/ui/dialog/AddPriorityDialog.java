@@ -137,11 +137,10 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
                                     Toast.makeText(mContext, "Create Successful!",
                                             Toast.LENGTH_SHORT).show();
                                     Log.d("RESUME", "Add Success");
+                                    dismiss();
                                 } else if (baseResponse.getStatus() == -1)
                                         if(baseResponse.getError() == 2) {
-                                            Toast.makeText(mContext,
-                                            "This name is already taken",
-                                            Toast.LENGTH_SHORT).show();
+                                            binding.tilPriority.setError("This name is already taken");
                                 }
                             }
                         }
@@ -153,10 +152,9 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
                         }
                     });
                 } else {
-                    binding.etPriority.setError("This information can't be empty!");
+                    binding.tilPriority.setError("This field can't be empty!");
                     return;
                 }
-                dismiss();
                 break;
             case R.id.btn_close_priority:
                 dismiss();

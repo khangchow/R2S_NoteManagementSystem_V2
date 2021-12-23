@@ -1,32 +1,51 @@
 package com.r2s.notemanagementsystem.ui.slidemenu.fragment;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.adapter.StatusAdapter;
 import com.r2s.notemanagementsystem.constant.Constants;
+import com.r2s.notemanagementsystem.constant.StatusConstant;
 import com.r2s.notemanagementsystem.databinding.FragmentStatusBinding;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Status;
 import com.r2s.notemanagementsystem.model.User;
+import com.r2s.notemanagementsystem.repository.StatusRepository;
+import com.r2s.notemanagementsystem.service.StatusService;
+import com.r2s.notemanagementsystem.ui.dialog.EditStatusDialog;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
-import com.r2s.notemanagementsystem.ui.dialog.StatusDialog;
+import com.r2s.notemanagementsystem.ui.dialog.AddStatusDialog;
+import com.r2s.notemanagementsystem.utils.CommunicateViewModel;
 import com.r2s.notemanagementsystem.viewmodel.StatusViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +58,9 @@ public class StatusFragment extends Fragment implements View.OnClickListener {
     private StatusAdapter mStatusAdapter;
     private List<Status> mStatuses = new ArrayList<>();
     private User mUser;
+    private Context mContext;
+    private CommunicateViewModel mCommunicateViewModel;
+    private StatusService mStatusService;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -97,42 +119,116 @@ public class StatusFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentStatusBinding.inflate(getLayoutInflater());
-        return binding.getRoot();
-    }
 
-    /**
-     * This method is called after the onCreateView() method
-     * @param view View
-     * @param savedInstanceState Bundle
-     */
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        setUserInfo();
+
+        mStatusService = StatusRepository.getService();
+
+        mCommunicateViewModel =
+                new ViewModelProvider(getActivity()).get(CommunicateViewModel.class);
+        mCommunicateViewModel.needReloading.observe(getViewLifecycleOwner(), needReloading -> {
+            Log.d("RESUME_FRAGMENT", needReloading.toString());
+            if (needReloading) {
+                onResume();
+            }
+        });
+
+        binding.fabOpenStatus.setOnClickListener(this);
+
+        mStatusAdapter = new StatusAdapter(mStatuses, getContext());
+        binding.rvStatus.setAdapter(mStatusAdapter);
+        binding.rvStatus.setHasFixedSize(true);
+        binding.rvStatus.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mStatusViewModel = new ViewModelProvider(this).get(StatusViewModel.class);
-
-        setUpRecyclerView();
-        setOnClicks();
+        mStatusViewModel.getAllStatuses().observe(getViewLifecycleOwner(), statuses -> {
+            mStatusAdapter.setStatuses(statuses);
+        });
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView,
-                                  @NonNull RecyclerView.ViewHolder viewHolder,
-                                  @NonNull RecyclerView.ViewHolder target) {
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
 
-            /**
-             * Implement swipe to delete
-             * @param viewHolder RecyclerView.ViewHolder
-             * @param direction int
-             */
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                switch (direction) {
+                    // Swipe right to delete
+                    case ItemTouchHelper.RIGHT:
+                        int position = viewHolder.getAdapterPosition();
+                        mStatuses = mStatusAdapter.getStatuses();
+                        String statusName = mStatuses.get(position).getName();
 
+                        new AlertDialog.Builder(requireContext()).setTitle("Title").setMessage(
+                                "Do you really want to delete?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mStatusViewModel.deleteStatus(statusName).enqueue(new Callback<BaseResponse>() {
+                                    @Override
+                                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                                        assert(response.body() != null);
+                                        if (response.body().getStatus() == 1) {
+                                            Toast.makeText(getContext(),
+                                                    "Deleted",
+                                                    Toast.LENGTH_SHORT).show();
+                                            mStatusViewModel.refreshData();
+                                        } else if (response.body().getStatus() == -1) {
+                                            if (response.body().getError() == 2) {
+                                                Toast.makeText(getContext(),
+                                                        "Can't delete, " +
+                                                                "because it's in use",
+                                                        Toast.LENGTH_SHORT).show();
+                                                mStatusViewModel.refreshData();
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+
+                                    }
+                                });
+                            }
+                        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mStatusViewModel.refreshData();
+                            }
+                        }).create().show();
+                        onResume();
+                        break;
+
+                    // Swipe left to update
+                    case ItemTouchHelper.LEFT:
+                        try {
+                            position = viewHolder.getAdapterPosition();
+                            mStatuses = mStatusAdapter.getStatuses();
+                            statusName = mStatuses.get(position).getName();
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString("status_name", statusName);
+
+                            final EditStatusDialog editStatusDialog =
+                                    EditStatusDialog.newInstance();
+                            editStatusDialog.setArguments(bundle);
+
+                            FragmentManager fm =
+                                    ((AppCompatActivity) requireContext()).getSupportFragmentManager();
+                            FragmentTransaction ft = fm.beginTransaction();
+
+                            editStatusDialog.show(ft, "EditStatusDialog");
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage());
+                        }
+                        mStatusViewModel.refreshData();
+                        break;
+                }
             }
         }).attachToRecyclerView(binding.rvStatus);
+
+        return binding.getRoot();
     }
 
     /**
@@ -141,7 +237,25 @@ public class StatusFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        retrieveStatuses();
+
+        mStatusService.getAllStatuses(StatusConstant.STATUS_TAB, mUser.getEmail()).enqueue(new Callback<BaseResponse>() {
+            @Override
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Status> mStatuses = new ArrayList<>();
+                    for (List<String> status : response.body().getData()) {
+                        mStatuses.add(new Status(status.get(0), status.get(1), status.get(2)));
+                    }
+                    mStatusAdapter.setStatuses(mStatuses);
+                    Log.d("RESUME_RELOAD", "Reload");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     /**
@@ -154,24 +268,6 @@ public class StatusFragment extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * This method sets on-click listener for views
-     */
-    private void setOnClicks() {
-        binding.fabOpenStatus.setOnClickListener(this);
-    }
-
-    /**
-     * This method initializes the Adapter and attach it to the RecyclerView
-     */
-    private void setUpRecyclerView() {
-        mStatusAdapter = new StatusAdapter(mStatuses, this.getContext());
-
-        binding.rvStatus.setAdapter(mStatusAdapter);
-
-        binding.rvStatus.setLayoutManager(new LinearLayoutManager(getContext()));
-    }
-
-    /**
      * This method sets on-click actions for views
      * @param view View
      */
@@ -179,15 +275,9 @@ public class StatusFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab_open_status:
-                new StatusDialog().show(getChildFragmentManager(), StatusDialog.TAG);
+                DialogFragment dialogFragment = AddStatusDialog.newInstance();
+                dialogFragment.show(getChildFragmentManager(), AddStatusDialog.TAG);
         }
-    }
-
-    /**
-     * This method is used to update the RecyclerView
-     */
-    private void retrieveStatuses() {
-
     }
 
     /**

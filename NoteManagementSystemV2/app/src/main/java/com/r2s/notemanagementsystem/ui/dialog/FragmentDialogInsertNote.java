@@ -204,7 +204,7 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         binding.autoCompletePriority.setAdapter(adapterItemPriority);
 
         // auto complete for status
-        mStatusViewModel.getAllStatusesByUserId().observe(getViewLifecycleOwner(), statuses -> {
+        mStatusViewModel.getAllStatuses().observe(getViewLifecycleOwner(), statuses -> {
             for (int i = 0; i < statuses.size(); i++) {
                 listStringSta.add(statuses.get(i).getName());
             }

@@ -1,20 +1,14 @@
 package com.r2s.notemanagementsystem.adapter;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.r2s.notemanagementsystem.databinding.RowStatusBinding;
 import com.r2s.notemanagementsystem.model.Status;
-import com.r2s.notemanagementsystem.ui.dialog.StatusDialog;
 
 import java.util.List;
 import java.lang.String;
@@ -24,6 +18,19 @@ public class StatusAdapter extends  RecyclerView.Adapter<StatusAdapter.StatusVie
     private List<Status> mStatuses;
     private Context mContext;
 
+    /**
+     * Constructor with 1 parameter
+     * @param mContext Context
+     */
+    public StatusAdapter(Context mContext) {
+        this.mContext = mContext;
+    }
+
+    /**
+     * Constructor with 2 parameters
+     * @param mStatuses List
+     * @param context Context
+     */
     public StatusAdapter(List<Status> mStatuses, Context context) {
         this.mStatuses = mStatuses;
         this.mContext = context;
@@ -39,7 +46,8 @@ public class StatusAdapter extends  RecyclerView.Adapter<StatusAdapter.StatusVie
     @Override
     public StatusViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Return a new holder instance
-        return new StatusViewHolder(RowStatusBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new StatusViewHolder(RowStatusBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     /**
@@ -50,23 +58,6 @@ public class StatusAdapter extends  RecyclerView.Adapter<StatusAdapter.StatusVie
     @Override
     public void onBindViewHolder(@NonNull StatusViewHolder holder, int position) {
         holder.bind(mStatuses.get(position));
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putInt("status_id", mStatuses.get(holder.getAdapterPosition()).getId());
-                bundle.putString("status_name", mStatuses.get(holder.getAdapterPosition()).getName());
-
-                final StatusDialog statusDialog = new StatusDialog();
-                statusDialog.setArguments(bundle);
-
-                FragmentManager fm = ((AppCompatActivity) mContext).getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-
-                statusDialog.show(fm, "StatusDialog");
-            }
-        });
     }
 
     /**
@@ -92,16 +83,17 @@ public class StatusAdapter extends  RecyclerView.Adapter<StatusAdapter.StatusVie
 
         public StatusViewHolder(@NonNull RowStatusBinding itemView) {
             super(itemView.getRoot());
-
             binding = itemView;
         }
 
         public void bind(Status status) {
-            String statusName = "Name: " + status.getName();
-            String statusCreatedDate = "Created Date: " + status.getCreatedDate();
+            String statusName = status.getName();
+            String statusCreatedDate = status.getCreatedDate();
+            String statusEmail = status.getUserEmail();
 
             binding.tvStatusName.setText(statusName);
             binding.tvStatusCreatedDate.setText(statusCreatedDate);
+            binding.tvStatusUser.setText(statusEmail);
         }
     }
 }
