@@ -1,6 +1,8 @@
 package com.r2s.notemanagementsystem.ui.dialog;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,26 +17,51 @@ import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.adapter.StatusAdapter;
 import com.r2s.notemanagementsystem.constant.Constants;
-import com.r2s.notemanagementsystem.databinding.DialogStatusBinding;
+import com.r2s.notemanagementsystem.databinding.DialogAddStatusBinding;
+import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Status;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
+import com.r2s.notemanagementsystem.utils.CommunicateViewModel;
 import com.r2s.notemanagementsystem.viewmodel.StatusViewModel;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class StatusDialog extends DialogFragment implements View.OnClickListener {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class AddStatusDialog extends DialogFragment implements View.OnClickListener {
 
     public static final String TAG = "StatusDialog";
     private StatusViewModel mStatusViewModel;
-    private DialogStatusBinding binding;
+    private DialogAddStatusBinding binding;
     private StatusAdapter mStatusAdapter;
     private List<Status> mStatuses = new ArrayList<>();
     private Bundle bundle = new Bundle();
     private User mUser;
+    private Context mContext;
+    private CommunicateViewModel mCommunicateViewModel;
+
+    public static AddStatusDialog newInstance() {
+        return new AddStatusDialog();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.mContext = context;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mCommunicateViewModel = new ViewModelProvider(getActivity()).get(CommunicateViewModel.class);
+    }
 
     /**
      * This method is called when a view is being created
@@ -48,7 +75,7 @@ public class StatusDialog extends DialogFragment implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding = DialogStatusBinding.inflate(inflater, container, false);
+        binding = DialogAddStatusBinding.inflate(inflater, container, false);
 
         setUserInfo();
 
@@ -64,17 +91,8 @@ public class StatusDialog extends DialogFragment implements View.OnClickListener
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mStatusViewModel = new ViewModelProvider(this).get(StatusViewModel.class);
-        mStatusAdapter = new StatusAdapter(mStatuses, this.getContext());
-
         setUpViewModel();
         setOnClicks();
-
-        bundle = getArguments();
-        if (bundle != null) {
-            binding.btnAddStatus.setText("Update");
-            binding.btnCloseStatus.setText(bundle.getString("priority_name" ));
-        }
     }
 
     /**
@@ -89,7 +107,9 @@ public class StatusDialog extends DialogFragment implements View.OnClickListener
      * This method sets up the ViewModel
      */
     public void setUpViewModel() {
-        mStatusViewModel.getAllStatusesByUserId()
+        mStatusViewModel = new ViewModelProvider(this).get(StatusViewModel.class);
+        mStatusAdapter = new StatusAdapter(mStatuses, this.getContext());
+        mStatusViewModel.getAllStatuses()
                 .observe(getViewLifecycleOwner(), statuses -> {
             mStatusAdapter.setStatuses(statuses);
         });
@@ -103,44 +123,42 @@ public class StatusDialog extends DialogFragment implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add_status:
-                if (binding.btnAddStatus.getText().toString()
-                        .equalsIgnoreCase("add")) {
-                    final Status status = new Status(0, binding.etStatus.getText().toString(),
-                            getCurrentLocalDateTimeStamp(), mUser.getUid());
-                    mStatusViewModel.insertStatus(status);
+                if (isEmpty()) {
+                    final String name =
+                            Objects.requireNonNull(binding.etStatus.getText()).toString();
+                    mStatusViewModel.addStatus(name).enqueue(new Callback<BaseResponse>() {
+                        @Override
+                        public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                BaseResponse baseResponse = response.body();
+                                if (baseResponse.getStatus() == 1) {
+                                    mCommunicateViewModel.makeChanges();
 
-                    Toast.makeText(getActivity(), "Create " +
-                            binding.etStatus.getText().toString(), Toast.LENGTH_SHORT).show();
-                    dismiss();
-                }
+                                    Toast.makeText(mContext, "Create Successful!",
+                                            Toast.LENGTH_SHORT).show();
+                                    Log.d("RESUME", "Add Success");
+                                    dismiss();
+                                } else if (baseResponse.getStatus() == -1) {
+                                    if (baseResponse.getError() == 2) {
+                                        binding.tilStatus.setError("This name is already taken!");
+                                    }
+                                }
+                            }
+                        }
 
-                if (binding.btnAddStatus.getText().toString()
-                        .equalsIgnoreCase("update")) {
-                    int updateId = bundle.getInt("status_id");
-                    final Status status = new Status(updateId,
-                            binding.etStatus.getText().toString(),
-                            getCurrentLocalDateTimeStamp(), mUser.getUid());
-                    mStatusViewModel.insertStatus(status);
-
-                    mStatusViewModel.updateStatus(status);
-
-                    Toast.makeText(getActivity(), "Update to " +
-                            binding.etStatus.getText().toString(), Toast.LENGTH_SHORT).show();
-                    dismiss();
+                        @Override
+                        public void onFailure(Call<BaseResponse> call, Throwable t) {
+                            Toast.makeText(getActivity(), "Create Failed!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    binding.tilStatus.setError("This field can't be empty!");
                 }
                 break;
             case R.id.btn_close_status:
                 dismiss();
                 break;
         }
-    }
-
-    /**
-     * This method returns the current date with custom format
-     * @return String
-     */
-    public String getCurrentLocalDateTimeStamp() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     /**
@@ -157,5 +175,12 @@ public class StatusDialog extends DialogFragment implements View.OnClickListener
      */
     private void setUserInfo() {
         mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
+    }
+
+    private Boolean isEmpty() {
+        if (Objects.requireNonNull(binding.etStatus.getText()).toString().trim().length() <= 0) {
+            return false;
+        }
+        return true;
     }
 }

@@ -6,6 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".ui.LoginActivity">
 
+    <EditText
+        android:id="@+id/activity_login_et_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:ems="10"
+        android:hint="@string/et_email_hint"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -19,41 +33,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/activity_login_et_email_wp"
+        android:id="@+id/activity_login_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        app:boxStrokeColor="@color/tool_bar_bg"
-        app:hintTextColor="@color/tool_bar_bg"
+        android:ems="10"
+        android:hint="@string/et_pwd_hint"
+        android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        android:theme="@style/pointer_color">
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/activity_login_et_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/transparent"
-        android:hint="@string/et_email_label"
-        android:paddingStart="0dp" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/activity_login_et_password_wp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="20dp"
-        app:boxStrokeColor="@color/tool_bar_bg"
-        app:hintTextColor="@color/tool_bar_bg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_login_et_email_wp"
-        android:theme="@style/pointer_color"
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_et_email"
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -61,7 +52,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@android:color/transparent"
-            android:hint="@string/et_pwd_label"
             android:inputType="textPassword"
             android:paddingStart="0dp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -70,46 +60,39 @@
         android:id="@+id/activity_login_chk_remember"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:buttonTint="@color/tool_bar_bg"
         android:text="@string/chk_remember_me_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_login_et_password_wp" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_password" />
 
     <Button
         android:id="@+id/activity_login_btn_login"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="20dp"
-        android:backgroundTint="@color/tool_bar_bg"
-        android:padding="15dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/grey"
         android:text="@string/btn_login_text"
-        android:textColor="@color/white"
-        android:textSize="16dp"
-        app:cornerRadius="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        app:cornerRadius="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_login_chk_remember" />
 
     <Button
         android:id="@+id/activity_login_btn_exit"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:backgroundTint="@color/grey"
-        android:padding="15dp"
         android:text="@string/btn_exit_text"
-        android:textColor="@color/tool_bar_bg"
-        android:textSize="16dp"
-        app:cornerRadius="50dp"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        app:cornerRadius="0dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_login_btn_login" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_chk_remember" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"

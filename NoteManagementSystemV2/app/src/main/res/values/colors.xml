@@ -13,5 +13,6 @@
     <color name="tool_bar_bg">#077E73</color>
     <color name="status_bar_bg">#09635B</color>
     <color name="button_edit_profile">#9B9393</color>
-    <color name="btn_floating_insert">#d90dd9</color>
+    <color name="button_main">#D7D7D7</color>
+    <color name="btn_floating_insert">#E3155F</color>
 </resources>

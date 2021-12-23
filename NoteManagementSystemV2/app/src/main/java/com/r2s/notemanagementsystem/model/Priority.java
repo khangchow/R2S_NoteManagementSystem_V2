@@ -4,13 +4,39 @@ public class Priority {
     private int id;
     private String name;
     private String createdDate;
-    private int userId;
+    private String userEmail;
 
-    public Priority(int id, String name, String createdDate, int userId) {
+    /**
+     * Constructor with no paramters
+     */
+    public Priority() {
+
+    }
+
+    /**
+     * Constructor with 3 parameters
+     * @param name String
+     * @param createdDate String
+     * @param userEmail String
+     */
+    public Priority(String name, String createdDate, String userEmail) {
+        this.name = name;
+        this.createdDate = createdDate;
+        this.userEmail = userEmail;
+    }
+
+    /**
+     * Constructor with 4 parameters
+     * @param id int
+     * @param name String
+     * @param createdDate String
+     * @param userEmail String
+     */
+    public Priority(int id, String name, String createdDate, String userEmail) {
         this.id = id;
         this.name = name;
         this.createdDate = createdDate;
-        this.userId = userId;
+        this.userEmail = userEmail;
     }
 
     public int getId() {
@@ -37,11 +63,11 @@ public class Priority {
         this.createdDate = createdDate;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }
