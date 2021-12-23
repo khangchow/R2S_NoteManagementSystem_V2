@@ -112,7 +112,6 @@ public class PriorityAdapter extends RecyclerView.Adapter<PriorityAdapter.Priori
 
             binding.tvPriorityName.setText(priorityName);
             binding.tvPriorityCreatedDate.setText(priorityCreatedDate);
-            binding.tvPriorityUser.setText(priorityEmail);
         }
     }
 }

@@ -93,7 +93,6 @@ public class StatusAdapter extends  RecyclerView.Adapter<StatusAdapter.StatusVie
 
             binding.tvStatusName.setText(statusName);
             binding.tvStatusCreatedDate.setText(statusCreatedDate);
-            binding.tvStatusUser.setText(statusEmail);
         }
     }
 }
