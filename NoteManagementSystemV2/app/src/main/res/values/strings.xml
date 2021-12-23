@@ -91,5 +91,5 @@
     <string name="err_wrong_email">Please re-enter your email!</string>
     <string name="email">Email</string>
     <string name="input_name">Input Name</string>
-    <string name="enter_category_name">Enter Category's Name</string>
+    <string name="enter_category_name">Enter Category\'s Name</string>
 </resources>

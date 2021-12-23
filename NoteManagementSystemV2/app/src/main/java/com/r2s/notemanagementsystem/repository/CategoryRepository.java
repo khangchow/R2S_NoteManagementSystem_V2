@@ -2,10 +2,14 @@ package com.r2s.notemanagementsystem.repository;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.r2s.notemanagementsystem.constant.Constants;
+import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.service.CategoryService;
 import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Category;
 import com.r2s.notemanagementsystem.utils.ApiClient;
+import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.utils.RefreshLiveData;
 
 import java.util.ArrayList;
@@ -17,6 +21,8 @@ import retrofit2.Response;
 
 public class CategoryRepository {
     private CategoryService mCateService;
+    private User mUser  = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA)
+            , User.class);
 
     /**
      * This method is used as constructor for CategoryRepository class
@@ -31,7 +37,7 @@ public class CategoryRepository {
      */
     public RefreshLiveData<List<Category>> getAllCate() {
         final RefreshLiveData<List<Category>> liveData = new RefreshLiveData<>(callback -> {
-            mCateService.getAllCate("Category", "a").enqueue(new Callback<BaseResponse>() {
+            mCateService.getAllCate("Category", mUser.getEmail()).enqueue(new Callback<BaseResponse>() {
                 @Override
                 public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                     List<Category> categories = new ArrayList<>();
@@ -57,7 +63,7 @@ public class CategoryRepository {
      * @return category by id
      */
     public Call<BaseResponse> loadCateById(int id) {
-        Call<BaseResponse> call = mCateService.getCateByID("Category", "a", id);
+        Call<BaseResponse> call = mCateService.getCateByID("Category", mUser.getEmail(), id);
 
         return call;
     }
@@ -68,7 +74,7 @@ public class CategoryRepository {
      * @return new Cate
      */
     public Call<BaseResponse> postCate (String nameCategory) {
-        return mCateService.addCate("Category", "a", nameCategory);
+        return mCateService.addCate("Category", mUser.getEmail(), nameCategory);
     }
 
     /**
@@ -78,7 +84,7 @@ public class CategoryRepository {
      * @return cate's information updated
      */
     public Call<BaseResponse> updateCate (String nameCate, String newCate) {
-        return mCateService.updateCate("Category", "a", nameCate, newCate);
+        return mCateService.updateCate("Category", mUser.getEmail(), nameCate, newCate);
     }
 
     /**
@@ -87,7 +93,7 @@ public class CategoryRepository {
      * @return void
      */
     public Call<BaseResponse> deleteCate (String nameCategory) {
-        return mCateService.deleteCate("Category", "a", nameCategory);
+        return mCateService.deleteCate("Category", mUser.getEmail(), nameCategory);
     }
 
 }
