@@ -48,6 +48,8 @@ public class HomeActivity extends AppCompatActivity {
 
         initHeaderViews();
 
+        setUserDataToHeader();
+
         setUpViewModel();
     }
 
@@ -78,16 +80,14 @@ public class HomeActivity extends AppCompatActivity {
     private void setUpViewModel() {
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-//        mUserViewModel.getUser().observe(this, new Observer<User>() {
-//            @Override
-//            public void onChanged(User user) {
-//                if (user != null) {
-//                    mUser = user;
-//
-//                    setUserDataToHeader();
-//                }
-//            }
-//        });
+        mUserViewModel.isUserUpdated().observe(this, isUserUpdated -> {
+            if (isUserUpdated) {
+                mUser = new Gson()
+                        .fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
+
+                setUserDataToHeader();
+            }
+        });
     }
 
     private void setUserDataToHeader() {

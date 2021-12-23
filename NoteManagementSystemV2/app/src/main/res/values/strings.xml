@@ -10,6 +10,7 @@
     <string name="button_update">Update</string>
     <string name="edit">Edit</string>
     <string name="edit_category_form">Edit category form</string>
+    <string name="update">Update</string>
 
     <!-- Note fragment-->
     <!-- TODO: Remove or change this placeholder text -->
@@ -41,18 +42,25 @@
     <string name="open_priority_dialog">Open Priority Dialog</string>
     <string name="open_status_dialog">Open Status Dialog</string>
 
+    <string name="et_fName_label">First Name</string>
+    <string name="et_lName_label">Last Name</string>
+    <string name="et_email_label">Email</string>
+    <string name="et_pwd_label">Password</string>
+    <string name="et_pwd_confirm_label">Password Confirm</string>
+    <string name="et_fName_empty">Please enter your first name</string>
+    <string name="et_lName_empty">Please enter your last name</string>
+
     <string name="close">Close</string>
 
     <string name="priority_form">Priority Form</string>
     <string name="status_form">Status Form</string>
 
-    <string name="priority_email">Email</string>
-    <string name="priority_name">Name</string>
-    <string name="priority_created_date">Created Date</string>
+    <string name="priority_name">PriorityName</string>
+    <string name="priority_created_date">PriorityCreatedDate</string>
     <string name="author_id">AuthorId</string>
 
-    <string name="status_created_date">Created Date</string>
-    <string name="status_name">Name</string>
+    <string name="status_created_date">StatusCreatedDate</string>
+    <string name="status_name">StatusName</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="user_name">Username</string>
     <string name="user_email">username@gmail.com</string>
@@ -65,7 +73,8 @@
     <string name="btn_add_new_note">Add</string>
     <string name="btn_close_new_note">Close</string>
     <string name="description_fab">description</string>
-    <string name="login_failed">Email or password is incorrect</string>
+    <string name="login_failed">User not found!</string>
+    <string name="login_pwd_incorrect">Incorrect password!</string>
     <string name="logged_in">Logged in</string>
     <string name="user_created">User created successfully!</string>
     <string name="title_activity_home">HomeActivity</string>
@@ -77,17 +86,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
-    <string name="status_email">Email</string>
-    <string name="update">Update</string>
-    <string name="enter_category_name">Enter Category\'s Name</string>
-    <string name="input_name">Input name</string>
-    <string name="title_activity_edit_status_dialog">EditStatusDialog</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="txt_enter_email">Enter your email</string>
+    <string name="txt_update_successful">Update user successfully</string>
+    <string name="err_wrong_email">Please re-enter your email!</string>
 </resources>
