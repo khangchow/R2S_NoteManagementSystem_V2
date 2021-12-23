@@ -62,11 +62,9 @@ public class NoteRepository {
         return mNoteService.addNote(NoteConstant.NOTE_TAB, mUser.getEmail(), name, priority, category, status, planDate);
     }
 
-
     public Call<BaseResponse> deleteNote(String name) {
         return mNoteService.deleteNote(NoteConstant.NOTE_TAB, mUser.getEmail(), name);
     }
-
 
     public Call<BaseResponse> editNote(String name, String nname) {
         return mNoteService.editNote(NoteConstant.NOTE_TAB, mUser.getEmail(), name, nname);

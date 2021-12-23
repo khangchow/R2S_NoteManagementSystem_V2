@@ -31,6 +31,7 @@ public class Note{
         this.createdDate = createdDate;
     }
 
+
     public int getUserId() {
         return userId;
     }
