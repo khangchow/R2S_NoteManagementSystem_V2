@@ -44,6 +44,12 @@ public class NoteRepository {
                     assert response.body() != null;
                     for (List<String> note : response.body().getData()) {
                         notes.add(new Note(note.get(0), note.get(1), note.get(2), note.get(3), note.get(4), note.get(5)));
+                        Log.e("TestGet", note.get(0));
+                        Log.e("TestGet", note.get(1));
+                        Log.e("TestGet", note.get(2));
+                        Log.e("TestGet", note.get(3));
+                        Log.e("TestGet", note.get(4));
+                        Log.e("TestGet", note.get(5));
                     }
                     callback.onDataLoaded(notes);
                 }
@@ -54,6 +60,7 @@ public class NoteRepository {
                 }
             });
         });
+
         return liveData;
     }
 
@@ -66,8 +73,10 @@ public class NoteRepository {
         return mNoteService.deleteNote(NoteConstant.NOTE_TAB, mUser.getEmail(), name);
     }
 
-    public Call<BaseResponse> editNote(String name, String nname) {
-        return mNoteService.editNote(NoteConstant.NOTE_TAB, mUser.getEmail(), name, nname);
+    public Call<BaseResponse> editNote(String name, String nname, String priority, String category,
+                                       String status, String planDate) {
+        return mNoteService.editNote(NoteConstant.NOTE_TAB, mUser.getEmail(), name, nname, priority,category,
+                status, planDate);
     }
 
     public static NoteService getService() {

@@ -23,7 +23,9 @@ public interface NoteService {
 
     @GET(UPDATE_NOTE)
     Call<BaseResponse> editNote(@Query("tab") String tab, @Query("email") String email,
-                                    @Query("name") String name, @Query("nname") String nname);
+                                    @Query("name") String name, @Query("nname") String nname,
+                                @Query("Priority") String priority,  @Query("Category") String category,
+                                @Query("Status") String status,  @Query("PlanDate") String planDate);
 
     @GET(DELETE_NOTE)
     Call<BaseResponse> deleteNote(@Query("tab") String tab, @Query("email") String email,

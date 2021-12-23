@@ -45,8 +45,10 @@ public class NoteViewModel extends AndroidViewModel {
         return mNoteRepository.addNote(name, priority, category, status, planDate);
     }
 
-    public Call<BaseResponse> editNote(String name, String nname) {
-        return mNoteRepository.editNote(name, nname);
+    public Call<BaseResponse> editNote(String name, String nname, String priority, String category,
+                                       String status, String planDate) {
+        return mNoteRepository.editNote(name, nname, priority,category,
+                status, planDate);
     }
 
     public Call<BaseResponse> deleteNote(String name) {

@@ -128,7 +128,7 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
 
         binding.fab.setOnClickListener(this);
         mNoteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
-
+        mNoteViewModel.refreshData();
         mNoteAdapter = new NoteAdapter(mNotes, getContext());
         mNoteViewModel.getAllNotes().observe(getViewLifecycleOwner(), notes -> {
             mNoteAdapter.setNotes(notes);
@@ -136,9 +136,6 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
         binding.rcvNoteFragment.setAdapter(mNoteAdapter);
         binding.rcvNoteFragment.setHasFixedSize(true);
         binding.rcvNoteFragment.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
-
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -162,6 +159,9 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
                         int position = viewHolder.getAdapterPosition();
                         mNotes = mNoteAdapter.getNotes();
                         String noteName = mNotes.get(position).getName();
+                        String notePri = mNotes.get(position).getPriority();
+                        String noteCate = mNotes.get(position).getCategory();
+                        String noteSta = mNotes.get(position).getStatus();
 
                         new AlertDialog.Builder(requireContext())
                                 .setTitle("Title")
@@ -216,9 +216,16 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
                             position = viewHolder.getAdapterPosition();
                             mNotes = mNoteAdapter.getNotes();
                             noteName = mNotes.get(position).getName();
+                            notePri = mNotes.get(position).getPriority();
+                            noteCate = mNotes.get(position).getCategory();
+                            noteSta = mNotes.get(position).getStatus();
 
                             Bundle bundle = new Bundle();
                             bundle.putString("note_name", noteName);
+                            bundle.putString("priority_name", notePri);
+                            bundle.putString("category_name", noteCate);
+                            bundle.putString("status_name", noteSta);
+
 
                             final EditNoteDialog editNoteDialog = EditNoteDialog.newInstance();
                             editNoteDialog.setArguments(bundle);

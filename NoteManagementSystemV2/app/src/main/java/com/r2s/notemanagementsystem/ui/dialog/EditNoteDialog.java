@@ -1,11 +1,17 @@
 package com.r2s.notemanagementsystem.ui.dialog;
 
+import static com.r2s.notemanagementsystem.ui.dialog.FragmentDialogInsertNote.TAG;
+
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +32,7 @@ import com.r2s.notemanagementsystem.utils.CommunicateViewModel;
 import com.r2s.notemanagementsystem.viewmodel.NoteViewModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,6 +47,14 @@ public class EditNoteDialog extends DialogFragment implements View.OnClickListen
     private Bundle bundle;
     private User mUser;
     private Context context;
+
+    List<String> listStringCate = new ArrayList<>();
+    List<String> listStringPri = new ArrayList<>();
+    List<String> listStringSta = new ArrayList<>();
+    private DatePickerDialog.OnDateSetListener dateSetListener;
+    String strCategoryName, strPriorityName, strStatusName;
+    String strPlanDate = "";
+
 
     private CommunicateViewModel mCommunicateViewModel;
 
@@ -83,11 +98,13 @@ public class EditNoteDialog extends DialogFragment implements View.OnClickListen
         mNoteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
         mAdapter = new NoteAdapter(mNotes, this.getContext());
 
+        initView(view);
+        eventItemClick();
         setOnClicks();
 
         bundle = getArguments();
         if (bundle != null) {
-            binding.etNote.setText(bundle.getString("note_name"));
+            binding.tfNoteName2.getEditText().setText(bundle.getString("note_name"));
         }
     }
 
@@ -102,44 +119,144 @@ public class EditNoteDialog extends DialogFragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_update_note:
-                mNoteViewModel.editNote(bundle.getString("note_name"),
-                        binding.etNote.getText().toString()).enqueue(
-                        new Callback<BaseResponse>() {
-                            @Override
-                            public void onResponse(Call<BaseResponse> call,
-                                                   Response<BaseResponse> response) {
-                                if (response.isSuccessful() && response.body() != null) {
-                                    BaseResponse baseResponse = response.body();
-                                    if (baseResponse.getStatus() == 1) {
-                                        mCommunicateViewModel.makeChanges();
-
-                                        Toast.makeText(context, "Update Successful!",
-                                                Toast.LENGTH_SHORT).show();
-                                        Log.d("RESUME", "Edit Success");
-                                    } else if (baseResponse.getStatus() == -1) {
-                                        if (response.body().getError() == Integer.getInteger(null)) {
-                                            Toast.makeText(context, "Update Failed!",
-                                                    Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<BaseResponse> call, Throwable t) {
-                                mCommunicateViewModel.makeChanges();
-
-                                Toast.makeText(getActivity(), "Update Failed!",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                dismiss();
-                break;
+//            case R.id.btn_update_note:
+//                mNoteViewModel.editNote(bundle.getString("note_name"),
+//                        binding.tfNoteName2.getEditText().getText().toString()).enqueue(
+//                        new Callback<BaseResponse>() {
+//                            @Override
+//                            public void onResponse(Call<BaseResponse> call,
+//                                                   Response<BaseResponse> response) {
+//                                if (response.isSuccessful() && response.body() != null) {
+//                                    BaseResponse baseResponse = response.body();
+//                                    if (baseResponse.getStatus() == 1) {
+//                                        mCommunicateViewModel.makeChanges();
+//
+//                                        Toast.makeText(context, "Update Successful!",
+//                                                Toast.LENGTH_SHORT).show();
+//                                        Log.d("RESUME", "Edit Success");
+//                                    } else if (baseResponse.getStatus() == -1) {
+//                                        if (response.body().getError() == Integer.getInteger(null)) {
+//                                            Toast.makeText(context, "Update Failed!",
+//                                                    Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    }
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<BaseResponse> call, Throwable t) {
+//                                mCommunicateViewModel.makeChanges();
+//
+//                                Toast.makeText(getActivity(), "Update Failed!",
+//                                        Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+               // dismiss();
+               // break;
             case R.id.btn_close_note:
                 dismiss();
                 break;
+            case R.id.show_date_picker:
+                setUpDatePicker();
+                break;
         }
+    }
+
+    public void initView(View view) {
+
+        //auto complete category
+//        mCateViewModel.loadAllCate().observe(getViewLifecycleOwner(), categories -> {
+//            for (int i = 0; i < categories.size(); i++) {
+//                listStringCate.add(categories.get(i).getNameCate());
+//            }
+//        });
+
+        listStringCate.add("Working");
+        listStringCate.add("Study");
+        listStringCate.add("Relax");
+
+        ArrayAdapter<String> adapterItemCategory = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringCate);
+        binding.autoCompleteCategory2.setAdapter(adapterItemCategory);
+
+        // auto complete for priority
+//        mPriorityViewModel.getAllPriorities().observe(getViewLifecycleOwner(), priorities -> {
+//            for (int i = 0; i < priorities.size(); i++) {
+//                listStringPri.add(priorities.get(i).getName());
+//            }
+//        });
+
+        listStringPri.add("High");
+        listStringPri.add("Medium");
+        listStringPri.add("Slow");
+        ArrayAdapter<String> adapterItemPriority = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringPri);
+        binding.autoCompletePriority2.setAdapter(adapterItemPriority);
+
+        // auto complete for status
+//        mStatusViewModel.getAllStatusesByUserId().observe(getViewLifecycleOwner(), statuses -> {
+//            for (int i = 0; i < statuses.size(); i++) {
+//                listStringSta.add(statuses.get(i).getName());
+//            }
+//        });
+
+        listStringSta.add("Done");
+        listStringSta.add("Processing");
+
+
+        ArrayAdapter<String> adapterItemStatus = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringSta);
+        binding.autoCompleteStatus2.setAdapter(adapterItemStatus);
+
+        // Show date when choose date inside date picker
+        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                month = month + 1;
+
+                Log.d(TAG, "onDateSet: yyyy/mm/dd: " + year + "/" + month + "/" + day);
+                String date = year + "-" + month + "-" + day;
+
+                binding.tvDatePlan2.setText(date);
+
+                strPlanDate = date;
+            }
+        };
+
+    }
+
+    public void eventItemClick() {
+
+        binding.autoCompleteCategory2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                strCategoryName = parent.getItemAtPosition(position).toString();
+            }
+        });
+
+        binding.autoCompletePriority2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                strPriorityName = parent.getItemAtPosition(position).toString();
+            }
+        });
+
+        binding.autoCompleteStatus2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                strStatusName = parent.getItemAtPosition(position).toString();
+            }
+        });
+    }
+
+    public void setUpDatePicker() {
+        Calendar kal = Calendar.getInstance();
+
+        int year = kal.get(Calendar.YEAR);
+        int month = kal.get(Calendar.MONTH);
+        int day = kal.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog = new DatePickerDialog(getContext(),
+                dateSetListener, year, month, day);
+
+        dialog.show();
     }
 
     /**
