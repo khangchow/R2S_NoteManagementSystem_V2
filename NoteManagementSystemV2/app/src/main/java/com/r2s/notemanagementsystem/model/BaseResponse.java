@@ -8,38 +8,31 @@ public class BaseResponse {
     private List<List<String>> data;
     private int error;
 
+    /**
+     * Constructor with 4 parameters
+     * @param status int
+     * @param info Info
+     * @param data List
+     * @param error int
+     */
     public BaseResponse(int status, Info info, List<List<String>> data, int error) {
         this.status = status;
         this.info = info;
-    }
-
-    private Category category;
-
-    /**
-     * Constructor
-     * @param status
-     * @param category
-     * @param data
-     * @param error
-     */
-    public BaseResponse(int status, Category category, List<List<String>> data, int error) {
-        this.status = status;
-        this.category = category;
         this.data = data;
         this.error = error;
     }
 
     /**
-     * get status
-     * @return status
+     * Get status
+     * @return status int
      */
     public int getStatus() {
         return status;
     }
 
     /**
-     * set status
-     * @param status
+     * Set status
+     * @param status int
      */
     public void setStatus(int status) {
         this.status = status;

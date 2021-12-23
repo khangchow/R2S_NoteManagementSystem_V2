@@ -25,8 +25,6 @@ import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.utils.CommunicateViewModel;
 import com.r2s.notemanagementsystem.viewmodel.PriorityViewModel;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -43,7 +41,7 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
     private PriorityAdapter mPriorityAdapter;
     private List<Priority> mPriorities = new ArrayList<>();
     private User mUser;
-    private Context context;
+    private Context mContext;
     private CommunicateViewModel mCommunicateViewModel;
 
     public static AddPriorityDialog newInstance() {
@@ -53,13 +51,13 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        this.context = context;
+        this.mContext = context;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCommunicateViewModel = new ViewModelProvider(requireActivity()).get(CommunicateViewModel.class);
+        mCommunicateViewModel = new ViewModelProvider(getActivity()).get(CommunicateViewModel.class);
     }
 
     /**
@@ -136,18 +134,14 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
                                 if (baseResponse.getStatus() == 1) {
                                     mCommunicateViewModel.makeChanges();
 
-                                    Toast.makeText(context, "Create Successful!",
+                                    Toast.makeText(mContext, "Create Successful!",
                                             Toast.LENGTH_SHORT).show();
-                                    mPriorityViewModel.refreshData();
                                     Log.d("RESUME", "Add Success");
                                 } else if (baseResponse.getStatus() == -1)
                                         if(baseResponse.getError() == 2) {
-                                            mCommunicateViewModel.makeChanges();
-
-                                            Toast.makeText(context,
+                                            Toast.makeText(mContext,
                                             "This name is already taken",
                                             Toast.LENGTH_SHORT).show();
-                                    mPriorityViewModel.refreshData();
                                 }
                             }
                         }
@@ -158,11 +152,11 @@ public class AddPriorityDialog extends DialogFragment implements View.OnClickLis
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
-                    dismiss();
                 } else {
                     binding.etPriority.setError("This information can't be empty!");
                     return;
                 }
+                dismiss();
                 break;
             case R.id.btn_close_priority:
                 dismiss();

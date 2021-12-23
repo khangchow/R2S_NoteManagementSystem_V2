@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +72,7 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
                              @Nullable Bundle savedInstanceState) {
         binding = DialogEditPriorityBinding.inflate(inflater, container, false);
         setUserInfo();
-        mCommunicateViewModel = new ViewModelProvider(this).get(CommunicateViewModel.class);
+        mCommunicateViewModel = new ViewModelProvider(getActivity()).get(CommunicateViewModel.class);
         return binding.getRoot();
     }
 
@@ -120,10 +121,9 @@ public class EditPriorityDialog extends DialogFragment implements View.OnClickLi
 
                                 Toast.makeText(context, "Update Successful!",
                                         Toast.LENGTH_SHORT).show();
+                                Log.d("RESUME", "Edit Success");
                             } else if (baseResponse.getStatus() == -1) {
                                 if (response.body().getError() == Integer.getInteger(null)) {
-                                    mCommunicateViewModel.makeChanges();
-
                                     Toast.makeText(context, "Update Failed!",
                                             Toast.LENGTH_SHORT).show();
                                 }

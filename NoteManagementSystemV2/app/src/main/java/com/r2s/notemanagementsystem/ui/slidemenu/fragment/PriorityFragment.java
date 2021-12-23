@@ -106,7 +106,6 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        mCommunicateViewModel = new ViewModelProvider(this).get(CommunicateViewModel.class);
     }
 
     /**
@@ -127,6 +126,7 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
 
         mPriorityService = PriorityRepository.getService();
 
+        mCommunicateViewModel = new ViewModelProvider(getActivity()).get(CommunicateViewModel.class);
         mCommunicateViewModel.needReloading().observe(getViewLifecycleOwner(), needReloading -> {
             Log.d("RESUME_FRAGMENT", needReloading.toString());
             if (needReloading) {
@@ -213,6 +213,7 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
                                         mPriorityViewModel.refreshData();
                                     }
                                 }).create().show();
+                        onResume();
                         break;
 
                     // Swipe left to update
@@ -237,6 +238,7 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
                             Log.e("Error", e.getMessage());
                         }
                         mPriorityViewModel.refreshData();
+                        onResume();
                         break;
                 }
             }
@@ -251,6 +253,7 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
+
         mPriorityService.getAllPriorities(PriorityConstant.PRIORITY_TAB, mUser.getEmail())
                 .enqueue(new Callback<BaseResponse>() {
                     @Override
@@ -261,7 +264,7 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
                                 mPriorites.add(new Priority(priority.get(0), priority.get(1), priority.get(2)));
                             }
                             mPriorityAdapter.setPriorities(mPriorites);
-                            Log.d("RESUME_UPDATE", "Reload");
+                            Log.d("RESUME_RELOAD", "Reload");
                         }
                     }
 
@@ -292,7 +295,6 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
             case R.id.fab_open_priority:
                 DialogFragment priorityDialog = AddPriorityDialog.newInstance();
                 priorityDialog.show(getChildFragmentManager(), AddPriorityDialog.TAG);
-                mCommunicateViewModel.openDialog();
         }
     }
 
