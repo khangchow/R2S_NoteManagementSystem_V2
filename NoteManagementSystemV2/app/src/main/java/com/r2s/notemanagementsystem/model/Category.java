@@ -25,6 +25,16 @@ public class Category {
     }
 
     /**
+     * Constructor
+     * @param nameCate
+     * @param createdDate
+     */
+    public Category(String nameCate, String createdDate) {
+        this.nameCate = nameCate;
+        this.createdDate = createdDate;
+    }
+
+    /**
      * get user id
      * @return
      */

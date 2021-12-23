@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 public class CategoryRepository {
-    private LiveData<List<Category>> mCates;
-    private User mUser;
+    private CategoryService mCateService;
 
     /**
      * This method is used as constructor for CategoryRepository class

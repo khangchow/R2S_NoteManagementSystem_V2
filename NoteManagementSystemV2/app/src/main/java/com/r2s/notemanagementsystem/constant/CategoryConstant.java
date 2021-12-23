@@ -9,4 +9,6 @@ public class CategoryConstant {
             Color.rgb(166, 166, 166), Color.rgb(255, 0, 0),
             Color.rgb(25, 25, 255)
     };
+
+    public static final String CATEGORY_KEY = "cate_name";
 }
