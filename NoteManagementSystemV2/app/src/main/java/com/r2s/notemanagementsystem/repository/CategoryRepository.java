@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.constant.Constants;
 import com.r2s.notemanagementsystem.model.Category;
 import com.r2s.notemanagementsystem.model.User;
+import com.r2s.notemanagementsystem.service.CategoryService;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 
 import java.util.List;

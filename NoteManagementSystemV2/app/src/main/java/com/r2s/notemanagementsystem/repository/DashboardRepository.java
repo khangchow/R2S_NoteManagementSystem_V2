@@ -2,10 +2,10 @@ package com.r2s.notemanagementsystem.repository;
 
 import android.util.Log;
 
-import com.r2s.notemanagementsystem.api.APIClient;
-import com.r2s.notemanagementsystem.api.DashboardService;
+import com.r2s.notemanagementsystem.service.DashboardService;
 import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Category;
+import com.r2s.notemanagementsystem.utils.ApiClient;
 import com.r2s.notemanagementsystem.utils.RefreshLiveData;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class DashboardRepository {
     private DashboardService mDashService;
 
     public DashboardRepository() {
-        mDashService = APIClient.getDash().create(DashboardService.class);
+        mDashService = ApiClient.getClient().create(DashboardService.class);
     }
 
     public RefreshLiveData<List<Category>> getAllCate() {
