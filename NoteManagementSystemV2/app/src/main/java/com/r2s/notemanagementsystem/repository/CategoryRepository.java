@@ -3,7 +3,7 @@ package com.r2s.notemanagementsystem.repository;
 import android.util.Log;
 
 import com.r2s.notemanagementsystem.api.APIClient;
-import com.r2s.notemanagementsystem.api.CategoryService;
+import com.r2s.notemanagementsystem.service.CategoryService;
 import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.model.Category;
 import com.r2s.notemanagementsystem.utils.RefreshLiveData;

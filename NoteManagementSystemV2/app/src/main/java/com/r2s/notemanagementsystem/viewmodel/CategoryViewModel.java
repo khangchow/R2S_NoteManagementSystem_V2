@@ -6,14 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.r2s.notemanagementsystem.api.CategoryService;
-import com.r2s.notemanagementsystem.constant.CategoryConstant;
 import com.r2s.notemanagementsystem.model.Category;
 import com.r2s.notemanagementsystem.model.BaseResponse;
 import com.r2s.notemanagementsystem.repository.CategoryRepository;
 import com.r2s.notemanagementsystem.utils.RefreshLiveData;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;

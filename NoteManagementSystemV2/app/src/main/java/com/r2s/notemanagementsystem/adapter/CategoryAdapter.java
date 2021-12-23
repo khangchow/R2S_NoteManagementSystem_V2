@@ -32,15 +32,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         this.context = context;
     }
 
-    /**
-     * Constructor with 2 param
-     * @param categoryList
-     * @param context
-     */
-    public CategoryAdapter(List<Category> categoryList, Context context) {
-        this.categoryList = categoryList;
-        this.context = context;
-    }
+//    /**
+//     * Constructor with 2 param
+//     * @param categoryList
+//     * @param context
+//     */
+//    public CategoryAdapter(List<Category> categoryList, Context context) {
+//        this.categoryList = categoryList;
+//        this.context = context;
+//    }
 
     /**
      * Create new view
@@ -61,7 +61,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Category br = categoryList.get(position);
         holder.tvNameCate.setText("Name: " + br.getNameCate());
-        holder.tvCreatedDate.setText("Created date: " + br.getCreatedDate());
+        holder.tvCreatedDate.setText("The lastest Update: " + br.getCreatedDate());
     }
 
     /**

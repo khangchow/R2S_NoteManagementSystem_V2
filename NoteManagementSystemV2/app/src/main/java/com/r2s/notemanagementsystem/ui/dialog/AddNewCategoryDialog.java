@@ -1,6 +1,5 @@
 package com.r2s.notemanagementsystem.ui.dialog;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,21 +10,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.adapter.CategoryAdapter;
-import com.r2s.notemanagementsystem.api.CategoryService;
 import com.r2s.notemanagementsystem.constant.CategoryConstant;
 import com.r2s.notemanagementsystem.constant.Constants;
 import com.r2s.notemanagementsystem.databinding.DialogAddNewCategoryBinding;
 import com.r2s.notemanagementsystem.model.BaseResponse;
-import com.r2s.notemanagementsystem.model.Category;
-import com.r2s.notemanagementsystem.model.Status;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.viewmodel.CategoryViewModel;
@@ -33,8 +27,6 @@ import com.r2s.notemanagementsystem.viewmodel.CommunicateViewModel;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -156,6 +148,13 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
                                     mCommunicateViewModel.makeChanges();
                                     dismiss();
 
+                                } else if (response.body().getStatus() == -1) {
+                                    String error = String.valueOf(response.body().getError());
+                                    Log.d("TTT", error);
+                                    if ((binding.etNewCate.getText().toString() == null)) {
+                                        Toast.makeText(getContext(), "Update fail"
+                                                , Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
                             @Override
