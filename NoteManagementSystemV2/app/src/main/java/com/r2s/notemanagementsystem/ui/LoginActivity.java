@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.r2s.notemanagementsystem.DemoLoggedActivity;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.constant.Constants;
 import com.r2s.notemanagementsystem.constant.UserConstant;
