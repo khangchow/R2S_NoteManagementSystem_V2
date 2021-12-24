@@ -1,6 +1,7 @@
 package com.r2s.notemanagementsystem.ui.dialog;
 
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Build;
@@ -35,9 +36,6 @@ import com.r2s.notemanagementsystem.viewmodel.CategoryViewModel;
 import com.r2s.notemanagementsystem.viewmodel.NoteViewModel;
 import com.r2s.notemanagementsystem.viewmodel.PriorityViewModel;
 import com.r2s.notemanagementsystem.viewmodel.StatusViewModel;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -68,10 +66,14 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
     private Context mContext;
     private CommunicateViewModel mCommunicateViewModel;
 
-    // text of note
     String strCategoryName, strPriorityName, strStatusName;
     String strPlanDate = "";
 
+    /**
+     * This method will get instance of this fragment dialog
+     *
+     * @return this fragment dialog
+     */
     public static FragmentDialogInsertNote newInstance() {
         return new FragmentDialogInsertNote();
     }
@@ -134,7 +136,6 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         setOnClickListener();
 
         eventItemClick();
-
     }
 
     /**
@@ -152,6 +153,7 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
     private void setViewModel() {
 
         mNoteAdapter = new NoteAdapter(mNotes, this.getContext());
+
         mNoteViewModel.getAllNotes()
                 .observe(getViewLifecycleOwner(), notes -> {
                     mNoteAdapter.setNotes(notes);
@@ -164,36 +166,38 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
      * @param view current view of the activity/fragment
      */
 
+    @SuppressLint("NonConstantResourceId")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.dialog_insert:
                 if (isFilled()) {
+
                     final String name = Objects.requireNonNull(Objects.requireNonNull(binding.tfNoteName.getEditText()).getText())
                             .toString();
+
                     mNoteViewModel.addNote(name, strPriorityName, strCategoryName, strStatusName, strPlanDate).enqueue(new Callback<BaseResponse>() {
                         @Override
                         public void onResponse(@NonNull Call<BaseResponse> call,
                                                @NonNull Response<BaseResponse> response) {
-                            Log.d("TestInsert", "isSuccessful: " + String.valueOf(response.isSuccessful()));
                             if (response.isSuccessful()) {
                                 BaseResponse baseResponse = response.body();
-
                                 assert baseResponse != null;
-                                Log.d("TestInsert", String.valueOf("Status: " + baseResponse.getStatus()));
+
                                 if (baseResponse.getStatus() == 1) {
                                     mCommunicateViewModel.makeChanges();
 
                                     Toast.makeText(mContext, "Create Note Successful!",
                                             Toast.LENGTH_SHORT).show();
+
                                 } else if (baseResponse.getStatus() == -1)
-                                    Log.d("TestInsert", String.valueOf("Error: " + baseResponse.getError()));
-                                if (baseResponse.getError() == 2) {
-                                    Toast.makeText(mContext,
-                                            "This name already exists",
-                                            Toast.LENGTH_SHORT).show();
-                                }
+                                    if (baseResponse.getError() == 2) {
+
+                                        Toast.makeText(mContext,
+                                                "This name already exists",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
                             }
                         }
 
@@ -235,7 +239,6 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         ArrayAdapter<String> adapterItemCategory = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringCate);
         binding.autoCompleteCategory.setAdapter(adapterItemCategory);
 
-
         // auto complete for priority
         mPriorityViewModel.getAllPriorities().observe(getViewLifecycleOwner(), priorities -> {
             for (int i = 0; i < priorities.size(); i++) {
@@ -247,7 +250,6 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         ArrayAdapter<String> adapterItemPriority = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringPri);
         binding.autoCompletePriority.setAdapter(adapterItemPriority);
 
-
         // auto complete for status
         mStatusViewModel.getAllStatuses().observe(getViewLifecycleOwner(), statuses -> {
             for (int i = 0; i < statuses.size(); i++) {
@@ -256,10 +258,8 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
             }
         });
 
-
         ArrayAdapter<String> adapterItemStatus = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringSta);
         binding.autoCompleteStatus.setAdapter(adapterItemStatus);
-
 
         // Show date when choose date inside date picker
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -310,10 +310,17 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         binding = null;
     }
 
+    /**
+     * set user
+     */
     private void setUserInfo() {
         User mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
     }
 
+    /**
+     * check if these field is filled
+     * @return boolean
+     */
     public boolean isFilled() {
         boolean result = true;
         if (binding.tfNoteName.getEditText().getText().toString().trim().length() <= 0) {
@@ -343,13 +350,4 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         dialog.show();
     }
 
-    /**
-     * This method returns the current date time
-     *
-     * @return String
-     */
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public String getCurrentLocalDateTime() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
 }

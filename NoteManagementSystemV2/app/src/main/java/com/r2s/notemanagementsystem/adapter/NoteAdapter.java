@@ -10,18 +10,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.r2s.notemanagementsystem.databinding.RowNoteBinding;
 import com.r2s.notemanagementsystem.model.Note;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
     private List<Note> mNotes;
-    private Context mContext;
+    private final Context mContext;
 
-    public NoteAdapter(Context context) {
-        this.mContext = context;
-    }
-
+    /**
+     * @param mNotes  list note to set recyclerview
+     * @param context context
+     */
     public NoteAdapter(List<Note> mNotes, Context context) {
         this.mNotes = mNotes;
         this.mContext = context;

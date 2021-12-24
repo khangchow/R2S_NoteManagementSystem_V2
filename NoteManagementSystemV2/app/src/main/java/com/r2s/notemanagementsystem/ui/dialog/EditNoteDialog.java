@@ -2,6 +2,7 @@ package com.r2s.notemanagementsystem.ui.dialog;
 
 import static com.r2s.notemanagementsystem.ui.dialog.FragmentDialogInsertNote.TAG;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -121,6 +122,7 @@ public class EditNoteDialog extends DialogFragment implements View.OnClickListen
 
         bundle = getArguments();
         if (bundle != null) {
+
             binding.tfNoteName2.getEditText().setText(bundle.getString("note_name"));
             binding.autoCompletePriority2.setText(bundle.getString("priority_name"));
             binding.autoCompleteCategory2.setText(bundle.getString("category_name"));
@@ -140,26 +142,30 @@ public class EditNoteDialog extends DialogFragment implements View.OnClickListen
         binding.showDatePicker2.setOnClickListener(this);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_update_note:
-                if(isEmpty()){
+                if (isEmpty()) {
+
                     mNoteViewModel.editNote(bundle.getString("note_name"),
-                            binding.tfNoteName2.getEditText().getText().toString(),strPriorityName,strCategoryName,strStatusName,strPlanDate).enqueue(
+                            binding.tfNoteName2.getEditText().getText().toString(), strPriorityName, strCategoryName, strStatusName, strPlanDate).enqueue(
                             new Callback<BaseResponse>() {
                                 @Override
                                 public void onResponse(Call<BaseResponse> call,
                                                        Response<BaseResponse> response) {
                                     if (response.isSuccessful() && response.body() != null) {
+
                                         BaseResponse baseResponse = response.body();
+
                                         if (baseResponse.getStatus() == 1) {
                                             mCommunicateViewModel.makeChanges();
 
                                             Toast.makeText(context, "Update Successful!",
                                                     Toast.LENGTH_SHORT).show();
-                                            Log.d("RESUME", "Edit Note Success");
                                         } else if (baseResponse.getStatus() == -1) {
+
                                             Integer error = new Integer(baseResponse.getError());
                                             if (error.equals(null)) {
                                                 Toast.makeText(context, "Update Note Failed!",
@@ -178,7 +184,7 @@ public class EditNoteDialog extends DialogFragment implements View.OnClickListen
                                 }
                             });
                     dismiss();
-                }else {
+                } else {
                     Toast.makeText(context, "Update Note Failed!!!",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -192,15 +198,25 @@ public class EditNoteDialog extends DialogFragment implements View.OnClickListen
         }
     }
 
-    public boolean isEmpty(){
+    /**
+     * Checking these field is filled
+     *
+     * @return boolean
+     */
+    public boolean isEmpty() {
         boolean result = true;
-        if(binding.tfNoteName2.getEditText().getText().toString().length() <= 0){
+        if (binding.tfNoteName2.getEditText().getText().toString().length() <= 0) {
             result = false;
             binding.tfNoteName2.setError("This field can not empty!!!");
         }
         return result;
     }
 
+    /**
+     * Set view for auto complete
+     *
+     * @param view view
+     */
     public void initView(View view) {
 
         //auto complete category
@@ -252,6 +268,9 @@ public class EditNoteDialog extends DialogFragment implements View.OnClickListen
         };
     }
 
+    /**
+     * Event click of auto complete
+     */
     public void eventItemClick() {
 
         binding.autoCompleteCategory2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -276,6 +295,9 @@ public class EditNoteDialog extends DialogFragment implements View.OnClickListen
         });
     }
 
+    /**
+     * set date picker
+     */
     public void setUpDatePicker() {
         Calendar kal = Calendar.getInstance();
 
