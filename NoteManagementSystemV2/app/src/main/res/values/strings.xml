@@ -57,9 +57,9 @@
     <string name="status_form">Status Form</string>
 
     <string name="priority_name">Name</string>
-    <string name="priority_updated_date">Updated Date</string>
+    <string name="priority_updated_date">Latest update</string>
 
-    <string name="status_updated_date">Updated Date</string>
+    <string name="status_updated_date">Latest update</string>
     <string name="status_name">Name</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="user_name">Username</string>
@@ -102,4 +102,6 @@
     <string name="err_repeat_name">Repeated name!</string>
     <string name="menu_logout">Logout</string>
     <string name="txt_confirm_logout">Do you want to logout?</string>
+    <string name="cate_name">Name:</string>
+    <string name="cate_lastest_update">Lastest update:</string>
 </resources>
