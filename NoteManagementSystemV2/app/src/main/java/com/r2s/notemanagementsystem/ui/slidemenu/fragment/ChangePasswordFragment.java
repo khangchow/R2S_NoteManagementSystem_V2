@@ -102,6 +102,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
                 .equals(binding.fragmentChangePasswordEtNew.getText().toString())
                 && binding.fragmentChangePasswordEtNew.getText().toString()
                 .equals(binding.fragmentChangePasswordEtAgain.getText().toString())){
+            hideAllWarnings();
 
             mUser.setPassword(binding.fragmentChangePasswordEtNew.getText().toString());
 
@@ -143,49 +144,51 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
 
         }else{
-            Boolean isFocused = false;
+            if (isEmptyField()) {
+                Boolean isFocused = false;
 
-            if (TextUtils.isEmpty(binding.fragmentChangePasswordEtCurrent.getText().toString())) {
-                binding.tilCurrentPass.setError(getString(R.string.err_empty_current_pass));
+                if (TextUtils.isEmpty(binding.fragmentChangePasswordEtCurrent.getText().toString())) {
+                    binding.tilCurrentPass.setError(getString(R.string.err_empty_current_pass));
 
-                if (!isFocused) {
-                    binding.fragmentChangePasswordEtCurrent.requestFocus();
+                    if (!isFocused) {
+                        binding.fragmentChangePasswordEtCurrent.requestFocus();
 
-                    KeyboardUtils.openKeyboard(binding.fragmentChangePasswordEtCurrent);
+                        KeyboardUtils.openKeyboard(binding.fragmentChangePasswordEtCurrent);
 
-                    isFocused = true;
+                        isFocused = true;
+                    }
+                }else {
+                    binding.tilCurrentPass.setError(null);
                 }
-            }else {
-                binding.tilCurrentPass.setError(null);
-            }
 
-            if (TextUtils.isEmpty(binding.fragmentChangePasswordEtNew.getText().toString())) {
-                binding.tilNewPass.setError(getString(R.string.err_empty_new_pass));
+                if (TextUtils.isEmpty(binding.fragmentChangePasswordEtNew.getText().toString())) {
+                    binding.tilNewPass.setError(getString(R.string.err_empty_new_pass));
 
-                if (!isFocused) {
-                    binding.fragmentChangePasswordEtNew.requestFocus();
+                    if (!isFocused) {
+                        binding.fragmentChangePasswordEtNew.requestFocus();
 
-                    KeyboardUtils.openKeyboard(binding.fragmentChangePasswordEtNew);
+                        KeyboardUtils.openKeyboard(binding.fragmentChangePasswordEtNew);
 
-                    isFocused = true;
+                        isFocused = true;
+                    }
+                }else {
+                    binding.tilNewPass.setError(null);
                 }
-            }else {
-                binding.tilNewPass.setError(null);
-            }
 
-            if (TextUtils.isEmpty(binding.fragmentChangePasswordEtAgain.getText().toString())) {
-                binding.tilReNewPass.setError(getString(R.string.err_empty_repass));
+                if (TextUtils.isEmpty(binding.fragmentChangePasswordEtAgain.getText().toString())) {
+                    binding.tilReNewPass.setError(getString(R.string.err_empty_repass));
 
-                if (!isFocused) {
-                    binding.fragmentChangePasswordEtAgain.requestFocus();
+                    if (!isFocused) {
+                        binding.fragmentChangePasswordEtAgain.requestFocus();
 
-                    KeyboardUtils.openKeyboard(binding.fragmentChangePasswordEtAgain);
+                        KeyboardUtils.openKeyboard(binding.fragmentChangePasswordEtAgain);
+                    }
+                }else {
+                    binding.tilReNewPass.setError(null);
                 }
-            }else {
-                binding.tilReNewPass.setError(null);
-            }
+            }else if (!isPasswordCorrect()) {
+                hideAllWarnings();
 
-            if (!isEmptyField() && !isPasswordCorrect()) {
                 binding.tilCurrentPass.setError(getString(R.string.err_wrong_pass));
 
                 binding.fragmentChangePasswordEtCurrent.requestFocus();
@@ -193,6 +196,8 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
                 KeyboardUtils.openKeyboard(binding.fragmentChangePasswordEtCurrent);
             }else if (mUser.getPassword()
                     .equals(binding.fragmentChangePasswordEtNew.getText().toString())) {
+                hideAllWarnings();
+
                 binding.tilNewPass.setError(getString(R.string.err_same_pass));
 
                 binding.fragmentChangePasswordEtNew.requestFocus();
@@ -200,6 +205,8 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
                 KeyboardUtils.openKeyboard(binding.fragmentChangePasswordEtNew);
             }else if (!binding.fragmentChangePasswordEtNew.getText().toString()
                     .equals(binding.fragmentChangePasswordEtAgain.getText().toString())) {
+                hideAllWarnings();
+
                 binding.tilReNewPass.setError(getString(R.string.err_wrong_confirm_pass));
 
                 binding.fragmentChangePasswordEtAgain.requestFocus();
@@ -207,6 +214,14 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
                 KeyboardUtils.openKeyboard(binding.fragmentChangePasswordEtAgain);
             }
         }
+    }
+
+    private void hideAllWarnings() {
+        binding.tilCurrentPass.setError(null);
+
+        binding.tilNewPass.setError(null);
+
+        binding.tilReNewPass.setError(null);
     }
 
     /**

@@ -57,7 +57,15 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         //Lay thong tin user tu phien dang nhap
         mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
 
+        setUserProfile();
+
         onFocusChanges();
+    }
+
+    private void setUserProfile() {
+        binding.etFirstName.setText(mUser.getFirstName());
+
+        binding.etLastName.setText(mUser.getLastName());
     }
 
     /**
@@ -120,6 +128,8 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private void editProfile(){
         if (!isEmptyField() && mUser.getEmail().equals(binding.etEmail.getText().toString())
                 && !isRepeatedData()){
+            hideAllWarnings();
+
             mUser.setFirstName(binding.etFirstName.getText().toString());
 
             mUser.setLastName(binding.etLastName.getText().toString());
@@ -167,54 +177,56 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         }else {
             Boolean isFocused = false;
 
-            if (TextUtils.isEmpty(binding.etEmail.getText().toString())) {
-                binding.tilEmail.setError(getString(R.string.txt_enter_email));
+            if (isEmptyField()) {
+                if (TextUtils.isEmpty(binding.etEmail.getText().toString())) {
+                    binding.tilEmail.setError(getString(R.string.txt_enter_email));
 
-                if (!isFocused) {
-                    binding.etEmail.requestFocus();
+                    if (!isFocused) {
+                        binding.etEmail.requestFocus();
 
-                    KeyboardUtils.openKeyboard(binding.etEmail);
+                        KeyboardUtils.openKeyboard(binding.etEmail);
 
-                    isFocused = true;
+                        isFocused = true;
+                    }
+                }else {
+                    binding.tilEmail.setError(null);
                 }
-            }else {
-                binding.tilEmail.setError(null);
-            }
 
-            if (TextUtils.isEmpty(binding.etFirstName.getText().toString())) {
-                binding.tilFirstname.setError(getString(R.string.app_etfirstname));
+                if (TextUtils.isEmpty(binding.etFirstName.getText().toString())) {
+                    binding.tilFirstname.setError(getString(R.string.app_etfirstname));
 
-                if (!isFocused) {
-                    binding.etFirstName.requestFocus();
+                    if (!isFocused) {
+                        binding.etFirstName.requestFocus();
 
-                    KeyboardUtils.openKeyboard(binding.etFirstName);
+                        KeyboardUtils.openKeyboard(binding.etFirstName);
 
-                    isFocused = true;
+                        isFocused = true;
+                    }
+                }else {
+                    binding.tilFirstname.setError(null);
                 }
-            }else {
-                binding.tilFirstname.setError(null);
-            }
 
-            if (TextUtils.isEmpty(binding.etLastName.getText().toString())) {
-                binding.tilLastname.setError(getString(R.string.app_etlastname));
+                if (TextUtils.isEmpty(binding.etLastName.getText().toString())) {
+                    binding.tilLastname.setError(getString(R.string.app_etlastname));
 
-                if (!isFocused) {
-                    binding.etLastName.requestFocus();
+                    if (!isFocused) {
+                        binding.etLastName.requestFocus();
 
-                    KeyboardUtils.openKeyboard(binding.etLastName);
+                        KeyboardUtils.openKeyboard(binding.etLastName);
+                    }
+                }else {
+                    binding.tilLastname.setError(null);
                 }
-            }else {
-                binding.tilLastname.setError(null);
-            }
+            }else if (!mUser.getEmail().equals(binding.etEmail.getText().toString())) {
+                hideAllWarnings();
 
-            if (!isEmptyField() && !mUser.getEmail().equals(binding.etEmail.getText().toString())) {
                 binding.tilEmail.setError(getString(R.string.err_wrong_email));
 
                 binding.etEmail.requestFocus();
 
                 KeyboardUtils.openKeyboard(binding.etEmail);
             }else if (isRepeatedData()) {
-                binding.tilEmail.setError(null);
+                hideAllWarnings();
 
                 binding.tilFirstname.setError(getString(R.string.err_repeat_name));
 
@@ -227,6 +239,13 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    private void hideAllWarnings() {
+        binding.tilEmail.setError(null);
+
+        binding.tilFirstname.setError(null);
+
+        binding.tilLastname.setError(null);
+    }
     /**
      * This method checks if input profile is the same as the original one
      * @return true if input profile is the same as the original one, false

@@ -22,10 +22,10 @@ public class UserRepository {
 
     public UserRepository() {
         mUserService = ApiClient.getClient().create(UserService.class);
-
     }
 
-    public Call<BaseResponse> editUser(String tab, String email, String nemail, String firstname, String lastname) {
+    public Call<BaseResponse> editUser(String tab, String email, String nemail, String firstname
+            , String lastname) {
         return mUserService.updateUser(tab, email, nemail, firstname, lastname);
     }
 
