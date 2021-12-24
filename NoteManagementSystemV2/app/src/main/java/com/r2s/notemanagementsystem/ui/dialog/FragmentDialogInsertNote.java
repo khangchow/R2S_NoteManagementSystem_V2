@@ -104,6 +104,16 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
 
         setUserInfo();
 
+        mCateViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        mPriorityViewModel = new ViewModelProvider(this).get(PriorityViewModel.class);
+        mStatusViewModel = new ViewModelProvider(this).get(StatusViewModel.class);
+        mNoteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
+
+        mPriorityViewModel.refreshData();
+        mStatusViewModel.refreshData();
+        mCateViewModel.refreshData();
+        mNoteViewModel.refreshData();
+
         return binding.getRoot();
     }
 
@@ -117,9 +127,9 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initView(view);
-
         setViewModel();
+
+        initView(view);
 
         setOnClickListener();
 
@@ -140,7 +150,7 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
      * This method set the ViewModel
      */
     private void setViewModel() {
-        mNoteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
+
         mNoteAdapter = new NoteAdapter(mNotes, this.getContext());
         mNoteViewModel.getAllNotes()
                 .observe(getViewLifecycleOwner(), notes -> {
@@ -220,10 +230,6 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
      */
     public void initView(View view) {
 
-        mCateViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-        mPriorityViewModel = new ViewModelProvider(this).get(PriorityViewModel.class);
-        mStatusViewModel = new ViewModelProvider(this).get(StatusViewModel.class);
-
         //auto complete category
         mCateViewModel.getCateById().observe(getViewLifecycleOwner(), categories -> {
             for (int i = 0; i < categories.size(); i++) {
@@ -231,9 +237,6 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
                 Log.d("TestAuto",categories.get(i).getNameCate());
             }
         });
-
-        listStringCate.add("Test1");
-        listStringCate.add("Test2");
 
         ArrayAdapter<String> adapterItemCategory = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringCate);
         binding.autoCompleteCategory.setAdapter(adapterItemCategory);
@@ -274,7 +277,6 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
                 strPlanDate = date;
             }
         };
-
     }
 
     /**

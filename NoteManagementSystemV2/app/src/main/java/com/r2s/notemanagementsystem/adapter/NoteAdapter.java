@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.r2s.notemanagementsystem.databinding.RowNoteBinding;
 import com.r2s.notemanagementsystem.model.Note;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {

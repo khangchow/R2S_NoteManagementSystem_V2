@@ -114,12 +114,13 @@ public class EditNoteDialog extends DialogFragment implements View.OnClickListen
     public void setOnClicks() {
         binding.btnUpdateNote.setOnClickListener(this);
         binding.btnCloseNote.setOnClickListener(this);
+        binding.showDatePicker2.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-//            case R.id.btn_update_note:
+            case R.id.btn_update_note:
 //                mNoteViewModel.editNote(bundle.getString("note_name"),
 //                        binding.tfNoteName2.getEditText().getText().toString()).enqueue(
 //                        new Callback<BaseResponse>() {
@@ -151,12 +152,12 @@ public class EditNoteDialog extends DialogFragment implements View.OnClickListen
 //                                        Toast.LENGTH_SHORT).show();
 //                            }
 //                        });
-               // dismiss();
-               // break;
+//                dismiss();
+//                break;
             case R.id.btn_close_note:
                 dismiss();
                 break;
-            case R.id.show_date_picker:
+            case R.id.show_date_picker2:
                 setUpDatePicker();
                 break;
         }
