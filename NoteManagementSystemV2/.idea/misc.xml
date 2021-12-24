@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Code/Mobile/R2S/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/activity_login.xml" value="0.275" />
+        <entry key="..\:/Code/Mobile/R2S/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/activity_register.xml" value="0.275" />
+        <entry key="..\:/Code/Mobile/R2S/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/row_category.xml" value="0.275" />
         <entry key="..\:/R2s/Android/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/activity_home.xml" value="0.22447916666666667" />
         <entry key="..\:/R2s/Android/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/content_home.xml" value="0.22447916666666667" />
         <entry key="..\:/R2s/Android/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_add_new_category.xml" value="0.2441123188405797" />
