@@ -127,12 +127,15 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
         });
 
         binding.fab.setOnClickListener(this);
+
         mNoteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
         mNoteViewModel.refreshData();
         mNoteViewModel.getAllNotes().observe(getViewLifecycleOwner(), notes -> {
             mNoteAdapter.setNotes(notes);
         });
+
         mNoteAdapter = new NoteAdapter(mNotes, getContext());
+
         binding.rcvNoteFragment.setAdapter(mNoteAdapter);
         binding.rcvNoteFragment.setHasFixedSize(true);
         binding.rcvNoteFragment.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -162,6 +165,7 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
                         String notePri = mNotes.get(position).getPriority();
                         String noteCate = mNotes.get(position).getCategory();
                         String noteSta = mNotes.get(position).getStatus();
+                        String planDate = mNotes.get(position).getPlanDate();
 
                         new AlertDialog.Builder(requireContext())
                                 .setTitle("Title")
@@ -174,15 +178,18 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
                                                     @Override
                                                     public void onResponse(Call<BaseResponse> call,
                                                                            Response<BaseResponse> response) {
+
                                                         assert response.body() != null;
                                                         if (response.body().getStatus() == 1) {
                                                             Toast.makeText(getContext(),
                                                                     "Deleted",
                                                                     Toast.LENGTH_SHORT).show();
                                                             mNoteViewModel.refreshData();
+
                                                         } else if (response.body()
                                                                 .getStatus() == -1) {
                                                             if (response.body().getError() == 2) {
+
                                                                 Toast.makeText(getContext(),
                                                                         "Can't delete, " +
                                                                                 "because it's in use",
@@ -215,16 +222,19 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
                         try {
                             position = viewHolder.getAdapterPosition();
                             mNotes = mNoteAdapter.getNotes();
+                            
                             noteName = mNotes.get(position).getName();
                             notePri = mNotes.get(position).getPriority();
                             noteCate = mNotes.get(position).getCategory();
                             noteSta = mNotes.get(position).getStatus();
+                            planDate = mNotes.get(position).getPlanDate();
 
                             Bundle bundle = new Bundle();
                             bundle.putString("note_name", noteName);
                             bundle.putString("priority_name", notePri);
                             bundle.putString("category_name", noteCate);
                             bundle.putString("status_name", noteSta);
+                            bundle.putString("plan_date", planDate);
 
 
                             final EditNoteDialog editNoteDialog = EditNoteDialog.newInstance();
@@ -262,7 +272,7 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
                         if (response.isSuccessful() && response.body() != null) {
                             List<Note> mNote = new ArrayList<>();
                             for (List<String> note : response.body().getData()) {
-                                mNote.add(new Note(note.get(0), note.get(1), note.get(2), note.get(3), note.get(4),note.get(5)));
+                                mNote.add(new Note(note.get(0), note.get(1), note.get(2), note.get(3), note.get(4), note.get(5)));
                             }
                             mNoteAdapter.setNotes(mNote);
                             Log.d("RESUME_RELOAD", mNote.get(0).getName());

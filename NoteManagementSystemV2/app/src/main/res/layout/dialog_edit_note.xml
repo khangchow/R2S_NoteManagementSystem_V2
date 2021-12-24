@@ -1,47 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:minWidth="450dp"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_note_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:text="@string/note_form"
-        android:textSize="25sp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_horizontal"
-        android:labelFor="@+id/et_priority" />
+        android:labelFor="@+id/et_priority"
+        android:text="@string/note_form"
+        android:textSize="20sp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tf_note_name2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp">
+
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:hint="@string/edt_hint_enter_note_name"
             android:textColor="@color/black"
-            android:hint="@string/edt_hint_enter_note_name" />
+            android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:focusable="false"
-        app:boxBackgroundColor="@color/gray"
-        android:hint="@string/hint_auto_complete_category">
+        android:hint="@string/hint_auto_complete_category"
+        app:boxBackgroundColor="@color/gray">
 
         <AutoCompleteTextView
             android:id="@+id/auto_complete_category2"
@@ -56,12 +57,12 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:boxBackgroundColor="@color/gray"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:focusable="false"
-        android:hint="@string/hint_auto_complete_priority">
+        android:hint="@string/hint_auto_complete_priority"
+        app:boxBackgroundColor="@color/gray">
 
         <AutoCompleteTextView
             android:id="@+id/auto_complete_priority2"
@@ -76,12 +77,12 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:focusable="false"
-        app:boxBackgroundColor="@color/gray"
-        android:hint="@string/hint_auto_complete_status">
+        android:hint="@string/hint_auto_complete_status"
+        app:boxBackgroundColor="@color/gray">
 
         <AutoCompleteTextView
             android:id="@+id/auto_complete_status2"
@@ -104,7 +105,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="5dp"
             android:text="@string/txt_select_plan_date"
             android:textSize="18sp" />
 
@@ -113,33 +114,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="5dp"
             android:backgroundTint="@color/gray"
             android:text="@string/btn_three_dots"
             android:textColor="@color/black" />
     </FrameLayout>
 
-    <RelativeLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:orientation="horizontal"
+        android:gravity="center">
 
         <Button
             android:id="@+id/btn_update_note"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:layout_alignParentStart="true"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:text="@string/update" />
 
         <Button
             android:id="@+id/btn_close_note"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
             android:text="@string/close" />
-    </RelativeLayout>
+
+    </LinearLayout>
 </LinearLayout>

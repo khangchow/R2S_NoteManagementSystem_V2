@@ -1,5 +1,6 @@
 package com.r2s.notemanagementsystem.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -9,18 +10,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.r2s.notemanagementsystem.databinding.RowNoteBinding;
 import com.r2s.notemanagementsystem.model.Note;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
     private List<Note> mNotes;
-    private Context mContext;
+    private final Context mContext;
 
-    public NoteAdapter(Context context) {
-        this.mContext = context;
-    }
-
+    /**
+     * @param mNotes  list note to set recyclerview
+     * @param context context
+     */
     public NoteAdapter(List<Note> mNotes, Context context) {
         this.mNotes = mNotes;
         this.mContext = context;
@@ -42,6 +41,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     /**
      * Return the size of your dataset
+     *
      * @return size of your dataset
      */
     @Override
@@ -60,6 +60,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     /**
      * This method return the datalist
+     *
      * @return List
      */
     public List<Note> getNotes() {
@@ -77,6 +78,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             binding = itemView;
         }
 
+        @SuppressLint("SetTextI18n")
         public void bind(Note note) {
             String noteName = note.getName();
             String priorityName = note.getPriority();
@@ -85,13 +87,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             String planDate = note.getPlanDate();
             String createdDate = note.getCreatedDate();
 
-
-            binding.tvNoteName.setText(noteName);
-            binding.tvNotePriorityName.setText(priorityName);
-            binding.tvNoteCategoryName.setText(categoryName);
-            binding.tvNoteStatusName.setText(statusName);
-            binding.tvNotePlanDate.setText(planDate);
-            binding.tvNoteCreatedDate.setText(createdDate);
+            String whiteSpace = "     ";
+            binding.tvNoteName.setText("Name: " + whiteSpace + whiteSpace + whiteSpace + "  " + noteName);
+            binding.tvNotePriorityName.setText("Priority: " + whiteSpace + whiteSpace + whiteSpace + " " + priorityName);
+            binding.tvNoteCategoryName.setText("Category: " + whiteSpace + whiteSpace + "  " + categoryName);
+            binding.tvNoteStatusName.setText("Status: " + whiteSpace + whiteSpace + whiteSpace + "  " + statusName);
+            binding.tvNotePlanDate.setText("Plan Date: " + whiteSpace + whiteSpace + " " + planDate);
+            binding.tvNoteCreatedDate.setText("Created Date: " + whiteSpace + createdDate);
         }
     }
 }
