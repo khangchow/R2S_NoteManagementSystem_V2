@@ -104,4 +104,8 @@
     <string name="txt_confirm_logout">Do you want to logout?</string>
     <string name="cate_name">Name:</string>
     <string name="cate_lastest_update">Lastest update:</string>
+    <string name="category">Category</string>
+    <string name="priority">Priority</string>
+    <string name="status">Status</string>
+    <string name="plan_date">Plan Date</string>
 </resources>

@@ -86,14 +86,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             String statusName = note.getStatus();
             String planDate = note.getPlanDate();
             String createdDate = note.getCreatedDate();
-
-            String whiteSpace = "     ";
-            binding.tvNoteName.setText("Name: " + whiteSpace + whiteSpace + whiteSpace + "  " + noteName);
-            binding.tvNotePriorityName.setText("Priority: " + whiteSpace + whiteSpace + whiteSpace + " " + priorityName);
-            binding.tvNoteCategoryName.setText("Category: " + whiteSpace + whiteSpace + "  " + categoryName);
-            binding.tvNoteStatusName.setText("Status: " + whiteSpace + whiteSpace + whiteSpace + "  " + statusName);
-            binding.tvNotePlanDate.setText("Plan Date: " + whiteSpace + whiteSpace + " " + planDate);
-            binding.tvNoteCreatedDate.setText("Created Date: " + whiteSpace + createdDate);
+            
+            binding.tvNoteName.setText(noteName);
+            binding.tvNotePriorityName.setText(priorityName);
+            binding.tvNoteCategoryName.setText(categoryName);
+            binding.tvNoteStatusName.setText(statusName);
+            binding.tvNotePlanDate.setText(planDate);
+            binding.tvNoteCreatedDate.setText(createdDate);
         }
     }
 }
