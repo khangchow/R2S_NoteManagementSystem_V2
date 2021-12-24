@@ -57,12 +57,34 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
 
         setOnClick();
+
+        onFocusChanges();
     }
 
     private void setOnClick() {
         binding.btnChangePassword.setOnClickListener(this);
 
         binding.btnHomeChangePassword.setOnClickListener(this);
+    }
+
+    private void onFocusChanges() {
+        binding.fragmentChangePasswordEtNew.setOnFocusChangeListener((view, b) -> {
+            if (!b) {
+                KeyboardUtils.hideKeyboard(view);
+            }
+        });
+
+        binding.fragmentChangePasswordEtCurrent.setOnFocusChangeListener((view, b) -> {
+            if (!b) {
+                KeyboardUtils.hideKeyboard(view);
+            }
+        });
+
+        binding.fragmentChangePasswordEtAgain.setOnFocusChangeListener((view, b) -> {
+            if (!b) {
+                KeyboardUtils.hideKeyboard(view);
+            }
+        });
     }
 
     private void updatePassword() {

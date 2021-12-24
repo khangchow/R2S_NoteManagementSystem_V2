@@ -96,4 +96,6 @@
     <string name="err_same_pass">Unchanged password!</string>
     <string name="err_wrong_confirm_pass">Please confirm your new password!</string>
     <string name="txt_success_change_pass">Change password successfully</string>
+    <string name="err_repeat_name">Repeated name!</string>
+    <string name="menu_logout">Logout</string>
 </resources>

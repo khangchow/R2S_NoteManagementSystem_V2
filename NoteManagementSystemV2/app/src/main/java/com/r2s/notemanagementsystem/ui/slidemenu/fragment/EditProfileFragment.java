@@ -49,12 +49,15 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         super.onViewCreated(view, savedInstanceState);
 
         binding.btnChange.setOnClickListener(this);
+
         binding.btnHome.setOnClickListener(this);
 
         mUserViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
 
         //Lay thong tin user tu phien dang nhap
         mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
+
+        onFocusChanges();
     }
 
     @Override
@@ -78,6 +81,27 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         navController = Navigation.findNavController(getActivity()
                 , R.id.nav_host_fragment_content_home);
     }
+
+    private void onFocusChanges() {
+        binding.etFirstName.setOnFocusChangeListener((view, b) -> {
+            if (!b) {
+                KeyboardUtils.hideKeyboard(view);
+            }
+        });
+
+        binding.etLastName.setOnFocusChangeListener((view, b) -> {
+            if (!b) {
+                KeyboardUtils.hideKeyboard(view);
+            }
+        });
+
+        binding.etEmail.setOnFocusChangeListener((view, b) -> {
+            if (!b) {
+                KeyboardUtils.hideKeyboard(view);
+            }
+        });
+    }
+
 
     private void editProfile(){
         if (!isEmptyField() && mUser.getEmail().equals(binding.etEmail.getText().toString())
@@ -178,7 +202,9 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             }else if (isRepeatedData()) {
                 binding.tilEmail.setError(null);
 
-                binding.tilFirstname.setError("Repeated name!");
+                binding.tilFirstname.setError(getString(R.string.err_repeat_name));
+
+                binding.tilLastname.setError(getString(R.string.err_repeat_name));
 
                 binding.etFirstName.requestFocus();
 

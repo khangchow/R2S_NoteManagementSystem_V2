@@ -1,11 +1,16 @@
 package com.r2s.notemanagementsystem.ui.slidemenu;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -18,8 +23,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.constant.Constants;
+import com.r2s.notemanagementsystem.constant.UserConstant;
 import com.r2s.notemanagementsystem.databinding.ActivityHomeBinding;
 import com.r2s.notemanagementsystem.model.User;
+import com.r2s.notemanagementsystem.ui.LoginActivity;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.viewmodel.UserViewModel;
 
@@ -75,6 +82,32 @@ public class HomeActivity extends AppCompatActivity {
                 , navController, mAppBarConfiguration);
 
         NavigationUI.setupWithNavController(navigationView, navController);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.home, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_logout:
+                AppPrefsUtils.putString(UserConstant.KEY_USER_DATA, null);
+
+                AppPrefsUtils.putString(UserConstant.KEY_REMEMBER_USER
+                        , new Gson().toJson("false"));
+
+                startActivity(new Intent(this, LoginActivity.class));
+
+                finish();
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void setUpViewModel() {
