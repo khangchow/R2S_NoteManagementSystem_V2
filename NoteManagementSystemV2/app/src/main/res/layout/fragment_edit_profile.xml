@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#00F1EBEB"
             android:hint="@string/txt_enter_email"
-            android:padding="10dp"/>
+            android:paddingTop="30dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#00F1EBEB"
             android:hint="@string/app_etfirstname"
-            android:padding="10dp"/>
+            android:paddingTop="30dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:background="#00F4EEEE"
             android:hint="@string/app_etlastname"
-            android:padding="10dp"/>
+            android:paddingTop="30dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

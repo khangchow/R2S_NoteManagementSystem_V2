@@ -206,7 +206,7 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
 
                         @Override
                         public void onFailure(Call<BaseResponse> call, Throwable t) {
-                            Toast.makeText(getActivity(), "Create Note Failed!",
+                            Toast.makeText(mContext, "Create Note Failed!",
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
