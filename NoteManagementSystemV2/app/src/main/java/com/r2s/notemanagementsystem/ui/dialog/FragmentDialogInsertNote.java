@@ -31,7 +31,10 @@ import com.r2s.notemanagementsystem.model.Note;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
 import com.r2s.notemanagementsystem.utils.CommunicateViewModel;
+import com.r2s.notemanagementsystem.viewmodel.CategoryViewModel;
 import com.r2s.notemanagementsystem.viewmodel.NoteViewModel;
+import com.r2s.notemanagementsystem.viewmodel.PriorityViewModel;
+import com.r2s.notemanagementsystem.viewmodel.StatusViewModel;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -56,9 +59,9 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
     List<String> listStringPri = new ArrayList<>();
     List<String> listStringSta = new ArrayList<>();
 
-//    private CategoryViewModel mCateViewModel;
-//    private PriorityViewModel mPriorityViewModel;
-//    private StatusViewModel mStatusViewModel;
+    private CategoryViewModel mCateViewModel;
+    private PriorityViewModel mPriorityViewModel;
+    private StatusViewModel mStatusViewModel;
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
 
@@ -217,44 +220,42 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
      */
     public void initView(View view) {
 
-        //auto complete category
-//        mCateViewModel.loadAllCate().observe(getViewLifecycleOwner(), categories -> {
-//            for (int i = 0; i < categories.size(); i++) {
-//                listStringCate.add(categories.get(i).getNameCate());
-//            }
-//        });
+        mCateViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        mPriorityViewModel = new ViewModelProvider(this).get(PriorityViewModel.class);
+        mStatusViewModel = new ViewModelProvider(this).get(StatusViewModel.class);
 
-        listStringCate.add("Working");
-        listStringCate.add("Study");
-        listStringCate.add("Relax");
+        //auto complete category
+        mCateViewModel.getCateById().observe(getViewLifecycleOwner(), categories -> {
+            for (int i = 0; i < categories.size(); i++) {
+                listStringCate.add(categories.get(i).getNameCate());
+                Log.d("TestAuto",categories.get(i).getNameCate());
+            }
+        });
+
+        listStringCate.add("Test1");
+        listStringCate.add("Test2");
 
         ArrayAdapter<String> adapterItemCategory = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringCate);
         binding.autoCompleteCategory.setAdapter(adapterItemCategory);
 
         // auto complete for priority
-//        mPriorityViewModel.getAllPriorities().observe(getViewLifecycleOwner(), priorities -> {
-//            for (int i = 0; i < priorities.size(); i++) {
-//                listStringPri.add(priorities.get(i).getName());
-//            }
-//        });
+        mPriorityViewModel.getAllPriorities().observe(getViewLifecycleOwner(), priorities -> {
+            for (int i = 0; i < priorities.size(); i++) {
+                listStringPri.add(priorities.get(i).getName());
+                Log.d("TestAuto",priorities.get(i).getName());
+            }
+        });
 
-        listStringPri.add("High");
-        listStringPri.add("Medium");
-        listStringPri.add("Slow");
         ArrayAdapter<String> adapterItemPriority = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringPri);
         binding.autoCompletePriority.setAdapter(adapterItemPriority);
 
         // auto complete for status
-//        mStatusViewModel.getAllStatusesByUserId().observe(getViewLifecycleOwner(), statuses -> {
-//            for (int i = 0; i < statuses.size(); i++) {
-//                listStringSta.add(statuses.get(i).getName());
-//            }
-//        });
-
-        listStringSta.add("Done");
-        listStringSta.add("Processing");
-
-        Log.d("TestAutocomplete", binding.autoCompleteCategory.getText().toString());
+        mStatusViewModel.getAllStatuses().observe(getViewLifecycleOwner(), statuses -> {
+            for (int i = 0; i < statuses.size(); i++) {
+                listStringSta.add(statuses.get(i).getName());
+                Log.d("TestAuto",statuses.get(i).getName());
+            }
+        });
 
         ArrayAdapter<String> adapterItemStatus = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringSta);
         binding.autoCompleteStatus.setAdapter(adapterItemStatus);
