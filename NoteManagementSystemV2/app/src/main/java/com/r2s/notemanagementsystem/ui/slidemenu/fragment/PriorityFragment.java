@@ -170,7 +170,7 @@ public class PriorityFragment extends Fragment implements View.OnClickListener {
                         String priorityName = mPriorities.get(position).getName();
 
                         new AlertDialog.Builder(requireContext())
-                                .setTitle("Title")
+                                .setTitle("Confirm")
                                 .setMessage("Do you really want to delete?")
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
