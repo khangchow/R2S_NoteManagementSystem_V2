@@ -61,12 +61,18 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         onFocusChanges();
     }
 
+    /**
+     * This method set on click listener for views
+     */
     private void setOnClick() {
         binding.btnChangePassword.setOnClickListener(this);
 
         binding.btnHomeChangePassword.setOnClickListener(this);
     }
 
+    /**
+     * This method listens to edittexts' fcous change to hide keyboard
+     */
     private void onFocusChanges() {
         binding.fragmentChangePasswordEtNew.setOnFocusChangeListener((view, b) -> {
             if (!b) {
@@ -87,6 +93,9 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         });
     }
 
+    /**
+     * This method updates user's password
+     */
     private void updatePassword() {
         if(!isEmptyField() && isPasswordCorrect()
                 && !mUser.getPassword()
@@ -200,11 +209,19 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         }
     }
 
+    /**
+     * This method checks if input password is correct
+     * @return true if input password is correct, false input password is incorrect
+     */
     private boolean isPasswordCorrect(){
         return mUser.getPassword()
                 .equals(binding.fragmentChangePasswordEtCurrent.getText().toString());
     }
 
+    /**
+     * This method overrides onclicklistener to set actions when view is clicked
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -220,12 +237,19 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         }
     }
 
+    /**
+     *This method checks if any input field is empty
+     * @return true if any input field is empty, false if all input fields are filled
+     */
     private boolean isEmptyField() {
         return TextUtils.isEmpty(binding.fragmentChangePasswordEtCurrent.getText().toString())
                 || TextUtils.isEmpty(binding.fragmentChangePasswordEtNew.getText().toString())
                 || TextUtils.isEmpty(binding.fragmentChangePasswordEtAgain.getText().toString());
     }
 
+    /**
+     * This method overrides onStart to get navigation controller
+     */
     @Override
     public void onStart() {
         super.onStart();

@@ -60,6 +60,10 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         onFocusChanges();
     }
 
+    /**
+     * This method overrides onclicklistener to set actions when view is clicked
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -74,6 +78,10 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    /**
+     *This method checks if any input field is empty
+     * @return true if any input field is empty, false if all input fields are filled
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -82,6 +90,9 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                 , R.id.nav_host_fragment_content_home);
     }
 
+    /**
+     * This method listens to edittexts' fcous change to hide keyboard
+     */
     private void onFocusChanges() {
         binding.etFirstName.setOnFocusChangeListener((view, b) -> {
             if (!b) {
@@ -103,6 +114,9 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     }
 
 
+    /**
+     * This method updates user's profile
+     */
     private void editProfile(){
         if (!isEmptyField() && mUser.getEmail().equals(binding.etEmail.getText().toString())
                 && !isRepeatedData()){
@@ -213,11 +227,20 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    /**
+     * This method checks if input profile is the same as the original one
+     * @return true if input profile is the same as the original one, false
+     * if input profile is different from the original one
+     */
     private boolean isRepeatedData() {
         return mUser.getFirstName().equals(binding.etFirstName.getText().toString())
                 && mUser.getLastName().equals(binding.etLastName.getText().toString());
     }
 
+    /**
+     *This method checks if any input field is empty
+     * @return true if any input field is empty, false if all input fields are filled
+     */
     private boolean isEmptyField() {
         return TextUtils.isEmpty(binding.etEmail.getText().toString())
                 || TextUtils.isEmpty(binding.etFirstName.getText().toString())

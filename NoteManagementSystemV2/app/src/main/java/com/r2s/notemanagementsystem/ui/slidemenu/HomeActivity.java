@@ -61,6 +61,9 @@ public class HomeActivity extends AppCompatActivity {
         setUpViewModel();
     }
 
+    /**
+     * This method set up navigation drawer menu
+     */
     private void setUpSlideMenu() {
         DrawerLayout drawer = binding.drawerLayout;
 
@@ -85,6 +88,11 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
     }
 
+    /**
+     * This method creates options menu
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home, menu);
@@ -92,6 +100,11 @@ public class HomeActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * This method set action for options menu's items
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -104,11 +117,15 @@ public class HomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * This method initializes and set up UserViewModel to observe if profile is changed
+     */
     private void setUpViewModel() {
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         mUserViewModel.isUserUpdated().observe(this, isUserUpdated -> {
             if (isUserUpdated) {
+                //Reset user's profile in local
                 mUser = new Gson()
                         .fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
 
@@ -117,12 +134,18 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method set user's data to navigation drawer menu's header
+     */
     private void setUserDataToHeader() {
         tvName.setText(mUser.getLastName() + " " + mUser.getFirstName());
 
         tvGmail.setText(mUser.getEmail());
     }
 
+    /**
+     * This method initializes navigation drawer menu's header views
+     */
     private void initHeaderViews() {
         header = binding.navView.getHeaderView(0);
 
@@ -140,11 +163,17 @@ public class HomeActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    /**
+     * This method overrides onBackPressed and make it logout when clicked
+     */
     @Override
     public void onBackPressed() {
         logout();
     }
 
+    /**
+     * This method logouts the current user
+     */
     private void logout() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
 
