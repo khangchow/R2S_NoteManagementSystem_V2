@@ -36,6 +36,7 @@ import com.r2s.notemanagementsystem.viewmodel.CategoryViewModel;
 import com.r2s.notemanagementsystem.viewmodel.NoteViewModel;
 import com.r2s.notemanagementsystem.viewmodel.PriorityViewModel;
 import com.r2s.notemanagementsystem.viewmodel.StatusViewModel;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -88,6 +89,8 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mCommunicateViewModel = new ViewModelProvider(getActivity()).get(CommunicateViewModel.class);
+
+
 
     }
 
@@ -227,11 +230,11 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
      * @param view
      */
     public void initView(View view) {
-
         //auto complete category
         mCateViewModel.getCateById().observe(getViewLifecycleOwner(), categories -> {
             for (int i = 0; i < categories.size(); i++) {
                 listStringCate.add(categories.get(i).getNameCate());
+                binding.autoCompleteCategory.setText(listStringCate.get(0), false);
             }
         });
 
@@ -242,6 +245,7 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         mPriorityViewModel.getAllPriorities().observe(getViewLifecycleOwner(), priorities -> {
             for (int i = 0; i < priorities.size(); i++) {
                 listStringPri.add(priorities.get(i).getName());
+                binding.autoCompletePriority.setText(listStringPri.get(0), false);
             }
         });
 
@@ -252,6 +256,7 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         mStatusViewModel.getAllStatuses().observe(getViewLifecycleOwner(), statuses -> {
             for (int i = 0; i < statuses.size(); i++) {
                 listStringSta.add(statuses.get(i).getName());
+                binding.autoCompleteStatus.setText(listStringSta.get(0), false);
             }
         });
 
@@ -316,6 +321,7 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
 
     /**
      * check if these field is filled
+     *
      * @return boolean
      */
     public boolean isFilled() {
