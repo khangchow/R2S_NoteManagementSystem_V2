@@ -53,7 +53,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Category br = categoryList.get(position);
         holder.tvNameCate.setText("Name: " + br.getNameCate());
-        holder.tvCreatedDate.setText("The lastest Update: " + br.getCreatedDate());
+        holder.tvCreatedDate.setText("Lastest Update: " + br.getCreatedDate());
     }
 
     /**
