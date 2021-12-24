@@ -3,26 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/drawable-v24/ic_add_24.xml" value="0.3251282051282051" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/drawable/ic_add.xml" value="0.3251282051282051" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/activity_edit_priority_dialog.xml" value="0.3489583333333333" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/activity_login.xml" value="0.20448877805486285" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/activity_register.xml" value="0.15353260869565216" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_add_new_category.xml" value="0.21750663129973474" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_add_priority.xml" value="0.2411764705882353" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_add_status.xml" value="0.3489583333333333" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_edit_category.xml" value="0.3489583333333333" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_edit_priority.xml" value="0.33" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_edit_status.xml" value="0.3489583333333333" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_fragment_insert_note.xml" value="0.3489583333333333" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_priority.xml" value="0.3489583333333333" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/fragment_category.xml" value="0.1697061803444782" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/fragment_edit_profile.xml" value="0.3489583333333333" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/fragment_priority.xml" value="0.75" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/fragment_status.xml" value="0.3333333333333333" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/row_category.xml" value="0.1697061803444782" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/row_priority.xml" value="0.23631123919308358" />
-        <entry key="..\:/Users/ADMIN/Downloads/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/row_status.xml" value="0.3489583333333333" />
         <entry key="..\:/R2s/Android/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/activity_home.xml" value="0.22447916666666667" />
         <entry key="..\:/R2s/Android/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/content_home.xml" value="0.22447916666666667" />
         <entry key="..\:/R2s/Android/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_add_new_category.xml" value="0.2441123188405797" />
@@ -32,25 +12,11 @@
         <entry key="..\:/R2s/Android/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/fragment_edit_profile.xml" value="0.3691123188405797" />
         <entry key="..\:/R2s/Android/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/fragment_status.xml" value="0.3691123188405797" />
         <entry key="..\:/R2s/Android/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/row_category.xml" value="0.38697916666666665" />
+        <entry key="..\:/R2s/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/row_category.xml" value="0.38697916666666665" />
       </map>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
-        <entry key="..\:/HocKy1_Nam4/TMDT/Github/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_edit_note.xml" value="0.22" />
-        <entry key="..\:/HocKy1_Nam4/TMDT/Github/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_fragment_insert_note.xml" value="0.22" />
-        <entry key="..\:/HocKy1_Nam4/TMDT/Github/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/fragment_note.xml" value="0.22" />
-        <entry key="..\:/HocKy1_Nam4/TMDT/Github/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/row_note.xml" value="0.22" />
-        <entry key="..\:/Users/FBI LOGISTICS/Documents/GitHub/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_edit_note.xml" value="0.16271442986881937" />
-        <entry key="..\:/Users/FBI LOGISTICS/Documents/GitHub/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/dialog_fragment_insert_note.xml" value="0.16271442986881937" />
-        <entry key="..\:/Users/FBI LOGISTICS/Documents/GitHub/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/fragment_change_password.xml" value="0.16271442986881937" />
-        <entry key="..\:/Users/FBI LOGISTICS/Documents/GitHub/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/fragment_note.xml" value="0.1" />
-        <entry key="..\:/Users/FBI LOGISTICS/Documents/GitHub/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/fragment_priority.xml" value="0.16271442986881937" />
-        <entry key="..\:/Users/FBI LOGISTICS/Documents/GitHub/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/row_note.xml" value="0.16271442986881937" />
-        <entry key="..\:/Users/FBI LOGISTICS/Documents/GitHub/R2S_NoteManagementSystem_V2/NoteManagementSystemV2/app/src/main/res/layout/row_status_list.xml" value="0.16271442986881937" />
-      </map>
-    </option>
-  </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

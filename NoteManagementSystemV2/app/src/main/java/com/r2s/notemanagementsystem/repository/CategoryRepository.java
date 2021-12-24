@@ -37,7 +37,8 @@ public class CategoryRepository {
      */
     public RefreshLiveData<List<Category>> getAllCate() {
         final RefreshLiveData<List<Category>> liveData = new RefreshLiveData<>(callback -> {
-            mCateService.getAllCate("Category", mUser.getEmail()).enqueue(new Callback<BaseResponse>() {
+            mCateService.getAllCate("Category", mUser.getEmail())
+                    .enqueue(new Callback<BaseResponse>() {
                 @Override
                 public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                     List<Category> categories = new ArrayList<>();
@@ -95,5 +96,4 @@ public class CategoryRepository {
     public Call<BaseResponse> deleteCate (String nameCategory) {
         return mCateService.deleteCate("Category", mUser.getEmail(), nameCategory);
     }
-
 }

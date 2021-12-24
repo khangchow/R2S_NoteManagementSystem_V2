@@ -190,9 +190,11 @@ public class CategoryFragment extends Fragment{
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        mCateViewModel.deleteCate(category).enqueue(new Callback<BaseResponse>() {
+                                        mCateViewModel.deleteCate(category)
+                                                .enqueue(new Callback<BaseResponse>() {
                                             @Override
-                                            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                                            public void onResponse(Call<BaseResponse> call
+                                                    , Response<BaseResponse> response) {
                                                 if (response.body().getStatus() == 1) {
                                                     Toast.makeText(getContext(), "Deleted",
                                                             Toast.LENGTH_SHORT).show();
@@ -200,14 +202,16 @@ public class CategoryFragment extends Fragment{
                                                     mCateViewModel.refreshData();
                                                 } else if (response.body().getStatus() == -1){
                                                     if (response.body().getError() == 2) {
-                                                        Toast.makeText(getContext(), "Can't delete, cause using",
+                                                        Toast.makeText(getContext()
+                                                                , "Can't delete, cause using",
                                                                 Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
                                             }
 
                                             @Override
-                                            public void onFailure(Call<BaseResponse> call, Throwable t) {
+                                            public void onFailure(Call<BaseResponse> call
+                                                    , Throwable t) {
 
                                             }
                                         });
@@ -236,10 +240,12 @@ public class CategoryFragment extends Fragment{
 
                             Log.d("RRR", cate);
 
-                            final AddNewCategoryDialog addNewCategoryDialog = new AddNewCategoryDialog();
+                            final AddNewCategoryDialog addNewCategoryDialog =
+                                                                        new AddNewCategoryDialog();
                             addNewCategoryDialog.setArguments(bundle);
 
-                            FragmentManager fm = ((AppCompatActivity) requireContext()).getSupportFragmentManager();
+                            FragmentManager fm = ((AppCompatActivity) requireContext())
+                                    .getSupportFragmentManager();
                             FragmentTransaction ft = fm.beginTransaction();
 
                             addNewCategoryDialog.show(fm, "CateDialog");

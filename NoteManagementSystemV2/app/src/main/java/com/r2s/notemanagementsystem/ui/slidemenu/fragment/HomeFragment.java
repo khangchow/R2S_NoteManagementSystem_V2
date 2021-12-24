@@ -32,19 +32,12 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     PieChart pieChart;
     List<PieEntry> pieEntryList = new ArrayList<>();
-    List<Status> statuses;
     private List<Dash> mDashList;
     private DashboardViewModel mDashViewModel;
-    private CommunicateViewModel mCommunicateViewModel;
-
-    public HomeFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -60,51 +53,48 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mDashViewModel = new ViewModelProvider(getActivity()).get(DashboardViewModel.class);
+        pieChart = view.findViewById(R.id.pieChart);
+
+        mDashViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         mDashViewModel.getDashById().observe(getViewLifecycleOwner(), dashes -> {
             this.mDashList = dashes;
-        });
 
-        pieChart = view.findViewById(R.id.pieChart);
-        statuses = new ArrayList<>();
-        initView();
+            for ( int i = 0; i < mDashList.size(); i++) {
+                String status = mDashList.get(i).getStatus();
+                int note = Integer.parseInt(mDashList.get(i).getNote());
+
+                pieEntryList.add(new PieEntry(note, status));
+            }
+
+            PieDataSet pieDataSet = new PieDataSet(pieEntryList,"Status");
+            pieChart.setData(new PieData(pieDataSet));
+
+            // setting percent value
+            pieChart.setUsePercentValues(true);
+
+            // setting size of text
+            pieDataSet.setValueTextSize(16f);
+
+            // Setting color for pie chart
+            pieDataSet.setColors(CategoryConstant.COLOR_RGB);
+
+            // Delete the hole inside pie chart
+            pieChart.setDrawHoleEnabled(false);
+
+            // Disable description
+            pieChart.getDescription().setEnabled(false);
+
+            // Disable rotation
+            pieChart.setRotationEnabled(false);
+
+            // load data
+            pieChart.invalidate();
+        });
     }
 
-    private void initView() {
-        pieEntryList.clear();
-        pieChart.setUsePercentValues(true);
-
-        pieEntryList.add(new PieEntry(6, "Done"));
-        pieEntryList.add(new PieEntry(4, "Process"));
-        pieEntryList.add(new PieEntry(4, "Pending"));
-
-//        for ( int i = 0; i < mDashList.size(); i++) {
-//            String status = mDashList.get(i).getStatus();
-//            int note = Integer.parseInt(mDashList.get(i).getNote());
-//
-//            pieEntryList.add(new PieEntry(note, status));
-//        }
-
-        PieDataSet pieDataSet = new PieDataSet(pieEntryList,"Status");
-
-        pieChart.setData(new PieData(pieDataSet));
-
-        // setting size of text
-        pieDataSet.setValueTextSize(16f);
-
-        // Setting color for pie chart
-        pieDataSet.setColors(CategoryConstant.COLOR_RGB);
-
-        // Delete the hole inside pie chart
-        pieChart.setDrawHoleEnabled(false);
-
-        // Disable description
-        pieChart.getDescription().setEnabled(false);
-
-        // Disable rotation
-        pieChart.setRotationEnabled(false);
-
-        // load data
-        pieChart.invalidate();
+    @Override
+    public void onResume() {
+        super.onResume();
+        mDashViewModel.refreshDataDash();
     }
 }

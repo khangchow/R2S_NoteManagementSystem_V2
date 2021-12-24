@@ -46,9 +46,6 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = DialogAddNewCategoryBinding.inflate(inflater, container, false);
-
-        setUserInfo();
-
         return binding.getRoot();
     }
 
@@ -106,14 +103,18 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
                     mCateViewModel.insertCate(binding.etNewCate.getText().toString())
                             .enqueue(new Callback<BaseResponse>() {
                                 @Override
-                                public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                                public void onResponse(Call<BaseResponse> call
+                                                                , Response<BaseResponse> response) {
                                     if (response.body().getStatus() == 1) {
-                                        Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Successful"
+                                                , Toast.LENGTH_SHORT).show();
                                         mCommunicateViewModel.makeChanges();
                                         dismiss();
+
                                     } else if (response.body().getStatus() == -1){
                                         if (response.body().getError() == 2) {
-                                            Toast.makeText(getContext(), "Category name already exists"
+                                            Toast.makeText(getContext()
+                                                    , "Category name already exists"
                                                     , Toast.LENGTH_SHORT).show();
                                         }
                                     }
@@ -121,7 +122,8 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
 
                                 @Override
                                 public void onFailure(Call<BaseResponse> call, Throwable t) {
-                                    Toast.makeText(getContext(), "Failure!!!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Failure!!!"
+                                            , Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -135,12 +137,11 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
                     try {
                         String updateId = bundle.getString(CategoryConstant.CATEGORY_KEY);
 
-                        Log.d("TTT", updateId);
-
                         mCateViewModel.updateCate(updateId, binding.etNewCate.getText().toString())
                                 .enqueue(new Callback<BaseResponse>() {
                                     @Override
-                                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                                    public void onResponse(Call<BaseResponse> call
+                                            , Response<BaseResponse> response) {
                                         if (response.body().getStatus() == 1) {
                                             Toast.makeText(getContext(), "Update successful"
                                                     , Toast.LENGTH_SHORT).show();
@@ -149,8 +150,9 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
                                             dismiss();
 
                                         } else if (response.body().getStatus() == -1) {
-                                            String error = String.valueOf(response.body().getError());
-                                            Log.d("TTT", error);
+                                            String error =
+                                                        String.valueOf(response.body().getError());
+
                                             if ((binding.etNewCate.getText().toString() == null)) {
                                                 Toast.makeText(getContext(), "Update fail"
                                                         , Toast.LENGTH_SHORT).show();
@@ -182,17 +184,5 @@ public class AddNewCategoryDialog extends DialogFragment implements View.OnClick
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
-    }
-
-    /**
-     * get current time
-     * @return
-     */
-    private String getCurrentTime() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
-    private void setUserInfo() {
-        User mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
     }
 }
