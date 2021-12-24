@@ -92,4 +92,8 @@
     <string name="err_empty_current_pass">Current password can not be empty!</string>
     <string name="err_empty_new_pass">New password can not be empty!</string>
     <string name="err_empty_repass">This field can not be empty!</string>
+    <string name="err_wrong_pass">Incorrect current password!</string>
+    <string name="err_same_pass">Unchanged password!</string>
+    <string name="err_wrong_confirm_pass">Please confirm your new password!</string>
+    <string name="txt_success_change_pass">Change password successfully</string>
 </resources>
