@@ -232,7 +232,6 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         mCateViewModel.getCateById().observe(getViewLifecycleOwner(), categories -> {
             for (int i = 0; i < categories.size(); i++) {
                 listStringCate.add(categories.get(i).getNameCate());
-                binding.autoCompleteCategory.setText(listStringCate.get(0));
             }
         });
 
@@ -243,7 +242,6 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         mPriorityViewModel.getAllPriorities().observe(getViewLifecycleOwner(), priorities -> {
             for (int i = 0; i < priorities.size(); i++) {
                 listStringPri.add(priorities.get(i).getName());
-                binding.autoCompletePriority.setText(listStringPri.get(0));
             }
         });
 
@@ -254,7 +252,6 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         mStatusViewModel.getAllStatuses().observe(getViewLifecycleOwner(), statuses -> {
             for (int i = 0; i < statuses.size(); i++) {
                 listStringSta.add(statuses.get(i).getName());
-                binding.autoCompleteStatus.setText(listStringSta.get(0));
             }
         });
 

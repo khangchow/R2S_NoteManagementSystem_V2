@@ -222,7 +222,7 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
                         try {
                             position = viewHolder.getAdapterPosition();
                             mNotes = mNoteAdapter.getNotes();
-                            
+
                             noteName = mNotes.get(position).getName();
                             notePri = mNotes.get(position).getPriority();
                             noteCate = mNotes.get(position).getCategory();
