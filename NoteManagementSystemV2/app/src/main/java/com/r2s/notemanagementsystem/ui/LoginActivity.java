@@ -1,17 +1,20 @@
 package com.r2s.notemanagementsystem.ui;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.r2s.notemanagementsystem.DemoLoggedActivity;
 import com.r2s.notemanagementsystem.R;
 import com.r2s.notemanagementsystem.constant.Constants;
 import com.r2s.notemanagementsystem.constant.UserConstant;
@@ -26,10 +29,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- *
- * @author
- */
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
     private UserViewModel userViewModel;
@@ -65,7 +64,6 @@ public class LoginActivity extends AppCompatActivity {
      * This method created to show register activity
      *
      * @param v View class
-     * @return void
      */
     public void showRegister(View v) {
         Intent intent = new Intent(this, RegisterActivity.class);
@@ -82,60 +80,68 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * @param isRememberTxt is true or false string
+     * @return true if isRememberTxt = "true"
+     */
     public Boolean isRememberUser(String isRememberTxt) {
-        if (TextUtils.equals("\"true\"", isRememberTxt))
-            return true;
-        else
-            return false;
+        return TextUtils.equals("\"true\"", isRememberTxt);
     }
 
     /**
      * This method created to register events
      */
     public void initEvents() {
-        binding.activityLoginBtnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                User user = new User();
+        EditText[] etArr = {
+                binding.activityLoginEtEmail,
+                binding.activityLoginEtPassword
+        };
+        hideKeyboardOnFocusChange(etArr);
+
+        binding.activityLoginBtnLogin.setOnClickListener(v -> {
+            User user = new User();
+            if (binding.activityLoginEtEmail.getText() != null)
                 user.setEmail(binding.activityLoginEtEmail.getText().toString().trim());
+            if (binding.activityLoginEtPassword.getText() != null)
                 user.setPassword(binding.activityLoginEtPassword.getText().toString().trim());
 
-                if (validateInput(user))
+            if (validateInput(user))
 
-                    userViewModel.login(user).enqueue(new Callback<BaseResponse>() {
-                        @Override
-                        public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                userViewModel.login(user).enqueue(new Callback<BaseResponse>() {
+                    @Override
+                    public void onResponse(@Nullable Call<BaseResponse> call, @NonNull Response<BaseResponse> response) {
+                        if (response.body() != null)
                             loginUI(response.body(), user);
-                        }
+                    }
 
-                        @Override
-                        public void onFailure(Call<BaseResponse> call, Throwable t) {
+                    @Override
+                    public void onFailure(@NonNull Call<BaseResponse> call, @NonNull Throwable t) {
 
-                        }
-                    });
-            }
+                    }
+                });
         });
-        binding.activityLoginBtnExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                System.exit(0);
-            }
+
+        binding.activityLoginBtnExit.setOnClickListener(v -> {
+            finish();
+            System.exit(0);
         });
     }
 
     /**
      * This method created to validate input
-     * @param user
-     * @return
+     *
+     * @param user is user
+     * @return is true if all fields valid
      */
     public Boolean validateInput(User user) {
         if (!user.getEmail().matches(Constants.emailPattern)) {
             binding.activityLoginEtEmail.setError(getResources().getString(R.string.et_email_invalid));
+            binding.activityLoginEtEmail.requestFocus();
             return false;
         }
         if (TextUtils.isEmpty(user.getPassword())) {
-            binding.activityLoginEtPassword.setError(getResources().getString(R.string.et_pwd_invalid));
+            Toast.makeText(this, getResources().getString(R.string.et_pwd_invalid), Toast.LENGTH_LONG).show();
+            binding.activityLoginEtPassword.requestFocus();
             return false;
         }
 
@@ -143,8 +149,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * @param res
-     * @param user
+     * @param res  is api response
+     * @param user is this user
      */
     public void loginUI(BaseResponse res, User user) {
         if (res.getStatus() == Constants.LOGIN_ERR) {
@@ -152,16 +158,12 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(getBaseContext(), getResources().getString(R.string.login_pwd_incorrect), Toast.LENGTH_LONG).show();
                 binding.activityLoginEtPassword.setText("");
                 binding.activityLoginEtPassword.requestFocus();
-            }
-
-            if (res.getError() == Constants.LOGIN_USER_NOT_FOUND_ERR) {
+            } else if (res.getError() == Constants.LOGIN_USER_NOT_FOUND_ERR) {
                 Toast.makeText(getBaseContext(), getResources().getString(R.string.login_failed), Toast.LENGTH_LONG).show();
                 binding.activityLoginEtEmail.requestFocus();
                 binding.activityLoginEtPassword.setText("");
             }
-        }
-
-        if (res.getStatus() == Constants.LOGIN_SUCCESS) {
+        } else if (res.getStatus() == Constants.LOGIN_SUCCESS) {
             user.setFirstName(res.getInfo().getFirstName());
             user.setLastName(res.getInfo().getLastName());
 
@@ -175,6 +177,20 @@ public class LoginActivity extends AppCompatActivity {
 
             showMainActivity();
             Toast.makeText(getBaseContext(), getResources().getString(R.string.logged_in), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * This method created to clear focus & hide keyboard on outside tap
+     */
+    public void hideKeyboardOnFocusChange(EditText[] etArr) {
+        for (EditText et : etArr) {
+            et.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            });
         }
     }
 }
