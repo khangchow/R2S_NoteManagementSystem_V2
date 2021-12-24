@@ -129,10 +129,10 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
         binding.fab.setOnClickListener(this);
         mNoteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
         mNoteViewModel.refreshData();
-        mNoteAdapter = new NoteAdapter(mNotes, getContext());
         mNoteViewModel.getAllNotes().observe(getViewLifecycleOwner(), notes -> {
             mNoteAdapter.setNotes(notes);
         });
+        mNoteAdapter = new NoteAdapter(mNotes, getContext());
         binding.rcvNoteFragment.setAdapter(mNoteAdapter);
         binding.rcvNoteFragment.setHasFixedSize(true);
         binding.rcvNoteFragment.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -264,8 +264,8 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
                             for (List<String> note : response.body().getData()) {
                                 mNote.add(new Note(note.get(0), note.get(1), note.get(2), note.get(3), note.get(4),note.get(5)));
                             }
-                            mNoteAdapter.setNotes(mNotes);
-                            Log.d("RESUME_RELOAD", "Reload");
+                            mNoteAdapter.setNotes(mNote);
+                            Log.d("RESUME_RELOAD", mNote.get(0).getName());
                         }
                     }
 
