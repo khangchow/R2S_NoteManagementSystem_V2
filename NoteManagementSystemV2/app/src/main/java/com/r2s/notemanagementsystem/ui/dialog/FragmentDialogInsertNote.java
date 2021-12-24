@@ -172,29 +172,23 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
                 if (isFilled()) {
                     final String name = Objects.requireNonNull(Objects.requireNonNull(binding.tfNoteName.getEditText()).getText())
                             .toString();
-                    Log.d("Auto", name);
-                    Log.d("Auto", strPriorityName);
-                    Log.d("Auto", strCategoryName);
-                    Log.d("Auto", strStatusName);
-                    Log.d("Auto", strPlanDate);
-
                     mNoteViewModel.addNote(name, strPriorityName, strCategoryName, strStatusName, strPlanDate).enqueue(new Callback<BaseResponse>() {
                         @Override
                         public void onResponse(@NonNull Call<BaseResponse> call,
                                                @NonNull Response<BaseResponse> response) {
-                            Log.d("TestInsert","isSuccessful: "+String.valueOf(response.isSuccessful()));
+                            Log.d("TestInsert", "isSuccessful: " + String.valueOf(response.isSuccessful()));
                             if (response.isSuccessful()) {
                                 BaseResponse baseResponse = response.body();
 
                                 assert baseResponse != null;
-                                Log.d("TestInsert",String.valueOf("Status: " +baseResponse.getStatus()));
+                                Log.d("TestInsert", String.valueOf("Status: " + baseResponse.getStatus()));
                                 if (baseResponse.getStatus() == 1) {
                                     mCommunicateViewModel.makeChanges();
 
                                     Toast.makeText(mContext, "Create Note Successful!",
                                             Toast.LENGTH_SHORT).show();
                                 } else if (baseResponse.getStatus() == -1)
-                                    Log.d("TestInsert",String.valueOf("Error: " +baseResponse.getError()));
+                                    Log.d("TestInsert", String.valueOf("Error: " + baseResponse.getError()));
                                 if (baseResponse.getError() == 2) {
                                     Toast.makeText(mContext,
                                             "This name already exists",
@@ -234,34 +228,38 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         mCateViewModel.getCateById().observe(getViewLifecycleOwner(), categories -> {
             for (int i = 0; i < categories.size(); i++) {
                 listStringCate.add(categories.get(i).getNameCate());
-                Log.d("TestAuto",categories.get(i).getNameCate());
+                binding.autoCompleteCategory.setText(listStringCate.get(0));
             }
         });
 
         ArrayAdapter<String> adapterItemCategory = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringCate);
         binding.autoCompleteCategory.setAdapter(adapterItemCategory);
 
+
         // auto complete for priority
         mPriorityViewModel.getAllPriorities().observe(getViewLifecycleOwner(), priorities -> {
             for (int i = 0; i < priorities.size(); i++) {
                 listStringPri.add(priorities.get(i).getName());
-                Log.d("TestAuto",priorities.get(i).getName());
+                binding.autoCompletePriority.setText(listStringPri.get(0));
             }
         });
 
         ArrayAdapter<String> adapterItemPriority = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringPri);
         binding.autoCompletePriority.setAdapter(adapterItemPriority);
 
+
         // auto complete for status
         mStatusViewModel.getAllStatuses().observe(getViewLifecycleOwner(), statuses -> {
             for (int i = 0; i < statuses.size(); i++) {
                 listStringSta.add(statuses.get(i).getName());
-                Log.d("TestAuto",statuses.get(i).getName());
+                binding.autoCompleteStatus.setText(listStringSta.get(0));
             }
         });
 
+
         ArrayAdapter<String> adapterItemStatus = new ArrayAdapter<String>(view.getContext(), R.layout.dropdown_item, listStringSta);
         binding.autoCompleteStatus.setAdapter(adapterItemStatus);
+
 
         // Show date when choose date inside date picker
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -316,25 +314,13 @@ public class FragmentDialogInsertNote extends DialogFragment implements View.OnC
         User mUser = new Gson().fromJson(AppPrefsUtils.getString(Constants.KEY_USER_DATA), User.class);
     }
 
-    public boolean isFilled(){
+    public boolean isFilled() {
         boolean result = true;
-        if (binding.autoCompleteCategory.getText().toString().equalsIgnoreCase("Select category")){
-            binding.autoCompleteCategory.setError(NoteConstant.NOTE_ERROR);
-            result = false;
-        }
-        if (binding.autoCompletePriority.getText().toString().equalsIgnoreCase("Select priority")){
-            binding.autoCompletePriority.setError(NoteConstant.NOTE_ERROR);
-            result = false;
-        }
-        if (binding.autoCompleteStatus.getText().toString().equalsIgnoreCase("Select status")){
-            binding.autoCompleteStatus.setError(NoteConstant.NOTE_ERROR);
-            result = false;
-        }
-        if(binding.tfNoteName.getEditText().getText().toString().trim().length() <= 0){
+        if (binding.tfNoteName.getEditText().getText().toString().trim().length() <= 0) {
             binding.tfNoteName.setError(NoteConstant.NOTE_ERROR);
             result = false;
         }
-        if(strPlanDate.trim().length() < 2){
+        if (strPlanDate.trim().length() < 2) {
             binding.tvDatePlan.setError(NoteConstant.NOTE_ERROR);
             result = false;
         }

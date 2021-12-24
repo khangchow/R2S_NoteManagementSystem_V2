@@ -162,6 +162,7 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
                         String notePri = mNotes.get(position).getPriority();
                         String noteCate = mNotes.get(position).getCategory();
                         String noteSta = mNotes.get(position).getStatus();
+                        String planDate = mNotes.get(position).getPlanDate();
 
                         new AlertDialog.Builder(requireContext())
                                 .setTitle("Title")
@@ -219,12 +220,15 @@ public class FragmentNote extends Fragment implements View.OnClickListener {
                             notePri = mNotes.get(position).getPriority();
                             noteCate = mNotes.get(position).getCategory();
                             noteSta = mNotes.get(position).getStatus();
+                            planDate = mNotes.get(position).getPlanDate();
 
                             Bundle bundle = new Bundle();
                             bundle.putString("note_name", noteName);
                             bundle.putString("priority_name", notePri);
                             bundle.putString("category_name", noteCate);
                             bundle.putString("status_name", noteSta);
+                            bundle.putString("plan_date", planDate);
+
 
 
                             final EditNoteDialog editNoteDialog = EditNoteDialog.newInstance();

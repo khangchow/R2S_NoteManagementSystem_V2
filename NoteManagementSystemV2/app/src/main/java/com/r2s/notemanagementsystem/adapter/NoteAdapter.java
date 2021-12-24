@@ -1,5 +1,6 @@
 package com.r2s.notemanagementsystem.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     /**
      * Return the size of your dataset
+     *
      * @return size of your dataset
      */
     @Override
@@ -60,6 +62,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     /**
      * This method return the datalist
+     *
      * @return List
      */
     public List<Note> getNotes() {
@@ -77,6 +80,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             binding = itemView;
         }
 
+        @SuppressLint("SetTextI18n")
         public void bind(Note note) {
             String noteName = note.getName();
             String priorityName = note.getPriority();
@@ -85,13 +89,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             String planDate = note.getPlanDate();
             String createdDate = note.getCreatedDate();
 
-
-            binding.tvNoteName.setText(noteName);
-            binding.tvNotePriorityName.setText(priorityName);
-            binding.tvNoteCategoryName.setText(categoryName);
-            binding.tvNoteStatusName.setText(statusName);
-            binding.tvNotePlanDate.setText(planDate);
-            binding.tvNoteCreatedDate.setText(createdDate);
+            String whiteSpace = "     ";
+            binding.tvNoteName.setText("Name: " + whiteSpace + whiteSpace + whiteSpace + "  " + noteName);
+            binding.tvNotePriorityName.setText("Priority: " + whiteSpace + whiteSpace + whiteSpace + " " + priorityName);
+            binding.tvNoteCategoryName.setText("Category: " + whiteSpace + whiteSpace + "  " + categoryName);
+            binding.tvNoteStatusName.setText("Status: " + whiteSpace + whiteSpace + whiteSpace + "  " + statusName);
+            binding.tvNotePlanDate.setText("Plan Date: " + whiteSpace + whiteSpace + " " + planDate);
+            binding.tvNoteCreatedDate.setText("Created Date: " + whiteSpace + createdDate);
         }
     }
 }
