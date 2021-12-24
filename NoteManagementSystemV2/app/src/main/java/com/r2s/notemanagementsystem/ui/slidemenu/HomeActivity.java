@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -95,14 +96,7 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_logout:
-                AppPrefsUtils.putString(UserConstant.KEY_USER_DATA, null);
-
-                AppPrefsUtils.putString(UserConstant.KEY_REMEMBER_USER
-                        , new Gson().toJson("false"));
-
-                startActivity(new Intent(this, LoginActivity.class));
-
-                finish();
+                logout();
 
                 break;
         }
@@ -144,5 +138,28 @@ public class HomeActivity extends AppCompatActivity {
 
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onBackPressed() {
+        logout();
+    }
+
+    private void logout() {
+        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
+
+        dialog.setMessage(R.string.txt_confirm_logout)
+                .setPositiveButton("Yes", (dialogInterface, i) -> {
+                    AppPrefsUtils.putString(UserConstant.KEY_USER_DATA, null);
+
+                    AppPrefsUtils.putString(UserConstant.KEY_REMEMBER_USER
+                            , new Gson().toJson("false"));
+
+                    startActivity(new Intent(this, LoginActivity.class));
+
+                    finish();
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 }
