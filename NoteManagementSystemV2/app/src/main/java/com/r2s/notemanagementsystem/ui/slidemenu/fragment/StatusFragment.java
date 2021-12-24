@@ -161,7 +161,7 @@ public class StatusFragment extends Fragment implements View.OnClickListener {
                         mStatuses = mStatusAdapter.getStatuses();
                         String statusName = mStatuses.get(position).getName();
 
-                        new AlertDialog.Builder(requireContext()).setTitle("Title").setMessage(
+                        new AlertDialog.Builder(requireContext()).setTitle("Confirm").setMessage(
                                 "Do you really want to delete?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
