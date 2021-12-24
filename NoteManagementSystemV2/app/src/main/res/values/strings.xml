@@ -89,4 +89,7 @@
     <string name="txt_enter_email">Enter your email</string>
     <string name="txt_update_successful">Update user successfully</string>
     <string name="err_wrong_email">Please re-enter your email!</string>
+    <string name="err_empty_current_pass">Current password can not be empty!</string>
+    <string name="err_empty_new_pass">New password can not be empty!</string>
+    <string name="err_empty_repass">This field can not be empty!</string>
 </resources>

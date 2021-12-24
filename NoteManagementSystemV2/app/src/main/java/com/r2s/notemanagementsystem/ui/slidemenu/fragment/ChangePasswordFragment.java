@@ -1,6 +1,7 @@
 package com.r2s.notemanagementsystem.ui.slidemenu.fragment;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.r2s.notemanagementsystem.constant.Constants;
 import com.r2s.notemanagementsystem.databinding.FragmentChangePasswordBinding;
 import com.r2s.notemanagementsystem.model.User;
 import com.r2s.notemanagementsystem.utils.AppPrefsUtils;
+import com.r2s.notemanagementsystem.utils.KeyboardUtils;
 import com.r2s.notemanagementsystem.viewmodel.UserViewModel;
 
 
@@ -58,17 +60,13 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     }
 
     private void updatePassword() {
-        String strPassword = binding.fragmentChangePasswordEtNew.getText().toString().trim();
+        if(!isEmptyField() && isPasswordCorrect()
+                && !mUser.getPassword()
+                .equals(binding.fragmentChangePasswordEtNew.getText().toString())
+                && binding.fragmentChangePasswordEtNew.getText().toString()
+                .equals(binding.fragmentChangePasswordEtAgain.getText().toString())){
 
-        if(binding.fragmentChangePasswordEtNew.getText().toString().trim()
-                .equals(binding.fragmentChangePasswordEtAgain.getText().toString().trim())
-        && isPasswordCorrect()
-                && !mUser.equals(binding.fragmentChangePasswordEtNew.getText().toString())){
-
-            mUser.setPassword(strPassword);
-
-            //Doi profile tren database
-//            mUserViewModel.updateUser(mUser);
+            mUser.setPassword(binding.fragmentChangePasswordEtNew.getText().toString());
 
             //Doi profile cua thong tin dang nhap
             AppPrefsUtils.putString(Constants.KEY_USER_DATA, new Gson().toJson(mUser));
@@ -83,13 +81,51 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
             Toast.makeText(getActivity(),"Change password successfully",Toast.LENGTH_SHORT)
                     .show();
         }else{
-            Toast.makeText(getActivity(),"Change password error",Toast.LENGTH_SHORT).show();
-        }
+            Boolean isFocused = false;
 
+            if (TextUtils.isEmpty(binding.fragmentChangePasswordEtCurrent.toString())) {
+                binding.tilCurrentPass.setError(getString(R.string.err_empty_current_pass));
+
+                if (!isFocused) {
+                    binding.fragmentChangePasswordEtCurrent.requestFocus();
+
+                    KeyboardUtils.openKeyboard(binding.fragmentChangePasswordEtCurrent);
+
+                    isFocused = true;
+                }
+            }else {
+                binding.tilCurrentPass.setError(null);
+            }
+
+            if (TextUtils.isEmpty(binding.fragmentChangePasswordEtNew.toString())) {
+                binding.tilNewPass.setError(getString(R.string.err_empty_new_pass));
+
+                if (!isFocused) {
+                    binding.fragmentChangePasswordEtNew.requestFocus();
+
+                    KeyboardUtils.openKeyboard(binding.fragmentChangePasswordEtNew);
+
+                    isFocused = true;
+                }
+            }else {
+                binding.tilNewPass.setError(null);
+            }
+
+            if (TextUtils.isEmpty(binding.fragmentChangePasswordEtAgain.toString())) {
+                binding.tilReNewPass.setError(getString(R.string.err_empty_repass));
+
+                if (!isFocused) {
+                    binding.fragmentChangePasswordEtAgain.requestFocus();
+
+                    KeyboardUtils.openKeyboard(binding.fragmentChangePasswordEtAgain);
+                }
+            }else {
+                binding.tilReNewPass.setError(null);
+            }
+        }
     }
 
     private boolean isPasswordCorrect(){
-        Log.d("PASS", mUser.getPassword()+" "+binding.fragmentChangePasswordEtCurrent.getText().toString());
         return mUser.getPassword()
                 .equals(binding.fragmentChangePasswordEtCurrent.getText().toString());
     }
@@ -107,6 +143,12 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
                 break;
 
         }
+    }
+
+    private boolean isEmptyField() {
+        return TextUtils.isEmpty(binding.fragmentChangePasswordEtCurrent.toString())
+                || TextUtils.isEmpty(binding.fragmentChangePasswordEtNew.getText().toString())
+                || TextUtils.isEmpty(binding.fragmentChangePasswordEtAgain.getText().toString());
     }
 
     @Override
